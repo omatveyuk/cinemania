@@ -11,7 +11,6 @@ from model import Movie, Person, Review
 import model
 
 
-
 app = Flask(__name__)
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "shhhhhhhhhhhhhh"
@@ -32,8 +31,9 @@ def configure():
     config['url']['popular'] = "https://api.themoviedb.org/3/movie/popular?api_key={0}".format(config['api_key']['themoviedb'])
     config['url']['movie'] = "https://api.themoviedb.org/3/movie"
     config['url']['poster'] = "https://image.tmdb.org/t/p/w500"
-    config['url']['youtube'] = "https://www.youtube.com/watch?v="
+    config['url']['youtube'] = "https://www.youtube.com/embed"
     config['url']['profile'] = "https://image.tmdb.org/t/p/w500"
+    config['url']['wikipedia'] = "https://en.wikipedia.org/wiki"
 
 @app.route('/')
 def index():
@@ -67,35 +67,35 @@ def get_random_movie():
     #if not movie.exists():
     #    return "Error"
 
-    html = 'cinemnia: {0} ({10})<br> Production country: {1}<br> Production companies: {2}<br>'
-    html += 'Release date: {3}<br> IMDB id: {4}<br> Genres: {5}<br> Runtime: {6}<br>'
-    html += 'Poster: {7}<br> Vote average: {8}<br> Vote count: {9}<br><br>'
-    html += 'Actors:<br>'
-    for actor in movie.actors:
-        html += str(actor.id) + ' ' + str(actor.name) + ' ' + str(actor.profile_url) + '<br>'
-    html += 'Directors:<br>'
-    for director in movie.directors:
-        html += str(director.id) + ' ' + str(director.name) + ' ' + str(director.profile_url) + '<br>'
-    html += 'Writers:<br>'
-    for writer in movie.writers:
-        html += str(writer.id) + ' ' + str(writer.name) + ' ' + str(writer.profile_url) + '<br>'
-    html += '<br>Reviews (pages=' + str(movie.tototal_pages_reviews) + '):<br>'
-    for review in movie.reviews:
-        html += str(review.name).upper() + ': ' + str(review.text) + '<br>'
-    html += '<br>Video:<br>'
-    for video in movie.trailer_url:
-        html += video + '<br>'
-    html = html.format(movie.title,
-                       movie.production_countries,
-                       movie.production_companies,
-                       movie.release_date,
-                       movie.imdb_id,
-                       movie.genres,
-                       movie.runtime,
-                       movie.poster_url,
-                       movie.vote_average,
-                       movie.vote_count,
-                       movie.id)
+    #html = 'cinemnia: {0} ({10})<br> Production country: {1}<br> Production companies: {2}<br>'
+    #html += 'Release date: {3}<br> IMDB id: {4}<br> Genres: {5}<br> Runtime: {6}<br>'
+    #html += 'Poster: {7}<br> Vote average: {8}<br> Vote count: {9}<br><br>'
+    #html += 'Actors:<br>'
+    #for actor in movie.actors:
+    #    html += str(actor.id) + ' ' + str(actor.name) + ' ' + str(actor.profile_url) + '<br>'
+    #html += 'Directors:<br>'
+    #for director in movie.directors:
+    #    html += str(director.id) + ' ' + str(director.name) + ' ' + str(director.profile_url) + '<br>'
+    #html += 'Writers:<br>'
+    #for writer in movie.writers:
+    #    html += str(writer.id) + ' ' + str(writer.name) + ' ' + str(writer.profile_url) + '<br>'
+    #html += '<br>Reviews (pages=' + str(movie.tototal_pages_reviews) + '):<br>'
+    #for review in movie.reviews:
+    #    html += str(review.name).upper() + ': ' + str(review.text) + '<br>'
+    #html += '<br>Video:<br>'
+    #for video in movie.trailer_url:
+    #    html += video + '<br>'
+    #html = html.format(movie.title,
+    #                   movie.production_countries,
+    #                   movie.production_companies,
+    #                   movie.release_date,
+    #                   movie.imdb_id,
+    #                   movie.genres,
+    #                   movie.runtime,
+    #                   movie.poster_url,
+    #                   movie.vote_average,
+    #                   movie.vote_count,
+    #                   movie.id)
     #return html
     return render_template("movie.html", movie=movie)
 

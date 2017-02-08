@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
+<!-- movie object -->
 
 <!-- It's container-fluid so it spans the whole page. -->
-<div class="container-fluid">
+<div class="container-fluid"> 
 
   <div class="row">
     <div class="col-xs-12 col-md-8" id="title">
@@ -18,25 +19,27 @@
       <b>Country: </b> 
     </div>
     <span class="col-xs-12 col-md-8" id="country">
-      {% if movie.production_countries|length > 1 %}
-        {% for country in movie.production_countries[:-2] %} 
-          {{ country }}, 
-        {% endfor %} 
-          {{ movie.production_countries[-2] }} and 
-      {% endif %} 
-      {{movie.production_countries[-1]}}
+      {% if movie.production_countries|length != 0 %}
+        {% if movie.production_countries|length > 1 %}
+          {% for country in movie.production_countries[:-1] %} 
+            {{ country }}, 
+          {% endfor %} 
+        {% endif %} 
+        {{movie.production_countries[-1]}}
+      {% endif %}
     </span><br>
     <div class="col-xs-2 col-md-2">
       <b>Production Co: </b> 
     </div>
     <span class="col-xs-12 col-md-8" id="company">
-      {% if movie.production_companies|length > 1 %}
-        {% for company in movie.production_companies[:-2] %} 
-          {{ company }}, 
-        {% endfor %} 
-        {{ movie.production_companies[-2] }} and 
-      {% endif %} 
-      {{movie.production_companies[-1]}}
+      {% if movie.production_companies|length != 0 %}
+        {% if movie.production_companies|length > 1 %}
+          {% for company in movie.production_companies[:-1] %} 
+            {{ company }}, 
+          {% endfor %} 
+        {% endif %} 
+        {{movie.production_companies[-1]}}
+      {% endif %}
     </span><br>
     <div class="col-xs-2 col-md-2">
       <b>Release Date: </b> 
@@ -49,47 +52,46 @@
   <div class="row" id="info-movie">
 
     <div class="col-xs-6 col-md-4">
-      <img src="{{ movie.poster_url }}" class="img-responsive" alt="Responsive image">
-      <!--<iframe src="{{ movie.poster_url }}" alt="Movie-poster" id="movie_poster"></iframe>-->
+      <img src="{{ movie.poster_url }}" class="img-responsive" alt="Responsive image" width="80%" height="80%">
     </div>
 
     <div class="col-xs-6 col-md-4">
       <b>Genre: </b>
       {% if movie.genres|length != 0 %}
-      {% if movie.genres|length > 1 %}
-        {% for genre in movie.genres[:-2] %} 
-          {{ genre }}, 
-        {% endfor %} 
-        {{ movie.genres[-2] }} and 
-      {% endif %} 
-      {{movie.genres[-1]}}<br>
-      {% endif %}
-      <b>Director {% if movie.directors|length > 1 %}s{% endif %}: </b>
-      {% if movie.directories|length > 1 %}
-        {% for director in movie.directors[:-2] %} 
-          {{ director.name }}, 
-        {% endfor %} 
-        {{ movie.directors[-2].name }} and 
-      {% endif %} 
-      {{movie.directors[-1].name}}<br>
-      <b>Writer {% if movie.writers|length > 1 %}s{% endif %}: </b>
+        {% if movie.genres|length > 1 %}
+          {% for genre in movie.genres[:-1] %} 
+            {{ genre }}, 
+          {% endfor %} 
+        {% endif %} 
+        {{movie.genres[-1]}}
+      {% endif %}<br>
+      <b>Director{% if movie.directors|length > 1 %}s{% endif %}: </b>
+      {% if movie.directors|length != 0 %}
+        {% if movie.directors|length > 1 %}
+          {% for director in movie.directors[:-1] %} 
+            <a href="{{ director.wikipedia_url }}">{{ director.name }}</a>,
+          {% endfor %} 
+        {% endif %} 
+        <a href="{{ movie.directors[-1].wikipedia_url }}">{{ movie.directors[-1].name }}</a>
+      {% endif %}<br>
+      <b>Writer{% if movie.writers|length > 1 %}s{% endif %}: </b>
       {% if movie.writers|length != 0 %}
-      {% if movie.writers|length > 1 %}
-        {% for writer in movie.writers[:-2] %} 
-          {{ writer.name }}, 
-        {% endfor %} 
-        {{ movie.writers[-2].name }} and 
-      {% endif %} 
-      {{movie.writers[-1].name}}<br>
-      {% endif %}
-      <b>Actor {% if movie.writers|length > 1 %}s{% endif %}: </b>
-      {% if movie.actors|length > 1 %}
-        {% for actor in movie.actors[:-2] %} 
-          {{ actor.name }}, 
-        {% endfor %} 
-        {{ movie.actors[-2].name }} and 
-      {% endif %} 
-      {{movie.actors[-1].name}}<br>
+        {% if movie.writers|length > 1 %}
+          {% for writer in movie.writers[:-1] %} 
+            <a href="{{ writer.wikipedia_url }}">{{ writer.name }}</a>, 
+          {% endfor %} 
+        {% endif %} 
+        <a href="{{ movie.writers[-1].wikipedia_url }}">{{ movie.writers[-1].name }}</a>
+      {% endif %}<br>
+      <b>Actor{% if movie.actors|length > 1 %}s{% endif %}: </b>
+      {% if movie.actors|length != 0 %}
+        {% if movie.actors|length > 1 %}
+          {% for actor in movie.actors[:-1] %} 
+            <a href="{{ actor.wikipedia_url }}">{{ actor.name }}</a>, 
+          {% endfor %} 
+        {% endif %} 
+        <a href="{{ movie.actors[-1].wikipedia_url }}">{{ movie.actors[-1].name }}</a>
+      {% endif %}<br>
       <b>Overview: </b>{{ movie.overview }}
     </div>
 
@@ -107,15 +109,24 @@
   </div>
 
   <div class="row">
-      <embed width="640" height="360" src="https://www.youtube.com/embed/yGQm50DTOVk" frameborder="0" allowfullscreen>
+    <div class="col-xs-12 col-md-8" id="title">
+      {% if movie.trailer_url|length != 0 %} 
+        <embed width="640" height="360" src="{{ movie.trailer_url[0] }}" frameborder="0" allowfullscreen>
+      {% endif %}
+    </div>
   </div>
 
 
 
 
 
-    <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script>
+    "use strict";
+
+
+  </script>
 
   </div>
 

@@ -4,7 +4,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import request_helper
 
-class Movie:
+class Movie(object):
     """ Movie class """
     def __init__(self, movie_id):
         self.id = movie_id
@@ -75,11 +75,8 @@ class Movie:
         """ Get trailer of movie from themoviedb API """
         json_videos = request_helper.get_videos_by_id(config, self.id)
 
-        self.trailer_url = ['{0}{1}'.format(config['url']['youtube'], video['key']) 
+        self.trailer_url = ['{0}/{1}'.format(config['url']['youtube'], video['key']) 
                          for video in json_videos['results'] if video['site'] == 'YouTube']
-        print ('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-        print self.trailer_url
-        print ('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
 
     def load_crew(self, config):
         """ Get information about actors, director, writer from themoviedb API"""
@@ -115,18 +112,23 @@ class Movie:
     def exists(self):
         return True
 
-class Person:
+class Person(object):
     """Person class"""
     def __init__(self, person_id, name, profile_url):
         self.id = person_id
         self.name = name
         self.profile_url = profile_url
+        print('++++++++++++++++++++++++++++++++++++++++++++++++')
+        url = "https://en.wikipedia.org/wiki"
+        self.wikipedia_url = '{0}/{1}'.format(url, name.replace(' ','_'))
+        print self.wikipedia_url
+
 
     def __repr__(self):
         """Provide helpful represetration when printed"""
         return "<Person id={0} name={1} profile={2}>".format(self.id, self.name, self.profile_url)
 
-class Review:
+class Review(object):
     """Review class"""
     def __init__(self, name, text=""):
         self.name = name

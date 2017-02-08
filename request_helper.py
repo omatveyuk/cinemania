@@ -2,7 +2,6 @@
 
 import requests
 import random
-#import model
 
 
 def get_movie_by_id(config, movie_id):
