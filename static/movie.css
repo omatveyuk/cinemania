@@ -1,3 +1,10 @@
+row {
+    padding: 0px 10px 0px 10px;
+}
+#all-about-movie {
+    margin: 0px 50px 0px 50px;
+}
+
 #title {
   font-family: 'Raleway', sans-serif;
   text-align: left;
@@ -12,5 +19,6 @@
 #info-movie {
   height: 500px;
 }
+
 
 

@@ -24,6 +24,7 @@ class Movie(object):
         self.poster_url = None
         self.reviews = []
         self.total_pages_reviews = 0
+        self.total_reviews = 0
         self.vote_average = None
         self.vote_count = None
 
@@ -87,7 +88,7 @@ class Movie(object):
             profile_url = None
             if actor['profile_path'] is not None:
                 profile_url = '{0}{1}'.format(config['url']['profile'], actor['profile_path'])
-            self.actors.append(Person(actor['id'], actor['name'], profile_url))
+            self.actors.append(Person(actor['id'], actor['name'], profile_url, config))
 
         # Directors and writers
         for person in json_crew['crew']:
@@ -95,7 +96,7 @@ class Movie(object):
                 profile_url = None
                 if person['profile_path'] is not None:
                     profile_url = '{0}{1}'.format(config['url']['profile'], person['profile_path'])
-                crew_member = Person(person['id'], person['name'], profile_url)
+                crew_member = Person(person['id'], person['name'], profile_url, config)
                 if person['job'] == 'Director':
                     self.directors.append(crew_member)
                 if person['job'] == 'Screenplay':
@@ -107,20 +108,19 @@ class Movie(object):
 
         for result in json_reviews['results']: 
             self.reviews.append(Review(result['author'], result['content']))
-        self.tototal_pages_reviews = json_reviews['total_pages']
+        self.total_pages_reviews = json_reviews['total_pages']
+        self.total_reviews = json_reviews['total_results']
     
     def exists(self):
         return True
 
 class Person(object):
     """Person class"""
-    def __init__(self, person_id, name, profile_url):
+    def __init__(self, person_id, name, profile_url, config):
         self.id = person_id
         self.name = name
         self.profile_url = profile_url
-        print('++++++++++++++++++++++++++++++++++++++++++++++++')
-        url = "https://en.wikipedia.org/wiki"
-        self.wikipedia_url = '{0}/{1}'.format(url, name.replace(' ','_'))
+        self.wikipedia_url = '{0}/{1}'.format(config['url']['wikipedia'], name.replace(' ','_'))
         print self.wikipedia_url
 
 

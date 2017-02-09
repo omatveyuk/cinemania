@@ -37,8 +37,6 @@ def configure():
 
 @app.route('/')
 def index():
-    """Show our homepage page."""
-    #return "Cinemania"
     return render_template("homepage.html")
 
 @app.route('/random_movie')
