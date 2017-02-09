@@ -1,8 +1,8 @@
-row {
-    padding: 0px 10px 0px 10px;
+.row {
+    padding: 0px 0px 10px 0px;
 }
 #all-about-movie {
-    margin: 0px 50px 0px 50px;
+    margin: 0px 25px 0px 25px;
 }
 
 #title {
@@ -16,9 +16,7 @@ row {
 
 }
 
-#info-movie {
-  height: 500px;
-}
+
 
 
 

@@ -40,17 +40,14 @@ def get_videos_by_id(config, movie_id):
     url = "{0}/{1}/videos?api_key={2}".format(config['url']['movie'],
                                         movie_id,
                                         config['api_key']['themoviedb'])
-    print ('******************************************************')
-    print url
     r_videos = requests.get(url)
     videos = r_videos.json()
-    print videos
-    print ('******************************************************')
     return videos
 
 def get_random_movie_id(config):
     """ Return random movie id from themoviedb (popular only)
         url for request is read from global config
+        Response does not contain full information about movie
     """
 
     # request for total number of movies in themoviedb (popular only)
@@ -71,6 +68,6 @@ def get_random_movie_id(config):
         r_movies = requests.get(url)
         movies = r_movies.json()
 
-    #movie_id = movies['results'][id_on_page]["id"]
-    movie_id = 238 #gold father #155 #nolan   33 550
+    movie_id = movies['results'][id_on_page]["id"]
+    #movie_id = 238 #gold father #155 #nolan   33 550
     return movie_id

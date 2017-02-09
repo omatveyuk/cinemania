@@ -5,20 +5,20 @@
 <!-- It's container-fluid so it spans the whole page. -->
 <div class="container-fluid" id="all-about-movie"> 
 
-  <div class="row">
+  <div class="row">   <!-- title-rating -->
     <div class="col-xs-10" id="title">
       {{ movie.title }} <spin >{{ movie.id}}</spin>
     </div>
     <div class="col-xs-2" id="imdb">
       <b>IMDB</b> ({{ movie.imdb_id }}): <b>{{ movie.imdb_rating }}</b>
     </div>
-  </div>
+  </div>              <!-- title-rating -->
 
-  <div class="row">
-    <div class="col-xs-2 col-md-2">
+  <div class="row">   <!-- country-production-release -->
+    <div class="col-xs-2">
       <b>Country: </b> 
     </div>
-    <span class="col-xs-12 col-md-8" id="country">
+    <div class="col-xs-10" id="country">
       {% if movie.production_countries|length != 0 %}
         {% if movie.production_countries|length > 1 %}
           {% for country in movie.production_countries[:-1] %} 
@@ -27,11 +27,11 @@
         {% endif %} 
         {{movie.production_countries[-1]}}
       {% endif %}
-    </span><br>
-    <div class="col-xs-2 col-md-2">
+    </div><br>
+    <div class="col-xs-2">
       <b>Production Co: </b> 
     </div>
-    <span class="col-xs-12 col-md-8" id="company">
+    <div class="col-xs-10" id="company">
       {% if movie.production_companies|length != 0 %}
         {% if movie.production_companies|length > 1 %}
           {% for company in movie.production_companies[:-1] %} 
@@ -40,85 +40,91 @@
         {% endif %} 
         {{movie.production_companies[-1]}}
       {% endif %}
-    </span><br>
-    <div class="col-xs-2 col-md-2">
+    </div><br>
+    <div class="col-xs-2">
       <b>Release Date: </b> 
     </div>
-    <span class="col-xs-12 col-md-8" id="release-date">
+    <div class="col-xs-10" id="release-date">
       {{ movie.release_date }} 
-    </span>
-  </div>
-
-  <div class="row" id="info-movie">
-
-    <div class="col-xs-6 col-md-4">
-      <img src="{{ movie.poster_url }}" class="img-responsive" alt="Responsive image" width="100%" height="100%">
     </div>
+  </div>        <!-- country-production-release -->
 
-    <div class="col-xs-6 col-md-4">
-      <b>Genre: </b>
-      {% if movie.genres|length != 0 %}
-        {% if movie.genres|length > 1 %}
-          {% for genre in movie.genres[:-1] %} 
-            {{ genre }}, 
-          {% endfor %} 
-        {% endif %} 
-        {{movie.genres[-1]}}
-      {% endif %}<br>
-      <b>Director{% if movie.directors|length > 1 %}s{% endif %}: </b>
-      {% if movie.directors|length != 0 %}
-        {% if movie.directors|length > 1 %}
-          {% for director in movie.directors[:-1] %} 
-            <a href="{{ director.wikipedia_url }}">{{ director.name }}</a>,
-          {% endfor %} 
-        {% endif %} 
-        <a href="{{ movie.directors[-1].wikipedia_url }}">{{ movie.directors[-1].name }}</a>
-      {% endif %}<br>
-      <b>Writer{% if movie.writers|length > 1 %}s{% endif %}: </b>
-      {% if movie.writers|length != 0 %}
-        {% if movie.writers|length > 1 %}
-          {% for writer in movie.writers[:-1] %} 
-            <a href="{{ writer.wikipedia_url }}">{{ writer.name }}</a>, 
-          {% endfor %} 
-        {% endif %} 
-        <a href="{{ movie.writers[-1].wikipedia_url }}">{{ movie.writers[-1].name }}</a>
-      {% endif %}<br>
-      <b>Actor{% if movie.actors|length > 1 %}s{% endif %}: </b>
-      {% if movie.actors|length != 0 %}
-        {% if movie.actors|length > 1 %}
-          {% for actor in movie.actors[:-1] %} 
-            <a href="{{ actor.wikipedia_url }}">{{ actor.name }}</a>, 
-          {% endfor %} 
-        {% endif %} 
-        <a href="{{ movie.actors[-1].wikipedia_url }}">{{ movie.actors[-1].name }}</a>
-      {% endif %}<br>
-      <b>Overview: </b>{{ movie.overview }}
-    </div>
+  <div class="row" id="info-movie">  
 
-    <div class="col-xs-6 col-md-4">
+    <div class="col-xs-8" id="info">
+
+      <div class="row">     <!-- poster-details -->
+        <div class="col-xs-4" id="poster">  
+          <img src="{{ movie.poster_url }}" class="img-thumbnail" alt="Movie poster" width="100%" height="100%">
+        </div>
+        <div class="col-xs-8 text-justify" id="details">
+          <b>Genre: </b>
+          {% if movie.genres|length != 0 %}
+            {% if movie.genres|length > 1 %}
+              {% for genre in movie.genres[:-1] %} 
+                {{ genre }}, 
+              {% endfor %} 
+            {% endif %} 
+            {{movie.genres[-1]}}
+          {% endif %}<br>
+          <b>Director{% if movie.directors|length > 1 %}s{% endif %}: </b>
+          {% if movie.directors|length != 0 %}
+            {% if movie.directors|length > 1 %}
+              {% for director in movie.directors[:-1] %} 
+                <a href="{{ director.wikipedia_url }}">{{ director.name }}</a>,
+              {% endfor %} 
+            {% endif %} 
+            <a href="{{ movie.directors[-1].wikipedia_url }}">{{ movie.directors[-1].name }}</a>
+          {% endif %}<br>
+          <b>Writer{% if movie.writers|length > 1 %}s{% endif %}: </b>
+          {% if movie.writers|length != 0 %}
+            {% if movie.writers|length > 1 %}
+              {% for writer in movie.writers[:-1] %} 
+                <a href="{{ writer.wikipedia_url }}">{{ writer.name }}</a>, 
+              {% endfor %} 
+            {% endif %} 
+            <a href="{{ movie.writers[-1].wikipedia_url }}">{{ movie.writers[-1].name }}</a>
+          {% endif %}<br>
+          <b>Actor{% if movie.actors|length > 1 %}s{% endif %}: </b>
+          {% if movie.actors|length != 0 %}
+            {% if movie.actors|length > 1 %}
+              {% for actor in movie.actors[:-1] %} 
+                <a href="{{ actor.wikipedia_url }}">{{ actor.name }}</a>, 
+              {% endfor %} 
+            {% endif %} 
+            <a href="{{ movie.actors[-1].wikipedia_url }}">{{ movie.actors[-1].name }}</a>
+          {% endif %}<br>
+          <b>Overview: </b>{{ movie.overview }}
+        </div>
+      </div>        <!-- poster-details -->
+
+      <div class="row">     <!-- trailer -->
+        <div class="col-xs-12" id="trailer">
+          {% if movie.trailer_url|length != 0 %} 
+            <!--<embed width="640" height="360" src="{{ movie.trailer_url[0] }}" frameborder="0" allowfullscreen>-->
+            <div class="embed-responsive embed-responsive-16by9">
+              <iframe class="embed-responsive-item" src="{{ movie.trailer_url[0] }}"></iframe>
+            </div>
+          {% endif %}
+        </div>
+      </div>    <!-- trailer -->
+
+    </div>      <!-- info -->
+
+    <div class="col-xs-4 text-justify" id="review">
       <b>Rating: </b>{{ movie.vote_average }} ({{ movie.vote_count }})<br>
-      <b>Reviews({{ movie.total_reviews }}):</b><br>
+      <b>Reviews</b> ({{ movie.total_reviews }})<b>:</b><br>
       {% for review in movie.reviews %}
         <div class="review"> 
           <u>{{ review.name }}:</u> {{ review.text}}
         </div>
         <hr>
       {% endfor %}
-    </div>
+    </div>    <!-- review -->
 
-  </div>
+  </div>  <!-- info-movie -->
 
-  <div class="row">
-    <div class="col-xs-12 col-md-8 col-xs-offset-2" id="trailer">
-      {% if movie.trailer_url|length != 0 %} 
-        <embed width="640" height="360" src="{{ movie.trailer_url[0] }}" frameborder="0" allowfullscreen>
-      {% endif %}
-    </div>
-  </div>
-
-
-
-
+</div>  <!-- all-about-movie -->
 
   <script src="http://code.jquery.com/jquery.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
@@ -158,8 +164,6 @@
 
 
   </script>
-
-  </div>
 
 {% endblock %}
 
