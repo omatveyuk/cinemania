@@ -1,0 +1,45 @@
+h1 {
+ color:#008080;
+ font-weight: bold;
+ text-align: center;
+}
+
+.navbar-movie {
+    background-color:#008080;
+    color:#ffffff;
+    border-radius:0;
+}
+
+.navbar-movie .navbar-nav > li > a {
+    color:#fff;
+}
+
+.navbar-movie .navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
+    color: #ffffff;
+    background-color:transparent;
+}
+
+.navbar-movie .navbar-brand {
+    color:#eeeeee;
+}
+
+.row {
+    padding: 0px 0px 10px 0px;
+}
+
+#all-about-movie {
+    margin: 0px 25px 0px 25px;
+}
+
+#title {
+  font-family: 'Raleway', sans-serif;
+  text-align: left;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+
+
+
+
+

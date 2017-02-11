@@ -1,6 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1> CINEMANIA </h1>
+
+<!-- It's container-fluid so it spans the whole page. -->
+<div class="container-fluid" id="movie-homepage"> 
+  <div class="row">
+    <div class="col-xs-12">
+      <h1> Welcome </h1>
+    </div>
+  </div>
+  <div class="row">   <!-- choice -->
+    <div class="col-xs-offset-3 col-xs-6" id="choice-window">
+      <a href="/random_movie"><img src="/static/movie.jpg" class="img-responsive" alt="CINEMANIA" width="100%" height="100%"></a>
+    </div>
+  </div>
+</div>    <!-- movie-homepage -->
 
 
 {% endblock %}

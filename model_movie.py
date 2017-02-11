@@ -4,11 +4,15 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import request_helper
 
+##############################################################################
+# Model definitions
+
 class Movie(object):
     """ Movie class """
     def __init__(self, movie_id):
         self.id = movie_id
         self.title = ""
+        self.original_language = []
         self.production_countries = []
         self.production_companies = []
         self.release_date = None
@@ -61,6 +65,7 @@ class Movie(object):
         json_movie = request_helper.get_movie_by_id(config, self.id)
 
         self.title = json_movie['title']
+        self.original_language = json_movie['original_language']
         self.production_countries = [ country['name'] for country in json_movie['production_countries']]
         self.production_companies = [ company['name'] for company in json_movie['production_companies']]
         self.release_date = json_movie['release_date']
@@ -110,9 +115,24 @@ class Movie(object):
             self.reviews.append(Review(result['author'], result['content']))
         self.total_pages_reviews = json_reviews['total_pages']
         self.total_reviews = json_reviews['total_results']
+
+    def create(self, config):
+        """ Load all information about movie to the movie instance"""
+
+        # Load information about movie from themoviedb API
+        self.load_info(config)
+        # Load trailer of movie from themoviedb API
+        self.load_trailer(config)
+        # Load information about actors, director, writer from themoviedb API
+        self.load_crew(config)
+        # Load review about movie from themoviedb API
+        self.load_reviews(config)
+
+        #self.imdb_rating = None
     
     def exists(self):
         return True
+
 
 class Person(object):
     """Person class"""
@@ -121,12 +141,11 @@ class Person(object):
         self.name = name
         self.profile_url = profile_url
         self.wikipedia_url = '{0}/{1}'.format(config['url']['wikipedia'], name.replace(' ','_'))
-        print self.wikipedia_url
-
 
     def __repr__(self):
         """Provide helpful represetration when printed"""
         return "<Person id={0} name={1} profile={2}>".format(self.id, self.name, self.profile_url)
+
 
 class Review(object):
     """Review class"""

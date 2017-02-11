@@ -7,20 +7,13 @@ from flask_debugtoolbar import DebugToolbarExtension
 import requests
 
 import request_helper
-from model import Movie, Person, Review
-import model
+from model_movie import Movie, Person, Review
+import model_movie
 
 
 app = Flask(__name__)
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "shhhhhhhhhhhhhh"
-
-# Normally, if you refer to an undefined variable in a Jinja template,
-# Jinja silently ignores this. This makes debugging difficult, so we'll
-# set an attribute of the Jinja environment that says to make this an
-# error.
-#app.jinja_env.undefined = jinja2.StrictUndefined
-#loader=jinja2.FileSystemLoader('templates')
 
 config = {}
 
@@ -45,25 +38,10 @@ def get_random_movie():
 
     # Get random movie id from themoviedb API
     movie_id = request_helper.get_random_movie_id(config)
+
+    # Create movie object which contain information about movie
     movie = Movie(movie_id)
-
-    # Load information about movie from themoviedb API
-    movie.load_info(config)
-
-    # Load trailer of movie from themoviedb API
-    movie.load_trailer(config)
-
-    # Load information about actors, director, writer from themoviedb API
-    movie.load_crew(config)
-
-    # Load review about movie from themoviedb API
-    movie.load_reviews(config)
-
-    #self.imdb_rating = None
-
-
-    #if not movie.exists():
-    #    return "Error"
+    movie.create(config)
 
     return render_template("movie.html", movie=movie)
 
