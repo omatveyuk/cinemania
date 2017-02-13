@@ -11,9 +11,9 @@
   </div>
 
   <div class="row" id="message" style="font-size: 25px; text-align: center;">    <!-- start -->
-    Click 
-    <a id="start" style="color: #008080; text-weight: bold;"> here</a>
-    for start...
+    Click &nbsp; 
+    <a id="start" style="color: #008080; text-weight: bold;">here</a>
+     &nbsp; &nbsp;for start...
   </div>  <!-- start -->
 
   <div class="container" id="choice">   <!-- choice -->
@@ -21,22 +21,23 @@
   </div>  <!-- choice -->
 
 </div>    <!-- movie-homepage -->
-
-
-  <script src="http://code.jquery.com/jquery.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script>
-  "use strict";
-
-  function playPosters(result) {
-
-    $("#message").html('Click image to choose a movie randomly');
-
-    var html = '<a href="/random_movie">'+
-               '<div class="carousel slide" data-ride="carousel" data-interval="300">'+
-               '<div id="carousel-poster" class="carousel-inner" role="listbox">'+
-               '</div>'+'</div>'+'</a>';
+'
+ 
+   <script src="http://code.jquery.com/jquery.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <script>
+   "use strict";
+ 
+   function playPosters(result) {
+    var html = 'Click  &nbsp;<a id="start" href="/random_movie" style="color: #008080;'+
+               'text-weight: bold;">here</a >  &nbsp;to choose a movie randomly';
+    $("#message").html(html);
+ 
+    html = '<div id="slideshow" class="carousel slide" data-ride="carousel" '+
+           'data-interval="500">'+
+           '<div id="carousel-poster" class="carousel-inner" role="listbox">'+
+           '</div>'+'</div>';
     $('#choice').html(html);
 
     var temp=1;
@@ -52,9 +53,8 @@
               '" class="img-responsive center-block" alt="CINEMANIA" style="width: 65%; height: 65%">'+
               '</div>';
       $('#carousel-poster').append(html);
-      if (temp > 3) { break; }
     } 
-
+    $("#slideshow").carousel();
   }
 
 
