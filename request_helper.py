@@ -71,3 +71,38 @@ def get_random_movie_id(config):
     movie_id = movies['results'][id_on_page]["id"]
     #movie_id = 238 #gold father #155 #nolan   33 550
     return movie_id
+
+
+def get_twenty_posters(config, page,posters):
+    """Return 20 movie posters from responde page of popular movie
+       and total number of pages
+    """
+    url = config['url']['popular']
+    if page > 1:
+        url = "{0}&page={1}".format(url, page)
+
+    r_movies = requests.get(url)
+    movies = r_movies.json()
+    for item in movies['results']:
+        if item['poster_path']:
+            posters['{0}{1}'.format(config['url']['poster'],
+                                    item['poster_path'])] = ''
+
+    return [posters, movies['total_pages']]
+
+def get_posters_for_animation(config):
+    """ Return 40 random movie posters from themoviedb (popular only)
+        for animation on homepage
+        url for request is read from global config
+    """
+    posters = {}
+    # request for first 20 posters and number of total pages of movies
+    # in themoviedb (popular only).
+    # 20 movies on page is requirement of API
+    posters, total_pages = get_twenty_posters(config, 1, posters)
+
+    # more 20 posters
+    random_page = random.randint(2, total_pages)
+    posters = get_twenty_posters(config, random_page, posters)[0]
+
+    return posters

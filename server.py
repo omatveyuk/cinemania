@@ -32,6 +32,13 @@ def configure():
 def index():
     return render_template("homepage.html")
 
+
+@app.route('/posters.json')
+def get_posters():
+    """Get 40 posters for animation"""
+    return jsonify(request_helper.get_posters_for_animation(config))
+
+
 @app.route('/random_movie')
 def get_random_movie():
     """Return random movie from themoviedb API."""

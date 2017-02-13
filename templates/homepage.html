@@ -3,17 +3,67 @@
 
 <!-- It's container-fluid so it spans the whole page. -->
 <div class="container-fluid" id="movie-homepage"> 
+
   <div class="row">
     <div class="col-xs-12">
       <h1> Welcome </h1>
     </div>
   </div>
-  <div class="row">   <!-- choice -->
-    <div class="col-xs-offset-3 col-xs-6" id="choice-window">
-      <a href="/random_movie"><img src="/static/movie.jpg" class="img-responsive" alt="CINEMANIA" width="100%" height="100%"></a>
-    </div>
-  </div>
+
+  <div class="row" id="message" style="font-size: 25px; text-align: center;">    <!-- start -->
+    Click 
+    <a id="start" style="color: #008080; text-weight: bold;"> here</a>
+    for start...
+  </div>  <!-- start -->
+
+  <div class="container" id="choice">   <!-- choice -->
+      <img id="poster" src="/static/movie.jpg" class="img-responsive center-block" alt="CINEMANIA">
+  </div>  <!-- choice -->
+
 </div>    <!-- movie-homepage -->
 
 
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script>
+  "use strict";
+
+  function playPosters(result) {
+
+    $("#message").html('Click image to choose a movie randomly');
+
+    var html = '<a href="/random_movie">'+
+               '<div class="carousel slide" data-ride="carousel" data-interval="300">'+
+               '<div id="carousel-poster" class="carousel-inner" role="listbox">'+
+               '</div>'+'</div>'+'</a>';
+    $('#choice').html(html);
+
+    var temp=1;
+    for(var key in result) {
+      if (temp == 1) {
+        html='<div class="item active">'
+      } else {
+        html='<div class="item">';
+      }
+      temp++;
+      html += '<img src="'+
+              key+
+              '" class="img-responsive center-block" alt="CINEMANIA" style="width: 65%; height: 65%">'+
+              '</div>';
+      $('#carousel-poster').append(html);
+      if (temp > 3) { break; }
+    } 
+
+  }
+
+
+  function showPosters(evt) {
+    $.get('/posters.json', playPosters);
+  }
+
+  $('a#start').on('click', showPosters);
+
+
+  </script>
 {% endblock %}

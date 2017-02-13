@@ -31,12 +31,33 @@ h1 {
     margin: 0px 25px 0px 25px;
 }
 
-#title {
+#title-movie {
   font-family: 'Raleway', sans-serif;
   text-align: left;
   font-size: 25px;
   font-weight: bold;
 }
+
+/*#start {
+  font-size: 25px;
+  text-align: center;
+}*/
+
+#choice {
+    position:relative;
+    width: 600px;
+    height: 750px;
+    overflow: hidden;
+}
+#poster {
+    z-index: -1; 
+}
+
+.piece-image {
+    position: absolute;
+    background-color: yellow;    
+}
+
 
 
 
