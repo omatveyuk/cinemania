@@ -116,7 +116,7 @@ class Movie(object):
         self.total_pages_reviews = json_reviews['total_pages']
         self.total_reviews = json_reviews['total_results']
 
-    def create(self, config):
+    def load(self, config):
         """ Load all information about movie to the movie instance"""
 
         # Load information about movie from themoviedb API

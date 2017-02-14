@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- movie object -->
+
+<!-- It's container-fluid so it spans the whole page. -->
+<div class="container-fluid" id="user-details"> 
+
+  <div class="row">
+    <div class="col-xs-12">
+      <h3><b>{% if user.name %}Hi {{ user.name }},{% endif %}</b></h3>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <b>Your favorite genre{% if genres|length > 1 %}s{% endif %}: </b>
+      {% if genres|length != 0 %}
+        {% if genres|length > 1 %}
+          {% for genre in genres[:-1] %} 
+            {{ genre.name }},&nbsp;
+          {% endfor %} 
+        {% endif %}
+        {{ genres[-1].name }}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-1">
+      <b>Seen:</b>
+    </div>
+    <div class="col-xs-offset-3 col-xs-1">
+      <b>Your Rating</b>
+    </div>
+  </div>
+
+  {% for movie in movies %}
+    <div class="row">
+      <div class="col-xs-1">  
+        <img src="{{ posters_url }}{{ movie.poster_url }}" class="img-thumbnail" alt="Movie poster" width="60%" height="60%">
+      </div>
+      <div class="col-xs-3">
+        <a href="{{ url_for('get_movie', movie_id= movie.themoviedb_id) }}">{{ movie.title }}</a>
+      </div>
+      {% if movie.rating %}
+        <div class="col-xs-1" align="center">
+          <div class= "prime-circle">
+            {{ movie.rating }}
+          </div>
+        </div>
+      {% endif %}   
+    </div>
+  {% endfor %}
+          
+
+        
+      
+
+  
+</div>  
+
+<script src="http://code.jquery.com/jquery.js"></script>
+<script>
+
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

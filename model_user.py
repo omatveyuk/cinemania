@@ -78,7 +78,7 @@ class UserGenre(db.Model):
 
     def __repr__(self):
         """Provide helpful represetration when printed"""
-        return "<User's genres id=%s user_id=%s genre_id=%s>" % (self.id,
+        return "<User's genres id=%s user_id=%s genre_id=%s>" % (self.usergenre_id,
                                                                  self.user_id,
                                                                  self.genre_id)
 
@@ -102,7 +102,7 @@ class UserMovie(db.Model):
 
     def __repr__(self):
         """Provide helpful represetration when printed"""
-        return "<User's movies id=%s user_id=%s movie_id=%s>" % (self.id,
+        return "<User's movies id=%s user_id=%s movie_id=%s>" % (self.usermovie_id,
                                                                  self.user_id,
                                                                  self.movie_id)
 ##############################################################################

@@ -3,7 +3,7 @@
 <!-- movie object -->
 
 <!-- It's container-fluid so it spans the whole page. -->
-<div class="container-fluid" id="all-about-movie"> 
+<div class="container-fluid" id="movie-details"> 
 
   <div class="row">   <!-- title-rating -->
     <div class="col-xs-10" id="title-movie">
@@ -101,7 +101,6 @@
       <div class="row">     <!-- trailer -->
         <div class="col-xs-12" id="trailer">
           {% if movie.trailer_url|length != 0 %} 
-            <!--<embed width="640" height="360" src="{{ movie.trailer_url[0] }}" frameborder="0" allowfullscreen>-->
             <div class="embed-responsive embed-responsive-16by9">
               <iframe class="embed-responsive-item" src="{{ movie.trailer_url[0] }}"></iframe>
             </div>

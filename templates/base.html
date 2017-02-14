@@ -5,14 +5,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-  <link href="static/styles.css" rel="stylesheet">
+  <link href="{{url_for('static', filename='styles.css')}}" rel="stylesheet">
 </head>
 <body>
   <!-- Static navbar -->
   <nav class="navbar navbar-default navbar-movie">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a class="navbar-brand" href="#">Cinemania</a>
+        <a class="navbar-brand" href="/">Cinemania</a>
       </div>
       <div id="navbar">
         <ul class="nav navbar-nav">
@@ -21,7 +21,8 @@
         <ul class="nav navbar-nav navbar-right">
           {% if "logged_in_user_id" in session %}
             <li><a href="/logout">Logout</a></li>
-            <li><a href="#">Profile</a></li>
+            <li><a href="{{ url_for('show_user', user_id= session['logged_in_user_id'])}}">
+            Profile</a></li>
           {% else %}
             <li><a href="/login">Log In</a></li>
           {% endif %}
