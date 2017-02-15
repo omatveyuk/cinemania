@@ -34,7 +34,7 @@ h1 {
 
 #user-details {
     margin: 0px 25px 0px 25px;
-    font-size: 15px;
+    font-size: 17px;
 }
 
 #title-movie {
@@ -59,22 +59,18 @@ h1 {
     background-color: yellow;    
 }
 
-
 .prime-circle {
-  color: #ffffff;
-  background-color: #008080;
-  text-shadow: 2px 2px 3px black;
-  border-radius: 50%;
-  box-shadow: 3px 3px 10px #666;
-  width: 4em;
-  padding: 1em 0;
-  text-align: center;
-  font-size: 100%;
-  font-family: sans-serif;
-  /*display: inline-block;*/
-  margin-right: 1em;
+    color: #ffffff;
+    background-color: #008080;
+    text-shadow: 2px 2px 3px black;
+    border-radius: 50%;
+    box-shadow: 3px 3px 10px #666;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 100%;
+    font-family: sans-serif;
 }
-
-
 
 

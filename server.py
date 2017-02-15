@@ -89,6 +89,42 @@ def show_user(user_id):
                            posters_url=config['url']['poster'])
 
 
+# @app.route("/ratings/<int:movie_id>", methods=['GET'])
+# def movie_rating(movie_id):
+#     """ Edit a rating if a user is logged in """
+
+#     user_id = session["logged_in_user_id"]
+
+#     usermovie_rating = UserMovie.query.filter_by(
+#             movie_id=movie_id, user_id=user_id).first()
+
+#     return usermovie_rating
+
+
+# @app.route("/ratings/<int:movie_id>", methods=['POST'])
+# def movie_rating_process(movie_id):
+#     """Edit a rating."""
+
+#     # Get form variables
+#     rating = int(request.form["rating"])
+
+#     user_id = session["logged_in_user_id"]
+#     if not user_id:
+#         raise Exception("No user logged in.")
+
+#     usermovie_rating = UserMovie.query.filter_by(user_id=user_id, movie_id=movie_id).first()
+
+#     if usermovie_rating:
+#         usermovie_rating.rating = rating
+#         flash("Rating updated.")
+
+#     db.session.commit()
+
+#     return redirect("/movies/%s" % movie_id)
+
+
+
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
