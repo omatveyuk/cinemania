@@ -44,14 +44,14 @@
       </div>
       <div class="col-xs-1" align="center">
         {% if movie.rating %}
-          <div class= "prime-circle">
+          <div class= "prime-circle" id="rating_{{ movie.movie_id }}">
             {{ movie.rating }}
           </div>
         {% endif %}
       </div>
       <div class="col-xs-5">
         <a class="change-rating" data-id="{{ movie.movie_id }}" style="font-size: 12px">Change rating...</a>
-        <form class="change-rating" id="movie_{{ movie.movie_id }}" data-id="{{ movie.movie_id }}" hidden>
+        <form class="change-rating" method="post" id="movie_{{ movie.movie_id }}" data-id="{{ movie.movie_id }}" hidden>
             <input type="radio" name="rating" value="1" {% if movie.rating == 1 %}checked="checked"{% endif %}> 1&nbsp;&nbsp;
             <input type="radio" name="rating" value="2" {% if movie.rating == 2 %}checked="checked"{% endif %}> 2&nbsp;&nbsp;
             <input type="radio" name="rating" value="3" {% if movie.rating == 3 %}checked="checked"{% endif %}> 3&nbsp;&nbsp;
@@ -76,41 +76,24 @@
 
 
   function showNewMovieRating(result){
-    alert('ShowNewMovieRating');
-  }
-
-  function getRadioVal(form, name) {
-      var val;
-      // get list of radio buttons with specified name
-      var radios = form.elements[name];
-      
-      // loop through list of radio buttons
-      for (var i=0, len=radios.length; i<len; i++) {
-          if ( radios[i].checked ) { // radio checked?
-              val = radios[i].value; // if so, hold its value in val
-              break; // and break out of for loop
-          }
-      }
-      return val; // return value of checked radio or undefined if none checked
+    $('#movie_'+result['movie_id']).hide();
+    $('#rating_'+result['movie_id']).html(result['rating']);
   }
 
   function changeMovieRating(evt) {
-    debugger;
+    //debugger;
+    event.preventDefault();
     var movie_id = $(this).attr('data-id');
-    var rating = $('#movie_'+movie_id).elemets['#movie_'+movie_id].value;
-    //var form = document.getElementById("test");
-    //alert(form.elements["test"].value);
-    //var rating = $('#movie_'+movie_id).get('checked');
-    //var rating = $('idinput[name="rating"]:checked').val()
+    var rating = $('#movie_'+movie_id+' input[name="rating"]:checked').val();
 
-    $.get('/change_rating.json', {'rating': $('input[name="rating"]:checked').val(),
-                                  'movie_id': $(this).attr('data-id')}, showNewMovieRating);
+    $.post('/change_rating.json', {"movie_id": movie_id, "rating": rating}, showNewMovieRating);
   }
+
 
   $('a.change-rating').click(function(){
       var movie_id = $(this).attr('data-id');
       $('#movie_'+movie_id).show();
-    });
+  });
 
   $('form.change-rating').on('submit', changeMovieRating); 
 
