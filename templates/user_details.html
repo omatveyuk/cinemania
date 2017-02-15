@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row">   <!-- genres --> 
     <div class="col-xs-12">
       <b>Your favorite genre{% if genres|length > 1 %}s{% endif %}: </b>
       {% if genres|length != 0 %}
@@ -23,7 +23,7 @@
         {{ genres[-1].name }}
       {% endif %}
     </div>
-  </div>
+  </div>    <!-- genres  -->
 
   <div class="row">
     <div class="col-xs-1">
@@ -35,21 +35,21 @@
   </div>
 
   {% for movie in movies %}
-    <div class="row">
+    <div class="row">   <!-- movie description -->
       <div class="col-xs-1">  
         <img src="{{ posters_url }}{{ movie.poster_url }}" class="img-thumbnail" alt="Movie poster" width="60%" height="60%">
       </div>
       <div class="col-xs-3">
         <a href="{{ url_for('get_movie', movie_id= movie.themoviedb_id) }}">{{ movie.title }}</a>
       </div>
-      <div class="col-xs-1" align="center">
-        {% if movie.rating %}
-          <div class= "prime-circle" id="rating_{{ movie.movie_id }}">
+      <div class="col-xs-1" align="center" id="center-rating_{{ movie.movie_id }}">
+        <!--{% if movie.rating %}-->
+          <div class= "prime-circle" id="rating_{{ movie.movie_id }}">      <!-- movie rating -->
             {{ movie.rating }}
           </div>
-        {% endif %}
+        <!--{% endif %}-->
       </div>
-      <div class="col-xs-5">
+      <div class="col-xs-5">    <!-- change rating -->
         <a class="change-rating" data-id="{{ movie.movie_id }}" style="font-size: 12px">Change rating...</a>
         <form class="change-rating" method="post" id="movie_{{ movie.movie_id }}" data-id="{{ movie.movie_id }}" hidden>
             <input type="radio" name="rating" value="1" {% if movie.rating == 1 %}checked="checked"{% endif %}> 1&nbsp;&nbsp;
@@ -76,13 +76,23 @@
 
 
   function showNewMovieRating(result){
+
     $('#movie_'+result['movie_id']).hide();
+
+    // if element 'rating' doesn't exist in visible DOM (user doesn't have the movie rating)
+    // add element to DOM
+    if ($('#rating_'+result['movie_id']).length == 0) {
+      var html='<div class= "prime-circle" id="rating_'+result['movie_id']+'">'+
+               result['rating']+'</div>';
+     $('#center-rating_'+result['movie_id']).html(html);
+    }
+
     $('#rating_'+result['movie_id']).html(result['rating']);
   }
 
   function changeMovieRating(evt) {
-    //debugger;
     event.preventDefault();
+
     var movie_id = $(this).attr('data-id');
     var rating = $('#movie_'+movie_id+' input[name="rating"]:checked').val();
 

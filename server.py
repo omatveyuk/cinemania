@@ -78,7 +78,7 @@ def show_user(user_id):
                               mu.UserMovie.seen,
                               mu.Movie.title,
                               mu.Movie.poster_url,
-                              mu.Movie.themoviedb_id).join(mu.Movie).filter(mu.UserMovie.user_id == user_id).all()
+                              mu.Movie.themoviedb_id).join(mu.Movie).filter(mu.UserMovie.user_id == user_id).order_by(mu.Movie.title).all()
     genres = db.session.query(mu.UserGenre.genre_id,
                               mu.Genre.name).join(mu.Genre).filter(mu.UserGenre.user_id == user_id).all()
 
@@ -92,17 +92,11 @@ def show_user(user_id):
 def change_movie_rating():
     """Edit ratings"""
 
-    #Get form variables
-    print ('\n\n')
-    print ('Inside change rating')
-    print ('\n***********************************************')
+    #Get values from form
     user_id = session["logged_in_user_id"]
-    #get value from form
     rating = request.form.get("rating")
     movie_id= request.form.get("movie_id")
-    print ('\n\n')
-    print 'movie_id: ', movie_id, 'rating: ', rating
-    print ('\n***********************************************')
+
     #Change rating
     usermovie_rating = mu.UserMovie.query.filter_by(user_id=user_id, movie_id=movie_id).first()
     if usermovie_rating:
