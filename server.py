@@ -32,8 +32,8 @@ def configure():
 
 @app.route('/')
 def index():
-    session["logged_in_user_id"] = 3
-    #print('/n/n', session["logged_in_user_id"])
+    session["logged_in_user_id"] = 2
+    print('\n\n', session["logged_in_user_id"])
     #del session["logged_in_user_id"]
     #print('/n/n*********************************************************')
 
@@ -42,7 +42,7 @@ def index():
 
 @app.route('/posters.json')
 def get_posters():
-    """Get 40 posters for animation"""
+    """Get 40 posters for animation."""
     return jsonify(rh.get_posters_for_animation(config))
 
 
@@ -55,6 +55,13 @@ def get_random_movie():
     # Create movie object which contain information about movie
     movie = Movie(movie_id)
     movie.load(config)
+
+    # if user login add movie to user's movie list
+    if "logged_in_user_id" in session:
+        print "\n\n"
+        print "go to add_movie. user_id= ", session["logged_in_user_id"]
+        print "\n**********************************************************"
+        mu.add_movie(movie, session["logged_in_user_id"])
 
     return render_template("movie_details.html", movie=movie)
 
@@ -71,7 +78,7 @@ def get_movie(movie_id):
 
 @app.route("/users/<int:user_id>")
 def show_user(user_id):
-    """Return page showing the user's list of movies."""
+    """Return page showing the user's movie list."""
     user = mu.User.query.get(user_id)
     movies = db.session.query(mu.UserMovie.movie_id,
                               mu.UserMovie.rating,
@@ -85,12 +92,11 @@ def show_user(user_id):
     return render_template("user_details.html",
                            user=user,
                            movies=movies,
-                           genres=genres,
-                           posters_url=config['url']['poster'])
+                           genres=genres)
 
 @app.route("/change_rating.json", methods=['POST'])
 def change_movie_rating():
-    """Edit ratings"""
+    """Edit rating."""
 
     #Get values from form
     user_id = session["logged_in_user_id"]

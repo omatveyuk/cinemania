@@ -68,8 +68,8 @@ def get_random_movie_id(config):
         r_movies = requests.get(url)
         movies = r_movies.json()
 
-    #movie_id = movies['results'][id_on_page]["id"]
-    movie_id = 238 #gold father #155 #nolan   33 550
+    movie_id = movies['results'][id_on_page]["id"]
+    #movie_id = 238 #gold father #155 #nolan   33 550
     return movie_id
 
 

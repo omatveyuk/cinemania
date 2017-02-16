@@ -37,7 +37,7 @@
   {% for movie in movies %}
     <div class="row">   <!-- movie description -->
       <div class="col-xs-1">  
-        <img src="{{ posters_url }}{{ movie.poster_url }}" class="img-thumbnail" alt="Movie poster" width="60%" height="60%">
+        <img src="{{ movie.poster_url }}" class="img-thumbnail" alt="Movie poster" width="60%" height="60%">
       </div>
       <div class="col-xs-3">
         <a href="{{ url_for('get_movie', movie_id= movie.themoviedb_id) }}">{{ movie.title }}</a>
