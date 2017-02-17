@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container-fluid" id="user-details"> 
+  <h1>Login</h1>
+
+  <form id ="login-form" method="POST">
+    <div class="row">   
+      <div class="col-xs-offset-4 col-xs-3">  
+        <b>E-mail: </b><input id="e-mail" class="form-control" type="text" name="e-mail"><br>
+        <b>Password: </b><input id="password" class="form-control" type="text" name="password"><br><br>
+        <input type="submit">    
+      </div>
+    </div>
+  </form>
+
+  <div class="row">   
+    <div class="col-xs-offset-4 col-xs-3"> 
+      <a href="/register">Would you like to register?</a> 
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

@@ -9,8 +9,16 @@
     <div class="col-xs-10" id="title-movie">
       {{ movie.title }} <spin >{{ movie.id}}</spin>
     </div>
-    <div class="col-xs-2" id="imdb">
-      <b>IMDB</b> ({{ movie.imdb_id }}): <b>{{ movie.imdb_rating }}</b>
+    <div class="col-xs-2">
+      <!--<div class="row">
+        <b>IMDB</b> ({{ movie.imdb_id }}): {{ movie.imdb_rating }}
+      </div>-->
+      <div class="row")>
+        {% if user_movierating %}
+          <div class="col-xs-6" style="padding: 15px 15px 0px 0px;"><b>Your rating: </b></div>
+          <div class="col-xs-6 prime-circle">{{user_movierating}}</div>
+        {% endif %}
+      </div>
     </div>
   </div>              <!-- title-rating -->
 

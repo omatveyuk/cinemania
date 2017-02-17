@@ -119,41 +119,23 @@ def add_movie(movie, user_id):
     """Add random chosen movie to user's movie list(UserMovie) and list of movies(Movie)."""
 
     # Movie
-    print "\n\n"
-    print "Check in Movie. themoviedb_id= {0}; title= {1}".format(movie.id, movie.title)
-    print "\n**********************************************************"
     if not check_movie(movie):
-        print "\n\n"
-        print "themoviedb_id= {0}; title= {1} DOESN'T EXIST".format(movie.id, movie.title)
-        print "\n**********************************************************"
         random_movie = Movie(themoviedb_id=movie.id,
                              title=movie.title,
                              poster_url=movie.poster_url)
         db.session.add(random_movie)
         db.session.commit()     # add to db and create movie_id ptimary key
-        print "\n\n"
-        print "Add movie"
-        print "\n**********************************************************"
 
     # UserMovie
     # Before add movie yo UserMovie check that commit above is successful
     if check_movie(movie):
-        print "\n\n"
-        print "themoviedb_id= {0}; title= {1} EXISTS in Movie".format(movie.id, movie.title)
-        print "\n**********************************************************"
         movie_id=Movie.query.filter_by(themoviedb_id=movie.id).first().movie_id
-        print "\n\n"
-        print "movie_id in Movie".format(movie_id)
-        print "\n**********************************************************"
         user_movie = UserMovie(user_id=user_id,
                                movie_id=movie_id,
                                rating=None,
                                seen=False)
         db.session.add(user_movie)
         db.session.commit()
-        print "\n\n"
-        print "Add movie to UserMovie"
-        print "\n**********************************************************"
 
 
 def connect_to_db(app):

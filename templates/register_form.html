@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid" id="user-details"> 
+
+<h1>Register form</h1>
+
+  <form id ="register-form" action="/register" method="POST">
+    <div class="row">
+
+      <div class="col-xs-offset-2 col-xs-3"> 
+        <b>User name: </b><input id="username" type="text" class="form-control" name="username"><br>
+        <b>Email address: </b><input id="e-mail" class="form-control" type="email" name="e-mail"><br>
+        <b>Password: </b><input id="password" class="form-control" type="text" name="password"><br>
+        <b>Date of birth: </b><input id="dob" class="form-control" type="date" name="dob"><br><br>
+        <input type="submit">
+      </div>
+
+      <div class="col-xs-2"> </div> 
+
+      <div class="col-xs-3">
+        <b>Which genres do you prefer? </b>
+        <form id="genres">
+          {% for genre in genres %}
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="genre" value={{ genre.name }}> {{ genre.name }} <br>
+            </label>
+          </div>
+          {% endfor %}
+        </form><br><br>
+      </div>
+
+    </div>
+  </form>
+
+</div>
+
+{% endblock %}

@@ -40,7 +40,7 @@
         <img src="{{ movie.poster_url }}" class="img-thumbnail" alt="Movie poster" width="60%" height="60%">
       </div>
       <div class="col-xs-3">
-        <a href="{{ url_for('get_movie', movie_id= movie.themoviedb_id) }}">{{ movie.title }}</a>
+        <a href="{{ url_for('get_movie', movie_id=movie.themoviedb_id) }}">{{ movie.title }}</a>
       </div>
       <div class="col-xs-1" align="center" id="center-rating_{{ movie.movie_id }}">
         <!--{% if movie.rating %}-->
@@ -49,19 +49,39 @@
           </div>
         <!--{% endif %}-->
       </div>
-      <div class="col-xs-5">    <!-- change rating -->
+      <div class="col-xs-6">    <!-- change rating -->
         <a class="change-rating" data-id="{{ movie.movie_id }}" style="font-size: 12px">Change rating...</a>
-        <form class="change-rating" method="post" id="movie_{{ movie.movie_id }}" data-id="{{ movie.movie_id }}" hidden>
+        <form class="change-rating" method="post" id="movie_{{ movie.movie_id }}" data-id="{{ movie.movie_id }}" hidden style="font-size: 15px">
+          <label class="radio-inline">
             <input type="radio" name="rating" value="1" {% if movie.rating == 1 %}checked="checked"{% endif %}> 1&nbsp;&nbsp;
+          </label>
+          <label class="radio-inline">
             <input type="radio" name="rating" value="2" {% if movie.rating == 2 %}checked="checked"{% endif %}> 2&nbsp;&nbsp;
+          </label>
+          <label class="radio-inline">
             <input type="radio" name="rating" value="3" {% if movie.rating == 3 %}checked="checked"{% endif %}> 3&nbsp;&nbsp;
+          </label>
+          <label class="radio-inline">
             <input type="radio" name="rating" value="4" {% if movie.rating == 4 %}checked="checked"{% endif %}> 4&nbsp;&nbsp;
+          </label>
+          <label class="radio-inline">
             <input type="radio" name="rating" value="5" {% if movie.rating == 5 %}checked="checked"{% endif %}> 5&nbsp;&nbsp;
+          </label>
+          <label class="radio-inline">
             <input type="radio" name="rating" value="6" {% if movie.rating == 6 %}checked="checked"{% endif %}> 6&nbsp;&nbsp;
+          </label>
+          <label class="radio-inline">
             <input type="radio" name="rating" value="7" {% if movie.rating == 7 %}checked="checked"{% endif %}> 7&nbsp;&nbsp;
+          </label>
+          <label class="radio-inline">
             <input type="radio" name="rating" value="8" {% if movie.rating == 8 %}checked="checked"{% endif %}> 8&nbsp;&nbsp;
+          </label>
+          <label class="radio-inline">
             <input type="radio" name="rating" value="9" {% if movie.rating == 9 %}checked="checked"{% endif %}> 9&nbsp;&nbsp;
+          </label>
+          <label class="radio-inline">
             <input type="radio" name="rating" value="10" {% if movie.rating == 10 %}checked="checked"{% endif %}> 10&nbsp;&nbsp;&nbsp;&nbsp;
+           </label> 
             <input type="submit">
         </form>
       </div>    
