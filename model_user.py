@@ -1,6 +1,8 @@
 """Models and database functions for users. Movie project."""
 
 from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, session, flash
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 # This is the connection to the PostgreSQL database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
@@ -105,6 +107,7 @@ class UserMovie(db.Model):
         return "<User's movies id=%s user_id=%s movie_id=%s>" % (self.usermovie_id,
                                                                  self.user_id,
                                                                  self.movie_id)
+        
 ##############################################################################
 # Helper functions
 def check_movie(movie):
@@ -127,7 +130,7 @@ def add_movie(movie, user_id):
         db.session.commit()     # add to db and create movie_id ptimary key
 
     # UserMovie
-    # Before add movie yo UserMovie check that commit above is successful
+    # Before add movie to UserMovie check that commit above is successful
     if check_movie(movie):
         movie_id=Movie.query.filter_by(themoviedb_id=movie.id).first().movie_id
         user_movie = UserMovie(user_id=user_id,
@@ -136,6 +139,101 @@ def add_movie(movie, user_id):
                                seen=False)
         db.session.add(user_movie)
         db.session.commit()
+
+
+def get_user_movie_rating(movie_id):
+    """Return user's rating for movie."""
+    user_movierating = None
+    if "logged_in_user_id" in session:
+        id_movie_db = Movie.query.filter(Movie.themoviedb_id == movie_id).first().movie_id
+        user_movierating = UserMovie.query.filter(UserMovie.user_id == session["logged_in_user_id"],
+                                                  UserMovie.movie_id == id_movie_db).first().rating
+
+    return user_movierating
+
+
+def update_rating(user_id, movie_id, rating):
+    """Update user's movie rating"""
+    usermovie_rating = UserMovie.query.filter(UserMovie.user_id == user_id,
+                                              UserMovie.movie_id == movie_id).first()
+    if usermovie_rating:
+        usermovie_rating.rating = rating
+    db.session.commit()
+
+
+def get_user(user_id):
+    """Return information about user: name, email, password, dob."""
+    return User.query.get(user_id)
+
+
+def get_user_movies(user_id):
+    """ Return user's list of movies."""
+    movies = db.session.query(UserMovie.movie_id,
+                              UserMovie.rating,
+                              UserMovie.seen,
+                              Movie.title,
+                              Movie.poster_url,
+                              Movie.themoviedb_id).join(Movie).filter(UserMovie.user_id == user_id).order_by(Movie.title).all()
+
+    return movies
+
+
+def get_user_genres(user_id):
+    """ Return user's genre preference."""
+
+    genres = db.session.query(UserGenre.genre_id,
+                              Genre.name).join(Genre).filter(UserGenre.user_id == user_id).all()
+
+    return genres
+
+
+def add_user(info_user):
+    """Add new user."""
+    name, email, password, dob, genres = info_user
+
+    user = User.query.filter_by(email=email).first()
+
+    if user is None:
+        user = User(name=name, email=email, password=password, dob=dob)
+        db.session.add(user)
+        db.session.commit()
+
+        user_id = User.query.filter(User.email == email,
+                                    User.password == password).first().user_id
+        session["logged_in_user_id"] = user_id
+        add_user_genres(user_id, genres)
+        flash("User sucsuccessfully added")
+    else:
+        flash("User already exists")
+
+
+def add_user_genres(user_id, genres):
+    """Add user's genre preference."""
+    for genre in genres:
+        genre_id = Genre.query.filter_by(name=genre).first().genre_id
+        usergenre_id = UserGenre.query.filter(UserGenre.user_id == user_id,
+                                              UserGenre.genre_id == genre_id).first()
+        if usergenre_id is None:
+            usergenre = UserGenre(user_id=user_id, genre_id=genre_id)
+            db.session.add(usergenre)
+    db.session.commit()
+
+
+def is_user(email, password):
+    """ Return true if user exists, overwise false."""
+    try:
+        user = User.query.filter_by(email=email).one()
+    except NoResultFound:
+        flash("User is not found in our base")
+        return False
+
+    if password == user.password:
+        session["logged_in_user_id"] = user.user_id
+        flash("Login successful")
+        return True
+    else:
+        flash("Incorrect password")
+        return False
 
 
 def connect_to_db(app):

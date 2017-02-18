@@ -3,6 +3,8 @@
 <!-- movie object -->
 
 <!-- It's container-fluid so it spans the whole page. -->
+  <div class="alert alert-warning" id="warning" hidden></div> 
+  
 <div class="container-fluid" id="user-details"> 
 
   <div class="row">
@@ -36,19 +38,23 @@
 
   {% for movie in movies %}
     <div class="row">   <!-- movie description -->
+
       <div class="col-xs-1">  
         <img src="{{ movie.poster_url }}" class="img-thumbnail" alt="Movie poster" width="60%" height="60%">
       </div>
+
       <div class="col-xs-3">
         <a href="{{ url_for('get_movie', movie_id=movie.themoviedb_id) }}">{{ movie.title }}</a>
       </div>
+
       <div class="col-xs-1" align="center" id="center-rating_{{ movie.movie_id }}">
-        <!--{% if movie.rating %}-->
+        {% if movie.rating %}
           <div class= "prime-circle" id="rating_{{ movie.movie_id }}">      <!-- movie rating -->
             {{ movie.rating }}
           </div>
-        <!--{% endif %}-->
+        {% endif %}
       </div>
+
       <div class="col-xs-6">    <!-- change rating -->
         <a class="change-rating" data-id="{{ movie.movie_id }}" style="font-size: 12px">Change rating...</a>
         <form class="change-rating" method="post" id="movie_{{ movie.movie_id }}" data-id="{{ movie.movie_id }}" hidden style="font-size: 15px">
@@ -84,8 +90,9 @@
            </label> 
             <input type="submit">
         </form>
-      </div>    
-    </div>
+      </div>  <!-- change rating -->
+
+    </div>  <!-- movie description -->
   {% endfor %}
   
 </div>  
@@ -108,6 +115,9 @@
     }
 
     $('#rating_'+result['movie_id']).html(result['rating']);
+
+    $('#warning:hidden').show();
+    $('#warning').html("Rating updated.")
   }
 
   function changeMovieRating(evt) {
