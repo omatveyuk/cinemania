@@ -18,16 +18,16 @@ app.secret_key = "shhhhhhhhhhhhhh"
 
 config = {}
 
-def configure():
-    config['api_key'] = {}
-    config['api_key']['themoviedb'] = os.environ['THEMOVIEDB_API_KEY']
-    config['url'] = {}
-    config['url']['popular'] = "https://api.themoviedb.org/3/movie/popular?api_key={0}".format(config['api_key']['themoviedb'])
-    config['url']['movie'] = "https://api.themoviedb.org/3/movie"
-    config['url']['poster'] = "https://image.tmdb.org/t/p/w500"
-    config['url']['youtube'] = "https://www.youtube.com/embed"
-    config['url']['profile'] = "https://image.tmdb.org/t/p/w500"
-    config['url']['wikipedia'] = "https://en.wikipedia.org/wiki"
+
+config['api_key'] = {}
+config['api_key']['themoviedb'] = os.environ['THEMOVIEDB_API_KEY']
+config['url'] = {}
+config['url']['popular'] = "https://api.themoviedb.org/3/movie/popular?api_key={0}".format(config['api_key']['themoviedb'])
+config['url']['movie'] = "https://api.themoviedb.org/3/movie"
+config['url']['poster'] = "https://image.tmdb.org/t/p/w500"
+config['url']['youtube'] = "https://www.youtube.com/embed"
+config['url']['profile'] = "https://image.tmdb.org/t/p/w500"
+config['url']['wikipedia'] = "https://en.wikipedia.org/wiki"
 
 
 @app.route('/')
@@ -156,5 +156,4 @@ if __name__ == "__main__":
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
-    configure()
     app.run(host="0.0.0.0")

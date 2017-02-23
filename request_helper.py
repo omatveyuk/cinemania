@@ -86,8 +86,7 @@ def get_twenty_posters(config, page,posters):
     for item in movies['results']:
         if item['poster_path']:
             posters['{0}{1}'.format(config['url']['poster'],
-                                    item['poster_path'])] = ''
-
+                                    item['poster_path'])] = item['original_title']
     return [posters, movies['total_pages']]
 
 def get_posters_for_animation(config):

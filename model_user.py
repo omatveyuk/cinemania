@@ -39,6 +39,7 @@ class Genre(db.Model):
 
     genre_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
+    themoviedb_id = db.Column(db.Integer, nullable=False)
     user = db.relationship('UserGenre')
 
     def __repr__(self):
@@ -107,7 +108,7 @@ class UserMovie(db.Model):
         return "<User's movies id=%s user_id=%s movie_id=%s>" % (self.usermovie_id,
                                                                  self.user_id,
                                                                  self.movie_id)
-        
+
 ##############################################################################
 # Helper functions
 def check_movie(movie):
@@ -236,11 +237,11 @@ def is_user(email, password):
         return False
 
 
-def connect_to_db(app):
+def connect_to_db(app, db_url='postgresql:///movie'):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///movie'
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     db.app = app
     db.init_app(app)
 

@@ -56,10 +56,11 @@ def load_genres():
     for row in open("seed_data/u.genre"):
         row = row.rstrip()
         # unpacking
-        genre_id, name = row.split(",")
+        genre_id, name, themoviedb_id = row.split(",")
 
         genre = Genre(genre_id=genre_id,
-                      name=name)
+                      name=name,
+                      themoviedb_id=themoviedb_id)
 
         # We need to add to the session or it won't ever be stored
         db.session.add(genre)
