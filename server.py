@@ -28,6 +28,7 @@ config['url']['poster'] = "https://image.tmdb.org/t/p/w500"
 config['url']['youtube'] = "https://www.youtube.com/embed"
 config['url']['profile'] = "https://image.tmdb.org/t/p/w500"
 config['url']['wikipedia'] = "https://en.wikipedia.org/wiki"
+config['url']['genres'] = "https://api.themoviedb.org/3/discover/movie?api_key={0}&with_genres=".format(config['api_key']['themoviedb'])
 
 
 @app.route('/')
@@ -150,10 +151,10 @@ def logout():
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
-    app.debug = True
+    #app.debug = True
 
     mu.connect_to_db(app)
 
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    #DebugToolbarExtension(app)
     app.run(host="0.0.0.0")

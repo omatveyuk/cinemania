@@ -5,7 +5,6 @@ import unittest
 from server import app
 from flask_sqlalchemy import SQLAlchemy
 from model_user import Movie, Genre, User, UserMovie, UserGenre, db, connect_to_db
-#db = SQLAlchemy()
 
 class CinemaniaTests(unittest.TestCase):
     """Tests for my party site."""
@@ -13,7 +12,6 @@ class CinemaniaTests(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client()
         app.config['TESTING'] = True
-
 
     def test_homepage(self):
         """Test start page."""
@@ -41,17 +39,15 @@ class PartyTestsDatabase(unittest.TestCase):
         self.client = app.test_client()
         app.config['TESTING'] = True
 
-        # Connect to test database (uncomment when testing database)
+        # Connect to test database 
         connect_to_db(app, 'postgresql:///testdb')
 
-        # Create tables and add sample data (uncomment when testing database)
+        # Create tables and add sample data 
         db.create_all()
         example_data()
 
     def tearDown(self):
         """Do at the end of every test."""
-
-        # (uncomment when testing database)
         db.session.close()
         db.drop_all()
 
@@ -175,8 +171,6 @@ def example_data():
     db.session.add_all([fred_music, fred_war, fred_comedy, fred_family,
                         fred_movie1, fred_movie2, fred_movie3, fred_movie4, fred_movie5, fred_movie6])
     db.session.commit() 
-
-
 
 
 if __name__ == "__main__":

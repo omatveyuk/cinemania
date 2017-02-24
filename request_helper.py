@@ -2,6 +2,8 @@
 
 import requests
 import random
+from flask import session
+import model_user as mu
 
 
 def get_movie_by_id(config, movie_id):
@@ -44,22 +46,77 @@ def get_videos_by_id(config, movie_id):
     videos = r_videos.json()
     return videos
 
+
 def get_random_movie_id(config):
-    """ Return random movie id from themoviedb (popular only)
-        url for request is read from global config
+    """ Return random movie id from themoviedb 
+        url for requests is read from global config
+    """
+    if "logged_in_user_id" in session:
+        # print "\n\n"
+        # print "SESSION"
+        movie_id = get_random_movie_id_session(config)
+        return movie_id
+
+    url = config['url']['popular']
+    return get_random_movie_id_based_url(url)
+
+
+
+def get_random_movie_id_session(config):
+    """Return movie id which randomly choosen from themoviedb 
+       (popular movies and movies based on genre's preference of user
+        url for requests is read from global config
+        If all movies from requests are already in the user's movie list
+        make another round of new requests
+    """
+    user_id = session["logged_in_user_id"]
+
+    while True:
+        # get random movie id from popular movie
+        url = config['url']['popular']
+        movies_id = [get_random_movie_id_based_url(url)]
+
+        # get random movie ids from all genres based on user's preference
+        url = config['url']['genres']
+        movies_id.extend(get_random_movie_id_genres(url))
+
+        # get random movie id
+        while len(movies_id) > 0:
+            random_index = random.randint(0, len(movies_id)-1)
+            if not mu.is_movie_in_user_movies_list(user_id, movies_id[random_index]):
+                return movies_id[random_index]
+        
+
+def get_random_movie_id_genres(url_genres):
+    """ Return list of random movie ids based on genres which user prefers."""
+    user_id = session["logged_in_user_id"]
+    genres = mu.get_user_genres(user_id)
+    movies_id = []
+
+    for genre in genres:
+        url = "{0}{1}".format(url_genres, genre[2])
+        movies_id.append(get_random_movie_id_based_url(url))
+
+    return movies_id    
+
+
+def get_random_movie_id_based_url(url):
+    """ Return random movie id from themoviedb based on url for request
         Response does not contain full information about movie
     """
-
-    # request for total number of movies in themoviedb (popular only)
-    url = config['url']['popular']
+    # request for total number of movies in themoviedb (url)
     r_movies = requests.get(url)
     movies = r_movies.json()
+
     total_results = movies["total_results"]
-    random_id = random.randint(1, total_results)
+    # disadventage of API: gives only 1000 pages for request
+    if total_results > 20000:
+        total_results = 20000
+    random_index = random.randint(1, total_results)
 
     # 20 movies on page is requirement of API
-    page = random_id / 20 + 1
-    id_on_page = random_id % 20 - 1
+    page = random_index / 20 + 1
+    id_on_page = random_index % 20 - 1
 
     # optimization: if page > 1 make another request for the page 
     # given total number of movies and random id, find page and slot on the page
@@ -70,10 +127,11 @@ def get_random_movie_id(config):
 
     movie_id = movies['results'][id_on_page]["id"]
     #movie_id = 238 #gold father #155 #nolan   33 550
+
     return movie_id
 
 
-def get_twenty_posters(config, page,posters):
+def get_twenty_posters(config, page, posters):
     """Return 20 movie posters from responde page of popular movie
        and total number of pages
     """
@@ -101,6 +159,9 @@ def get_posters_for_animation(config):
     posters, total_pages = get_twenty_posters(config, 1, posters)
 
     # more 20 posters
+    # disadventage of API: gives only 1000 pages for request
+    if total_pages > 1000:
+        total_pages = 1000
     random_page = random.randint(2, total_pages)
     posters = get_twenty_posters(config, random_page, posters)[0]
 

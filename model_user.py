@@ -179,11 +179,20 @@ def get_user_movies(user_id):
     return movies
 
 
+def is_movie_in_user_movies_list(user_id, themoviedb_id):
+    """Return true if user has already seen the movie"""
+    # get movies id which user has already seen
+    user_movies = [movie[5] for movie in get_user_movies(user_id)]
+    if themoviedb_id in user_movies:
+        return True
+    return False
+
+
 def get_user_genres(user_id):
     """ Return user's genre preference."""
-
     genres = db.session.query(UserGenre.genre_id,
-                              Genre.name).join(Genre).filter(UserGenre.user_id == user_id).all()
+                              Genre.name,
+                              Genre.themoviedb_id).join(Genre).filter(UserGenre.user_id == user_id).all()
 
     return genres
 
