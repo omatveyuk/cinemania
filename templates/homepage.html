@@ -13,7 +13,7 @@
   <div class="row" id="message" style="font-size: 25px; text-align: center;">    <!-- start -->
     Click &nbsp; 
     <a id="start" style="color: #008080; text-weight: bold;">here</a>
-     &nbsp; to start...
+     &nbsp; to peek randomly selected movie...
   </div>  <!-- start -->
 
   <div class="container" id="choice">   <!-- choice -->
@@ -30,9 +30,9 @@
    "use strict";
  
    function playPosters(result) {
-    var html = 'Click  &nbsp;<a id="start" href="/random_movie" style="color: #008080;'+
-               'text-weight: bold;">here</a >  &nbsp;to choose a movie randomly';
+    var html = 'Wait a bit, please. In the process...';
     $("#message").html(html);
+
  
     html = '<div id="slideshow" class="carousel slide" data-ride="carousel" '+
            'data-interval="500">'+
@@ -55,6 +55,7 @@
       $('#carousel-poster').append(html);
     } 
     $("#slideshow").carousel();
+    location.replace("/random_movie");
   }
 
 
@@ -63,7 +64,6 @@
   }
 
   $('a#start').on('click', showPosters);
-
 
   </script>
 {% endblock %}
