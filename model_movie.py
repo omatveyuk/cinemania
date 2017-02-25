@@ -47,7 +47,7 @@ class Movie(object):
         print 'Title', self.title, '. Directors:'
         for director in self.directors:
             print director
-        
+
     def print_writers(self):
         """ Print list of writers for movie """
         print 'Title', self.title, '. Writers:'
@@ -81,8 +81,8 @@ class Movie(object):
         """ Get trailer of movie from themoviedb API """
         json_videos = request_helper.get_videos_by_id(config, self.id)
 
-        self.trailer_url = ['{0}/{1}'.format(config['url']['youtube'], video['key']) 
-                         for video in json_videos['results'] if video['site'] == 'YouTube']
+        self.trailer_url = ['{0}/{1}'.format(config['url']['youtube'], video['key'])
+                            for video in json_videos['results'] if video['site'] == 'YouTube']
 
     def load_crew(self, config):
         """ Get information about actors, director, writer from themoviedb API"""
@@ -111,7 +111,7 @@ class Movie(object):
         """Get review about movie from themoviedb API"""
         json_reviews = request_helper.get_reviews_by_id(config, self.id)
 
-        for result in json_reviews['results']: 
+        for result in json_reviews['results']:
             self.reviews.append(Review(result['author'], result['content']))
         self.total_pages_reviews = json_reviews['total_pages']
         self.total_reviews = json_reviews['total_results']
@@ -129,7 +129,7 @@ class Movie(object):
         self.load_reviews(config)
 
         #self.imdb_rating = None
-    
+
     def exists(self):
         return True
 
@@ -140,7 +140,7 @@ class Person(object):
         self.id = person_id
         self.name = name
         self.profile_url = profile_url
-        self.wikipedia_url = '{0}/{1}'.format(config['url']['wikipedia'], name.replace(' ','_'))
+        self.wikipedia_url = '{0}/{1}'.format(config['url']['wikipedia'], name.replace(' ', '_'))
 
     def __repr__(self):
         """Provide helpful represetration when printed"""
@@ -159,7 +159,7 @@ class Review(object):
 
 
 class PersonNode(object):
-    """Node in a cast graph representing a person.
+    """Node representing a person in a cast graph
        person - object of class Person
        movies - dictionary of movies where person participated
     """
@@ -167,7 +167,7 @@ class PersonNode(object):
     def __init__(self, person, movies, adjacent=None):
         """Create a person node with another actors adjacent
            person - object of class Person
-           movies - dictionary of movies
+           movies - dictionary of movies (id: name)
         """
 
         if adjacent is None:
@@ -182,11 +182,19 @@ class PersonNode(object):
 
     def __repr__(self):
         """Debugging-friendly representation"""
-        return "<PersonNode: {0}>".format(self.person)
+        return "<PersonNode: {0}; Movies: {1}>".format(self.person, self.movies.keys())
+
+    def print_node(self):
+        """Print node"""
+        print "\nPersonNode:"
+        print self.person
+        for key, value in self.movies.items():
+            print key, value
+        print self.adjacent
 
 
 class CastGraph(object):
-    """Graph holding actors and directors of movie and their connections 
+    """Graph holding actors and directors of movie and their connections
        in other movies.
     """
 
@@ -197,13 +205,11 @@ class CastGraph(object):
     def __repr__(self):
         return "<CastGraph: {0}>".format([n.person for n in self.nodes])
 
-    def add_person(self, person):
-        """Add a person to our graph"""
-        self.nodes.add(person)
+    def add_person(self, person_node):
+        """Add a person (person_node) to our graph"""
+        self.nodes.add(person_node)
 
-    def set_connections(self, person1, person2):
+    def set_connections(self, person_node1, person_node2):
         """Set two person if they met in another movies"""
-        person1.adjacent.add(person2)
-        person2.adjacent.add(person1)
-
-
+        person_node1.adjacent.add(person_node2)
+        person_node2.adjacent.add(person_node1)

@@ -106,17 +106,22 @@ def change_movie_rating():
 def get_cast_graph():
     """Collect information for drawing cast graph"""
     movie_id = request.args.get("movie_id")
-    print "\n\n"
-    print movie_id
-    print "\n*****************************************"
+
+    # Create Movie object which contains only movie, actors and directors
     movie = Movie(movie_id)
     movie.load_crew(config)
 
-    rh.create_cast_graph(config, movie)
-    print "\n\n"
-    print movie_id
-    print "\n*****************************************"
-    return jsonify({'movie_id': movie_id})
+    # Create cast graph (5 actors and director) 
+    cast_graph = rh.create_cast_graph(config, movie)
+
+    # Prepare data for D3
+    #rh.load_data_d3(cast_graph)
+
+    return jsonify({"nodes":[
+      {"x":80, "y":80, "r":60, "name":"Christofer Nolan"},
+      {"x":220, "y":240, "r":60, "name":"Christeian Bale"},
+      {"x":360, "y":80, "r":60, "name":"Mike Kein"}
+    ]})
 
 
 @app.route("/register", methods=["GET"])

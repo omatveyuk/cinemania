@@ -144,6 +144,7 @@
 </div>  <!-- all-about-movie -->
 
   <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js"></script>
   <script>
     "use strict";
     var showChar = 500;         //Total characters to show to user
@@ -184,20 +185,38 @@
     var html = "I will draw here CAST GRAPH for movie "+result['movie_id'];
     $('#draw-graph').html(html);
 
-    // $('#movie_'+result['movie_id']).hide();
+    // create d3 object
+    var vis = d3.select("#draw-graph").append("svg");
+    var w = 900, h = 400;
+    vis.attr("width", w).attr("height", h);
 
-    // // if element 'rating' doesn't exist in visible DOM (user doesn't have the movie rating)
-    // // add element to DOM
-    // if ($('#rating_'+result['movie_id']).length == 0) {
-    //   var html='<div class= "prime-circle" id="rating_'+result['movie_id']+'">'+
-    //            result['rating']+'</div>';
-    //  $('#center-rating_'+result['movie_id']).html(html);
-    // }
 
-    // $('#rating_'+result['movie_id']).html(result['rating']);
+//d3.json("data.json", function(json) {
+    /* Define the data for the circles */
+    var elem = vis.selectAll("g")
+        .data(result.nodes)
 
-    // $('#warning:hidden').show();
-    // $('#warning').html("Rating updated.")
+    /*Create and place the "blocks" containing the circle and the text */  
+    var elemEnter = elem.enter()
+        .append("g")
+        .attr("transform", function(d){return "translate("+d.x+","+d.y+")"})
+
+    /*Create the circle for each block */
+    var circle = elemEnter.append("circle")
+        .attr("r", function(d){return d.r})
+        .attr("stroke","black")
+        .attr("fill", "#008080")
+
+    /* Create the text for each block */
+    elemEnter.append("text")
+        .attr("dx", function(d){return -55})
+        .text(function(d){return d.name})
+
+    //elemEnter.attr("text", "black")
+// })
+
+
+
   }
 
 
