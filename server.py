@@ -29,6 +29,8 @@ config['url']['youtube'] = "https://www.youtube.com/embed"
 config['url']['profile'] = "https://image.tmdb.org/t/p/w500"
 config['url']['wikipedia'] = "https://en.wikipedia.org/wiki"
 config['url']['genres'] = "https://api.themoviedb.org/3/discover/movie?api_key={0}&with_genres=".format(config['api_key']['themoviedb'])
+config['url']['person_base'] = "https://api.themoviedb.org/3/person/"
+config['url']['person_credits'] = "/movie_credits?api_key={0}".format(config['api_key']['themoviedb'])
 
 
 @app.route('/')
@@ -69,7 +71,8 @@ def get_movie(movie_id):
     # Get user's rating for movie
     user_movierating = mu.get_user_movie_rating(movie_id)
 
-    return render_template("movie_details.html", movie=movie, user_movierating=user_movierating)
+    return render_template("movie_details.html", movie=movie,
+                            user_movierating=user_movierating)
 
 
 @app.route("/users/<int:user_id>")
@@ -97,6 +100,23 @@ def change_movie_rating():
     mu.update_rating(user_id, movie_id, rating)
 
     return jsonify({'movie_id': movie_id, 'rating': rating})
+
+
+@app.route("/cast_graph.json")
+def get_cast_graph():
+    """Collect information for drawing cast graph"""
+    movie_id = request.args.get("movie_id")
+    print "\n\n"
+    print movie_id
+    print "\n*****************************************"
+    movie = Movie(movie_id)
+    movie.load_crew(config)
+
+    rh.create_cast_graph(config, movie)
+    print "\n\n"
+    print movie_id
+    print "\n*****************************************"
+    return jsonify({'movie_id': movie_id})
 
 
 @app.route("/register", methods=["GET"])

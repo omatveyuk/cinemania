@@ -4,6 +4,7 @@ import requests
 import random
 from flask import session
 import model_user as mu
+from model_movie import PersonNode
 
 
 def get_movie_by_id(config, movie_id):
@@ -36,7 +37,6 @@ def get_reviews_by_id(config, movie_id):
     return reviews
 
 
-
 def get_videos_by_id(config, movie_id):
     """ Get video of movie from request to themoviedb by movie id"""
     url = "{0}/{1}/videos?api_key={2}".format(config['url']['movie'],
@@ -52,14 +52,11 @@ def get_random_movie_id(config):
         url for requests is read from global config
     """
     if "logged_in_user_id" in session:
-        # print "\n\n"
-        # print "SESSION"
         movie_id = get_random_movie_id_session(config)
         return movie_id
 
     url = config['url']['popular']
     return get_random_movie_id_based_url(url)
-
 
 
 def get_random_movie_id_session(config):
@@ -125,8 +122,8 @@ def get_random_movie_id_based_url(url):
         r_movies = requests.get(url)
         movies = r_movies.json()
 
-    movie_id = movies['results'][id_on_page]["id"]
-    #movie_id = 238 #gold father #155 #nolan   33 550
+    #movie_id = movies['results'][id_on_page]["id"]
+    movie_id = 155 #238 #gold father #155 #nolan   33 550
 
     return movie_id
 
@@ -147,6 +144,7 @@ def get_twenty_posters(config, page, posters):
                                     item['poster_path'])] = item['original_title']
     return [posters, movies['total_pages']]
 
+
 def get_posters_for_animation(config):
     """ Return 40 random movie posters from themoviedb (popular only)
         for animation on homepage
@@ -166,3 +164,55 @@ def get_posters_for_animation(config):
     posters = get_twenty_posters(config, random_page, posters)[0]
 
     return posters
+
+
+def create_cast_graph(config, movie):
+    """Return cast connections in over movie"""
+    #Create person nodes for less or 5 actors and directors
+    person_nodes = create_nodes_for_graph(config, movie)
+    print "\n\n"
+    print "NODES FOR GRAPH"
+    for person in person_nodes:
+        print person.person
+        print person.movies
+        print "\n"
+    print "\n****************************************************"
+
+
+
+def create_nodes_for_graph(config, movie):
+    """Create list of person nodes for actors and directors"""
+    number_actors = 0
+    movie_credits = []
+    id_persons = []
+    # Actors (max 5 total)
+    for person in movie.actors:
+        number_actors += 1
+        person_node = create_node(config, person, movie.id)
+        movie_credits.append(person_node)
+        id_persons.append(person.id)
+        if number_actors == 5:
+            break
+
+    # Directors
+    for person in movie.directors:
+        # check duplicates of person if director is actor in own movie
+        if person.id not in id_persons:
+            person_node = create_node(config, person, movie.id)
+            movie_credits.append(person_node)
+
+    return movie_credits 
+
+
+def create_node(config, person, movie_id):
+    """Return person node for cast graph"""
+    url = config['url']['person_base']+str(person.id)+config['url']['person_credits']
+    r_movies = requests.get(url)
+    movies = {}
+
+    for movie in r_movies.json()["cast"]:
+        movies[movie["id"]] = movie["title"]
+
+    return PersonNode(person, movies)
+
+

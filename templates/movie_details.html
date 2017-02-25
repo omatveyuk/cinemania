@@ -6,8 +6,8 @@
 <div class="container-fluid" id="movie-details"> 
 
   <div class="row">   <!-- title-rating -->
-    <div class="col-xs-10" id="title-movie">
-      {{ movie.title }}
+    <div class="col-xs-10" id="title-movie" data-id="{{ movie.id }}">
+      {{ movie.title }} 
     </div>
     <div class="col-xs-2">
       <!--<div class="row">
@@ -62,9 +62,11 @@
     <div class="col-xs-8" id="info">
 
       <div class="row">     <!-- poster-details -->
+
         <div class="col-xs-4" id="poster">  
           <img src="{{ movie.poster_url }}" class="img-thumbnail" alt="No image" width="100%" height="100%">
         </div>
+
         <div class="col-xs-8 text-justify" id="details">
           <b>Genre: </b>
           {% if movie.genres|length != 0 %}
@@ -104,7 +106,15 @@
           {% endif %}<br>
           <b>Overview: </b>{{ movie.overview }}
         </div>
+
       </div>        <!-- poster-details -->
+
+      <div class="row" id="graph">   <!-- graph -->
+        <div class="col-xs-12">
+          <a id="cast-graph"><b>Would you like to see connections between actors and director in other movies?</b></a>
+        </div>
+        <div class="col-xs-12" id="draw-graph"></div>
+      </div>      <!-- graph -->
 
       <div class="row">     <!-- trailer -->
         <div class="col-xs-12" id="trailer">
@@ -168,6 +178,35 @@
       return false;
     });
 
+
+  function showCastGraph(result){
+    debugger;
+    var html = "I will draw here CAST GRAPH for movie "+result['movie_id'];
+    $('#draw-graph').html(html);
+
+    // $('#movie_'+result['movie_id']).hide();
+
+    // // if element 'rating' doesn't exist in visible DOM (user doesn't have the movie rating)
+    // // add element to DOM
+    // if ($('#rating_'+result['movie_id']).length == 0) {
+    //   var html='<div class= "prime-circle" id="rating_'+result['movie_id']+'">'+
+    //            result['rating']+'</div>';
+    //  $('#center-rating_'+result['movie_id']).html(html);
+    // }
+
+    // $('#rating_'+result['movie_id']).html(result['rating']);
+
+    // $('#warning:hidden').show();
+    // $('#warning').html("Rating updated.")
+  }
+
+
+  $('#cast-graph').click(function(evt){
+      debugger;
+      event.preventDefault();
+      var movie_id = $('#title-movie').attr('data-id');
+      $.get('/cast_graph.json', { "movie_id": movie_id }, showCastGraph);
+  });
 
   </script>
 

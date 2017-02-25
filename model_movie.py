@@ -10,7 +10,7 @@ import request_helper
 class Movie(object):
     """ Movie class """
     def __init__(self, movie_id):
-        self.id = movie_id
+        self.id = movie_id          # id in themoviedb API
         self.title = ""
         self.original_language = []
         self.production_countries = []
@@ -156,3 +156,54 @@ class Review(object):
     def __repr__(self):
         """Provide helpful represetration when printed"""
         return "<Review name={0} text={1}>".format(self.name, self.text)
+
+
+class PersonNode(object):
+    """Node in a cast graph representing a person.
+       person - object of class Person
+       movies - dictionary of movies where person participated
+    """
+
+    def __init__(self, person, movies, adjacent=None):
+        """Create a person node with another actors adjacent
+           person - object of class Person
+           movies - dictionary of movies
+        """
+
+        if adjacent is None:
+            adjacent = set()
+
+        assert isinstance(adjacent, set), \
+            "adjacent must be a set!"
+
+        self.person = person
+        self.movies = movies
+        self.adjacent = adjacent
+
+    def __repr__(self):
+        """Debugging-friendly representation"""
+        return "<PersonNode: {0}>".format(self.person)
+
+
+class CastGraph(object):
+    """Graph holding actors and directors of movie and their connections 
+       in other movies.
+    """
+
+    def __init__(self):
+        """Create an empty graph"""
+        self.nodes = set()
+
+    def __repr__(self):
+        return "<CastGraph: {0}>".format([n.person for n in self.nodes])
+
+    def add_person(self, person):
+        """Add a person to our graph"""
+        self.nodes.add(person)
+
+    def set_connections(self, person1, person2):
+        """Set two person if they met in another movies"""
+        person1.adjacent.add(person2)
+        person2.adjacent.add(person1)
+
+
