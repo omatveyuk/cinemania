@@ -110,7 +110,7 @@
       </div>        <!-- poster-details -->
 
       <div class="row" id="graph">   <!-- graph -->
-        <div class="col-xs-12">
+        <div class="col-xs-12" id="title-graph">
           <a id="cast-graph"><b>Would you like to see connections between actors and director in other movies?</b></a>
         </div>
         <div class="col-xs-12" id="draw-graph"></div>
@@ -140,6 +140,12 @@
     </div>    <!-- review -->
 
   </div>  <!-- info-movie -->
+
+  <div class="row">   <!-- graph -->
+    <div class="col-xs-12" id="title-graph">
+        <div class="col-xs-12" id="draw-graph"></div>
+    </div>
+  </div>      <!-- graph -->
 
 </div>  <!-- all-about-movie -->
 
@@ -182,42 +188,58 @@
 
   function showCastGraph(result){
     debugger;
-    var html = "I will draw here CAST GRAPH for movie "+result['movie_id'];
-    $('#draw-graph').html(html);
+    var html = "<h3>Connection between first five actors and director in other movies</h3>";
+    $('#title-graph').html(html);
 
     // create d3 object
-    var vis = d3.select("#draw-graph").append("svg");
-    var w = 900, h = 400;
-    vis.attr("width", w).attr("height", h);
+    var w = 900, h = 900;
+    var vis = d3.select("#draw-graph").append("svg")
+      .attr("width", w)
+      .attr("height", h);
 
+    var force = d3.layout.force()
+        .gravity(.01)
+        .distance(400)
+        .charge(-120)
+        .size([w, h]);
 
-//d3.json("data.json", function(json) {
-    /* Define the data for the circles */
-    var elem = vis.selectAll("g")
-        .data(result.nodes)
+    // Define the data for the nodes(circles) and links
+    force
+      .nodes(result.nodes)
+      .links(result.links)
+      .start();
 
-    /*Create and place the "blocks" containing the circle and the text */  
-    var elemEnter = elem.enter()
-        .append("g")
-        .attr("transform", function(d){return "translate("+d.x+","+d.y+")"})
+    var link = vis.selectAll(".link")
+      .data(result.links)
+      .enter().append("line")
+      .attr("class", "link")
+      .attr("stroke","black");
 
-    /*Create the circle for each block */
-    var circle = elemEnter.append("circle")
-        .attr("r", function(d){return d.r})
-        .attr("stroke","black")
-        .attr("fill", "#008080")
+    var node = vis.selectAll(".node")
+      .data(result.nodes)
+      .enter().append("g")
+      .attr("class", "node")
+      .call(force.drag);
 
-    /* Create the text for each block */
-    elemEnter.append("text")
-        .attr("dx", function(d){return -55})
-        .text(function(d){return d.name})
+    node.append("circle")
+      .attr("r","60")
+      .attr("stroke","black")
+      .attr("fill", "#008080");
 
-    //elemEnter.attr("text", "black")
-// })
+    node.append("text")
+      .attr("dx", 12)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.name });
 
+    force.on("tick", function() {
+      link.attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
 
-
-  }
+      node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    });
+  };
 
 
   $('#cast-graph').click(function(evt){

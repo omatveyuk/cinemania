@@ -230,9 +230,59 @@ def create_cast_graph(config, movie):
             if intersection:
                 cast_graph.set_connections(person_nodes[i], person_nodes[j])
 
-    print "person_node in GRAPH"
+    print "person_node in GRAPH:"
     for node in cast_graph.nodes:
         node.print_node()
+
+    return cast_graph
+
+
+def create_cast_graph_json(config, movie):
+    """Return cast connections in over movie
+        movie: Movie's object"""
+
+    print "Inside CREATE CAST GRAPH JSON"
+    cast_graph = {"nodes": [], "links": []}
+    #Create person nodes for less or 5 actors and first director
+    person_nodes = create_nodes_for_graph(config, movie)
+
+    # Nodes
+    print "NODES"
+    i = 0
+    for person_node in person_nodes:
+        node = {"name": person_node.person.name,
+                "url": person_node.person.profile_url
+               }
+        cast_graph["nodes"].append(node)
+        print "name:", cast_graph["nodes"][i]["name"],
+        print "url: ", cast_graph["nodes"][i]["url"]
+        i +=1
+        
+
+    # Add links to the graph between two persons
+    print "LINKS"
+    for i in xrange(len(person_nodes)-1):
+        for j in xrange(i+1, len(person_nodes)):
+            # find movie ids where two persons worked together
+            list_movies_person1 = set(person_nodes[i].movies.keys())
+            list_movies_person2 = set(person_nodes[j].movies.keys())
+            intersection = list_movies_person1 & list_movies_person2
+            if intersection:
+                intersection_movies = []
+                index = 0
+                for movie_id in intersection:
+                    intersection_movies.append(person_nodes[i].movies[movie_id])
+                    link = {"source": i,
+                            "target": j,
+                            "movies":intersection_movies}
+                    cast_graph["links"].append(link)
+                    print "source:", cast_graph["links"][index]["source"],
+                    print "target: ", cast_graph["links"][index]["target"],
+                    print "movies: ", cast_graph["links"][index]["movies"],
+                    index +=1
+
+
+    return cast_graph
 
             
 

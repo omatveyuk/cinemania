@@ -112,16 +112,20 @@ def get_cast_graph():
     movie.load_crew(config)
 
     # Create cast graph (5 actors and director) 
-    cast_graph = rh.create_cast_graph(config, movie)
+    rh.create_cast_graph(config, movie)
+    cast_graph = rh.create_cast_graph_json(config, movie)
 
-    # Prepare data for D3
-    #rh.load_data_d3(cast_graph)
+    return jsonify(cast_graph)
+    #     {"nodes": [
+    #   {"name": "Christofer Nolan"},
+    #   {"name": "Christeian Bale"},
+    #   {"name": "Mike Kein"},
+    #   {"name": "Oxana Matveyuk"}],
+    #   "links": [
+    #   {"source": 0, "target": 1},
+    #   {"source": 0, "target": 2}]
+    # })
 
-    return jsonify({"nodes":[
-      {"x":80, "y":80, "r":60, "name":"Christofer Nolan"},
-      {"x":220, "y":240, "r":60, "name":"Christeian Bale"},
-      {"x":360, "y":80, "r":60, "name":"Mike Kein"}
-    ]})
 
 
 @app.route("/register", methods=["GET"])

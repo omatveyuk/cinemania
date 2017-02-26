@@ -1,7 +1,12 @@
 h1 {
- color:#008080;
- font-weight: bold;
- text-align: center;
+    color:#008080;
+    font-weight: bold;
+    text-align: center;
+}
+h3 {
+    color:#008080;
+    font-weight: bold;
+    text-align: center;  
 }
 
 .navbar-movie {
@@ -72,6 +77,5 @@ h1 {
     font-size: 100%;
     font-family: sans-serif;
 }
-
 
 
