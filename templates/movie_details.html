@@ -111,9 +111,26 @@
 
       <div class="row" id="graph">   <!-- graph -->
         <div class="col-xs-12" id="title-graph">
-          <a id="cast-graph"><b>Would you like to see connections between actors and director in other movies?</b></a>
+          <a id="cast-graph" style="font-size: 20px"><b>Would you like to see connections between lead actors and the director in other movies?</b></a>
         </div>
         <div class="col-xs-12" id="draw-graph"></div>
+
+        <div class="modal fade" id="myModal" role="dialog">    <!-- Modal -->
+          <div class="modal-dialog">
+          
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title"></h3>
+              </div>
+              <div class="modal-body">
+                <p></p>
+              </div>
+            </div>
+            
+          </div>
+        </div>    <!-- modal -->
+
       </div>      <!-- graph -->
 
       <div class="row">     <!-- trailer -->
@@ -128,7 +145,7 @@
 
     </div>      <!-- info -->
 
-    <div class="col-xs-4 text-justify" id="review">
+    <div class="col-xs-4 text-justify" id="review">     <!-- review -->
       <b>Rating: </b>{{ movie.vote_average }} ({{ movie.vote_count }})<br>
       <b>Reviews</b> ({{ movie.total_reviews }})<b>:</b><br>
       {% for review in movie.reviews %}
@@ -141,16 +158,11 @@
 
   </div>  <!-- info-movie -->
 
-  <div class="row">   <!-- graph -->
-    <div class="col-xs-12" id="title-graph">
-        <div class="col-xs-12" id="draw-graph"></div>
-    </div>
-  </div>      <!-- graph -->
-
 </div>  <!-- all-about-movie -->
 
   <script src="http://code.jquery.com/jquery.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script>
     "use strict";
     var showChar = 500;         //Total characters to show to user
@@ -187,21 +199,38 @@
 
 
   function showCastGraph(result){
-    debugger;
-    var html = "<h3>Connection between first five actors and director in other movies</h3>";
+    var html = "<h3>Connection between lead actors and the director in other movies</h3>";
     $('#title-graph').html(html);
 
     // create d3 object
-    var w = 900, h = 900;
-    var vis = d3.select("#draw-graph").append("svg")
-      .attr("width", w)
-      .attr("height", h);
+    var width = 900, height = 750, radius = 50;
+    var svg = d3.select("#draw-graph").append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    var borderPath = svg.append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", width)
+      .attr("height", height)
+      .style("stroke", "#808080")
+      .style("fill", "none")
+      .style("stroke-width", 2);
+
+    var borderPath2 = svg.append("rect")
+      .attr("x", 3)
+      .attr("y", 3)
+      .attr("width", width-6)
+      .attr("height", height-6)
+      .style("stroke", "#808080")
+      .style("fill", "none")
+      .style("stroke-width", 1);
 
     var force = d3.layout.force()
         .gravity(.01)
-        .distance(400)
+        .distance(280)
         .charge(-120)
-        .size([w, h]);
+        .size([width, height]);
 
     // Define the data for the nodes(circles) and links
     force
@@ -209,29 +238,55 @@
       .links(result.links)
       .start();
 
-    var link = vis.selectAll(".link")
+    var node = svg.selectAll(".node")
+      .data(result.nodes);
+
+    var link = svg.selectAll(".link")
       .data(result.links)
       .enter().append("line")
       .attr("class", "link")
-      .attr("stroke","black");
+      .attr("stroke","#808080")
+      .style("stroke-width", function(d) { return d.movies.length; })
+      .style("cursor", "pointer")
+      .on("click", function(d) { 
+        $('.modal-title').html(d.source.name+' - '+d.target.name+':');
+        html = '';
+        for (var i = 0; i < d.movies.length; i++) { 
+          html += d.movies[i] + "<br>";
+        }
+        $('.modal-body p').html(html);
+        //d3.select("#info").text(d.movies); 
+        $("#myModal").modal("show"); 
 
-    var node = vis.selectAll(".node")
-      .data(result.nodes)
-      .enter().append("g")
+        });
+
+    node.enter().append("g")
       .attr("class", "node")
       .call(force.drag);
 
     node.append("circle")
-      .attr("r","60")
-      .attr("stroke","black")
+      .attr("r",radius)
+      .attr("stroke","#808080")
       .attr("fill", "#008080");
 
+    node.append("image")
+      .attr("xlink:href", function(d) { return d.url })
+      .attr("x", -25)
+      .attr("y", -37)
+      .attr("width", 50)
+      .attr("height", 75);
+
     node.append("text")
-      .attr("dx", 12)
-      .attr("dy", ".35em")
+      .attr("dx", 30)
+      .attr("dy", 30)
+      .style("font-weight","bold")
       .text(function(d) { return d.name });
 
     force.on("tick", function() {
+
+      node.attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
+          .attr("cy", function(d) { return d.y = Math.max(radius, Math.min(height - radius, d.y)); });
+
       link.attr("x1", function(d) { return d.source.x; })
           .attr("y1", function(d) { return d.source.y; })
           .attr("x2", function(d) { return d.target.x; })
@@ -243,7 +298,6 @@
 
 
   $('#cast-graph').click(function(evt){
-      debugger;
       event.preventDefault();
       var movie_id = $('#title-movie').attr('data-id');
       $.get('/cast_graph.json', { "movie_id": movie_id }, showCastGraph);

@@ -251,7 +251,8 @@ def create_cast_graph_json(config, movie):
     i = 0
     for person_node in person_nodes:
         node = {"name": person_node.person.name,
-                "url": person_node.person.profile_url
+                "url": person_node.person.profile_url,
+                "wiki": person_node.person.wikipedia_url
                }
         cast_graph["nodes"].append(node)
         print "name:", cast_graph["nodes"][i]["name"],
@@ -261,6 +262,7 @@ def create_cast_graph_json(config, movie):
 
     # Add links to the graph between two persons
     print "LINKS"
+    index = 0
     for i in xrange(len(person_nodes)-1):
         for j in xrange(i+1, len(person_nodes)):
             # find movie ids where two persons worked together
@@ -269,17 +271,17 @@ def create_cast_graph_json(config, movie):
             intersection = list_movies_person1 & list_movies_person2
             if intersection:
                 intersection_movies = []
-                index = 0
                 for movie_id in intersection:
                     intersection_movies.append(person_nodes[i].movies[movie_id])
-                    link = {"source": i,
-                            "target": j,
-                            "movies":intersection_movies}
-                    cast_graph["links"].append(link)
-                    print "source:", cast_graph["links"][index]["source"],
-                    print "target: ", cast_graph["links"][index]["target"],
-                    print "movies: ", cast_graph["links"][index]["movies"],
-                    index +=1
+
+                link = {"source": i,
+                        "target": j,
+                        "movies":intersection_movies}
+                cast_graph["links"].append(link)
+                print "source:", cast_graph["links"][index]["source"],
+                print "target: ", cast_graph["links"][index]["target"],
+                print "movies: ", cast_graph["links"][index]["movies"],
+                index +=1
 
 
     return cast_graph

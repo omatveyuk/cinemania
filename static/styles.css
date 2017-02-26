@@ -32,7 +32,6 @@ h3 {
     padding: 0px 0px 10px 0px;
 }
 
-
 #movie-details {
     margin: 0px 25px 0px 25px;
 }
@@ -55,13 +54,9 @@ h3 {
     height: 750px;
     overflow: hidden;
 }
+
 #poster {
     z-index: -1; 
-}
-
-.piece-image {
-    position: absolute;
-    background-color: yellow;    
 }
 
 .prime-circle {
