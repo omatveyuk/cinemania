@@ -64,6 +64,7 @@ h3 {
     background-color: #008080;
     text-shadow: 2px 2px 3px black;
     border-radius: 50%;
+    border-color: #ffffff;
     box-shadow: 3px 3px 10px #666;
     width: 40px;
     height: 40px;
@@ -74,3 +75,28 @@ h3 {
 }
 
 
+.loading {
+  font-size: 20px;
+}
+
+.loading:after {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
+  animation: ellipsis steps(4,end) 900ms infinite;
+  content: "\2026"; /* ascii code for the ellipsis character */
+  width: 0px;
+}
+
+@keyframes ellipsis {
+  to {
+    width: 1.25em;    
+  }
+}
+
+@-webkit-keyframes ellipsis {
+  to {
+    width: 1.25em;    
+  }
+}

@@ -3,7 +3,7 @@
 <!-- movie object -->
 
 <!-- It's container-fluid so it spans the whole page. -->
-  <div class="alert alert-warning" id="warning" hidden></div> 
+<div class="alert alert-warning" id="warning" hidden></div> 
   
 <div class="container-fluid" id="user-details"> 
 
@@ -31,68 +31,66 @@
     <div class="col-xs-1">
       <b>Seen:</b>
     </div>
-    <div class="col-xs-offset-2 col-xs-2" align="right">
-      <b>Your Rating</b>
-    </div>
   </div>
 
-  {% for movie in movies %}
-    <div class="row">   <!-- movie description -->
+  {% for index in range(0, movies|count, 6) %}
+    <div class="row">   <!-- row of seen movies -->
 
-      <div class="col-xs-1">  
-        <img src="{{ movie.poster_url }}" class="img-thumbnail" alt="No image" style="width: 60%;  height: 60%">
-      </div>
+    {% for step in range(0, 6) %}
+      {% set index_in_row = index + step %}   <!-- next in row -->
+      {% if index_in_row in range(movies|count) %}
 
-      <div class="col-xs-3">
-        <a href="{{ url_for('get_movie', movie_id=movie.themoviedb_id) }}">{{ movie.title }}</a>
-      </div>
+        <div class="col-xs-2">  <!-- 2nd in row -->
 
-      <div class="col-xs-1" align="center" id="center-rating_{{ movie.movie_id }}">
-        {% if movie.rating %}
-          <div class= "prime-circle" id="rating_{{ movie.movie_id }}">      <!-- movie rating -->
-            {{ movie.rating }}
-          </div>
-        {% endif %}
-      </div>
+          <div class="row" style="height: 280px;">   <!-- poster with circle rating -->
+            <div class="col-xs-11" style="position: absolute;" >
+              <a href="{{ url_for('get_movie', movie_id=movies[index_in_row].themoviedb_id) }}" style="cursor: pointer">
+                <img src="{{ movies[index_in_row].poster_url }}" class="img-thumbnail img-responsive" alt="No image" >
+              </a>
+            </div>
 
-      <div class="col-xs-6">    <!-- change rating -->
-        <a class="change-rating" data-id="{{ movie.movie_id }}" style="font-size: 12px">Change rating...</a>
-        <form class="change-rating" method="post" id="movie_{{ movie.movie_id }}" data-id="{{ movie.movie_id }}" hidden style="font-size: 15px">
-          <label class="radio-inline">
-            <input type="radio" name="rating" value="1" {% if movie.rating == 1 %}checked="checked"{% endif %}> 1&nbsp;&nbsp;
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="rating" value="2" {% if movie.rating == 2 %}checked="checked"{% endif %}> 2&nbsp;&nbsp;
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="rating" value="3" {% if movie.rating == 3 %}checked="checked"{% endif %}> 3&nbsp;&nbsp;
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="rating" value="4" {% if movie.rating == 4 %}checked="checked"{% endif %}> 4&nbsp;&nbsp;
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="rating" value="5" {% if movie.rating == 5 %}checked="checked"{% endif %}> 5&nbsp;&nbsp;
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="rating" value="6" {% if movie.rating == 6 %}checked="checked"{% endif %}> 6&nbsp;&nbsp;
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="rating" value="7" {% if movie.rating == 7 %}checked="checked"{% endif %}> 7&nbsp;&nbsp;
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="rating" value="8" {% if movie.rating == 8 %}checked="checked"{% endif %}> 8&nbsp;&nbsp;
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="rating" value="9" {% if movie.rating == 9 %}checked="checked"{% endif %}> 9&nbsp;&nbsp;
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="rating" value="10" {% if movie.rating == 10 %}checked="checked"{% endif %}> 10&nbsp;&nbsp;&nbsp;&nbsp;
-           </label> 
-            <input type="submit">
-        </form>
-      </div>  <!-- change rating -->
+            <div class="col-xs-offset-8 col-xs-4" style="position:absolute; z-index=2;" id="center-rating_{{ movies[index_in_row].movie_id }}">
+              {% if movies[index_in_row].rating %}
+                <div class= "prime-circle" id="rating_{{ movies[index_in_row].movie_id }}">      <!-- movie rating -->
+                  {{ movies[index_in_row].rating }}
+                </div>
+              {% endif %}
+            </div>
+          </div>  <!-- poster with circle rating -->  
 
-    </div>  <!-- movie description -->
+          <div class="row">  <!-- change rating form -->
+
+            <div class="col-xs-7">
+              <a class="change-rating" data-id="{{ movies[index_in_row].movie_id }}" style="font-size: 14px; cursor: pointer">Change rating...</a>
+            </div>
+
+            <div class="col-xs-4">
+              <form class="change-rating" method="post" id="movie_{{ movies[index_in_row].movie_id }}" data-id="{{ movies[index_in_row].movie_id }}" hidden style="font-size: 15px">
+                <select class="custom-select" id="rating-value_{{ movies[index_in_row].movie_id }}">
+                  <option selected>{{ movies[index_in_row].rating }}</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+              </form>
+            </div>
+
+          </div>  <!-- change rating form -->
+
+        </div>  <!-- 2snd in row -->
+
+      {% endif %}
+    {% endfor %}
+
+    </div>  <!-- row of seen movies -->
+    <br>
   {% endfor %}
   
 </div>  
@@ -121,21 +119,23 @@
   }
 
   function changeMovieRating(evt) {
+    debugger;
     event.preventDefault();
 
     var movie_id = $(this).attr('data-id');
-    var rating = $('#movie_'+movie_id+' input[name="rating"]:checked').val();
-
+    //var rating = $('#movie_'+movie_id+' input[name="rating"]:checked').val();
+    var rating = $('#rating-value_'+movie_id).val()
     $.post('/change_rating.json', {"movie_id": movie_id, "rating": rating}, showNewMovieRating);
   }
 
 
   $('a.change-rating').click(function(){
+    debugger;
       var movie_id = $(this).attr('data-id');
       $('#movie_'+movie_id).show();
   });
 
-  $('form.change-rating').on('submit', changeMovieRating); 
+  $('form.change-rating').change(changeMovieRating); 
 
 
 </script>
