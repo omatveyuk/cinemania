@@ -45,7 +45,7 @@
           <div class="row" style="height: 280px;">   <!-- poster with circle rating -->
             <div class="col-xs-11" style="position: absolute;" >
               <a href="{{ url_for('get_movie', movie_id=movies[index_in_row].themoviedb_id) }}" style="cursor: pointer">
-                <img src="{{ movies[index_in_row].poster_url }}" class="img-thumbnail img-responsive" alt="No image" >
+                <img src="{{ movies[index_in_row].poster_url }}" class="img-thumbnail img-responsive" alt="{{ movies[index_in_row].title }}" >
               </a>
             </div>
 

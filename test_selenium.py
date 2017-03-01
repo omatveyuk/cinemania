@@ -1,6 +1,6 @@
 """Test Selenium"""
 
-import unitest
+import unittest
 from selenium import webdriver
 
 class CinemaniaSeleniumTests(unittest.TestCase):

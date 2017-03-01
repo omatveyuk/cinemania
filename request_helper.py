@@ -4,7 +4,7 @@ import requests
 import random
 from flask import session
 import model_user as mu
-from model_movie import PersonNode, CastGraph
+from model_movie import PersonNode
 
 
 def get_movie_by_id(config, movie_id):
@@ -122,8 +122,8 @@ def get_random_movie_id_based_url(url):
         r_movies = requests.get(url)
         movies = r_movies.json()
 
-    #movie_id = movies['results'][id_on_page]["id"]
-    movie_id = 155 #238 #gold father #155 #nolan   33 550
+    movie_id = movies['results'][id_on_page]["id"]
+    #movie_id = 155 #238 #gold father #155 #nolan   33 550
 
     return movie_id
 
@@ -210,59 +210,30 @@ def create_nodes_for_graph(config, movie):
     return movie_credits
 
 
-def create_cast_graph(config, movie):
-    """Return cast connections in over movie (5 actors and first director)
-        movie: Movie's object"""
-    #Create person nodes for less or 5 actors and directors
-    person_nodes = create_nodes_for_graph(config, movie)
-
-    # Initialize graph
-    cast_graph = CastGraph()
-    for node in person_nodes:
-        cast_graph.add_person(node)
-
-    # Add connections to the graph between two persons
-    for i in xrange(len(person_nodes)-1):
-        for j in xrange(i+1, len(person_nodes)):
-            list_movies_person1 = set(person_nodes[i].movies.keys())
-            list_movies_person2 = set(person_nodes[j].movies.keys())
-            intersection = list_movies_person1 & list_movies_person2
-            if intersection:
-                cast_graph.set_connections(person_nodes[i], person_nodes[j])
-
-    print "person_node in GRAPH:"
-    for node in cast_graph.nodes:
-        node.print_node()
-
-    return cast_graph
-
-
 def create_cast_graph_json(config, movie):
-    """Return cast connections in over movie
-        movie: Movie's object"""
-
-    print "Inside CREATE CAST GRAPH JSON"
+    """Return dictionary cast connections in over movie
+        {"nodes": [{"name": actor's name,
+                    "url": url actor's photo,
+                    "wiki": wikipedia link}, ],
+         "links": [{"source": actor1's index in "nodes",
+                    "target": actor2's index in "nodes", 
+                    "movies": intersection of movies }, ]
+        }
+       Input: movie is Movie's object
+    """
     cast_graph = {"nodes": [], "links": []}
     #Create person nodes for less or 5 actors and first director
     person_nodes = create_nodes_for_graph(config, movie)
 
     # Nodes
-    print "NODES"
-    i = 0
     for person_node in person_nodes:
         node = {"name": person_node.person.name,
                 "url": person_node.person.profile_url,
                 "wiki": person_node.person.wikipedia_url
                }
-        cast_graph["nodes"].append(node)
-        print "name:", cast_graph["nodes"][i]["name"],
-        print "url: ", cast_graph["nodes"][i]["url"]
-        i +=1
-        
+        cast_graph["nodes"].append(node)       
 
     # Add links to the graph between two persons
-    print "LINKS"
-    index = 0
     for i in xrange(len(person_nodes)-1):
         for j in xrange(i+1, len(person_nodes)):
             # find movie ids where two persons worked together
@@ -278,15 +249,8 @@ def create_cast_graph_json(config, movie):
                         "target": j,
                         "movies":intersection_movies}
                 cast_graph["links"].append(link)
-                print "source:", cast_graph["links"][index]["source"],
-                print "target: ", cast_graph["links"][index]["target"],
-                print "movies: ", cast_graph["links"][index]["movies"],
-                index +=1
 
-
-    return cast_graph
-
-            
+    return cast_graph          
 
 
 

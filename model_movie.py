@@ -191,25 +191,3 @@ class PersonNode(object):
         for key, value in self.movies.items():
             print key, value
         print self.adjacent
-
-
-class CastGraph(object):
-    """Graph holding actors and directors of movie and their connections
-       in other movies.
-    """
-
-    def __init__(self):
-        """Create an empty graph"""
-        self.nodes = set()
-
-    def __repr__(self):
-        return "<CastGraph: {0}>".format([n.person for n in self.nodes])
-
-    def add_person(self, person_node):
-        """Add a person (person_node) to our graph"""
-        self.nodes.add(person_node)
-
-    def set_connections(self, person_node1, person_node2):
-        """Set two person if they met in another movies"""
-        person_node1.adjacent.add(person_node2)
-        person_node2.adjacent.add(person_node1)

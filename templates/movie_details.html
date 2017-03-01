@@ -115,7 +115,7 @@
         </div>
         <div class="col-xs-12" id="draw-graph"></div>
 
-        <div class="modal fade" id="myModal" role="dialog">    <!-- Modal -->
+        <div class="modal fade" id="Modal-graph" role="dialog">    <!-- Modal -->
           <div class="modal-dialog">
           
             <div class="modal-content">
@@ -256,9 +256,8 @@
         for (var i = 0; i < d.movies.length; i++) { 
           html += d.movies[i] + "<br>";
         }
-        $('.modal-body p').html(html);
-        //d3.select("#info").text(d.movies); 
-        $("#myModal").modal("show"); 
+        $('.modal-body p').html(html); 
+        $("#Modal-graph").modal("show"); 
 
         });
 

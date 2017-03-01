@@ -24,7 +24,8 @@
             <li><a href="{{ url_for('show_user', user_id= session['logged_in_user_id'])}}">
             Profile</a></li>
           {% else %}
-            <li><a href="/login">Log In</a></li>
+<!--             <li><a href="/login">Log In</a></li> -->
+            <li><a href="#" id="login-cinemania">Log In</a></li>
           {% endif %}
         </ul>
       </div>
@@ -40,10 +41,54 @@
   {% endwith %}
   
   {% block content %} put your content here {% endblock %}
+  <!-- Modal -->
+  <div class="modal fade" id="Modal-Login" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="padding:35px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4><span class="glyphicon glyphicon-lock"></span> Login</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+          <form role="form" action = "/login" method = "post">
+            <div class="form-group">
+              <label for="email"><span class="glyphicon glyphicon-user"></span> E-mail</label>
+              <input type="text" class="form-control" id="e-mail" placeholder="Enter email" name="e-mail">
+            </div>
+            <div class="form-group">
+              <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+              <input type="text" class="form-control" id="password" placeholder="Enter password" name="password">
+            </div>
+              <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Login</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <p> <a href="/register">Would you like to register?</a></p>
+<!--           <p>Forgot <a href="#">Password?</a></p> -->
+        </div>
+      </div>
+      
+    </div>
+  </div>
 
   <footer>
     <!--<p>Hackbright Academy. Fellowship - 2017.</p>-->
   </footer>
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script>
+  "use strict"
+
+    $("#login-cinemania").click(function(){
+      event.preventDefault();
+      debugger;
+        $("#Modal-Login").modal();
+    });
+
+  </script>
 
 </body>
 </html>

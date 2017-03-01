@@ -104,7 +104,16 @@ def change_movie_rating():
 
 @app.route("/cast_graph.json")
 def get_cast_graph():
-    """Collect information for drawing cast graph"""
+    """Collect information for drawing cast graph 
+       Return json:
+        {"nodes": [{"name": actor's name,
+                    "url": url actor's photo,
+                    "wiki": wikipedia link}, ],
+         "links": [{"source": actor1's index in "nodes",
+                    "target": actor2's index in "nodes", 
+                    "movies": intersection of movies }, ]
+        }
+    """
     movie_id = request.args.get("movie_id")
 
     # Create Movie object which contains only movie, actors and directors
@@ -112,20 +121,9 @@ def get_cast_graph():
     movie.load_crew(config)
 
     # Create cast graph (5 actors and director) 
-    rh.create_cast_graph(config, movie)
     cast_graph = rh.create_cast_graph_json(config, movie)
 
     return jsonify(cast_graph)
-    #     {"nodes": [
-    #   {"name": "Christofer Nolan"},
-    #   {"name": "Christeian Bale"},
-    #   {"name": "Mike Kein"},
-    #   {"name": "Oxana Matveyuk"}],
-    #   "links": [
-    #   {"source": 0, "target": 1},
-    #   {"source": 0, "target": 2}]
-    # })
-
 
 
 @app.route("/register", methods=["GET"])

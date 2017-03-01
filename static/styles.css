@@ -74,6 +74,17 @@ h3 {
     font-family: sans-serif;
 }
 
+.modal-header, h4, .close {
+  background-color: #008080;
+  color: #ffffff !important;
+  text-align: center;
+  font-size: 30px;
+}
+
+.modal-content .btn .btn-success .btn-block {
+  background-color: #008080;
+  color: #ffffff !important
+}
 
 .loading {
   font-size: 20px;
