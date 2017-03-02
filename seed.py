@@ -25,7 +25,7 @@ def load_users():
     for row in open("seed_data/u.user"):
         row = row.rstrip()
         # unpacking
-        user_id, name, email, password, dob = row.split(",")
+        user_id, name, email, password, provider, dob = row.split(",")
         if dob:
             dob = datetime.datetime.strptime(dob, "%d-%b-%Y")
         else:
@@ -35,6 +35,7 @@ def load_users():
                     name=name,
                     email=email,
                     password=password,
+                    provider=provider,
                     dob=dob)
 
         # We need to add to the session or it won't ever be stored

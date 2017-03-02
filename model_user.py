@@ -21,8 +21,9 @@ class User(db.Model):
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(64), nullable=True)
-    email = db.Column(db.String(64), nullable=False)
+    email = db.Column(db.String(64), nullable=False, unique=True)
     password = db.Column(db.String(64), nullable=False)
+    provider = db.Column(db.String(30), nullable=True)
     dob = db.Column(db.DateTime, nullable=True)
     genres = db.relationship('UserGenre')
     movies = db.relationship('UserMovie')
@@ -193,28 +194,36 @@ def get_user_genres(user_id):
     genres = db.session.query(UserGenre.genre_id,
                               Genre.name,
                               Genre.themoviedb_id).join(Genre).filter(UserGenre.user_id == user_id).all()
-
     return genres
 
 
 def add_user(info_user):
     """Add new user."""
-    name, email, password, dob, genres = info_user
+    email, password, provider = info_user
 
     user = User.query.filter_by(email=email).first()
 
     if user is None:
-        user = User(name=name, email=email, password=password, dob=dob)
+        user = User(name=None, email=email, password=password, provider=provider, dob=None)
         db.session.add(user)
         db.session.commit()
 
         user_id = User.query.filter(User.email == email,
                                     User.password == password).first().user_id
-        session["logged_in_user_id"] = user_id
-        add_user_genres(user_id, genres)
-        flash("User sucsuccessfully added")
+        return user_id 
     else:
-        flash("User already exists")
+        return 0
+
+
+def add_user_info(info_user):
+    """Add info from registration form if user login through Facebook"""
+    user_id, name, dob, genres = info_user
+    user = get_user(user_id)
+
+
+
+
+
 
 
 def add_user_genres(user_id, genres):
@@ -230,20 +239,13 @@ def add_user_genres(user_id, genres):
 
 
 def is_user(email, password):
-    """ Return true if user exists, overwise false."""
-    try:
-        user = User.query.filter_by(email=email).one()
-    except NoResultFound:
-        flash("User is not found in our base")
-        return False
+    """Return user id if user is valid, overwise 0(false)."""
+    user = User.query.filter(User.email == email,
+                             User.password == password).first()
 
-    if password == user.password:
-        session["logged_in_user_id"] = user.user_id
-        flash("Login successful")
-        return True
-    else:
-        flash("Incorrect password")
-        return False
+    if user is None:
+        return 0
+    return user.user_id
 
 
 def connect_to_db(app, db_url='postgresql:///movie'):

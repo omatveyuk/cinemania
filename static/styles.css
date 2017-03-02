@@ -74,16 +74,29 @@ h3 {
     font-family: sans-serif;
 }
 
-.modal-header, h4, .close {
+/*.modal-header, h4, .close {*/
+.modal-header {
   background-color: #008080;
-  color: #ffffff !important;
+  color: #ffffff;
+  text-align: center;
+  font-size: 30px;
+}
+.modal-title {
+  color: #ffffff;
   text-align: center;
   font-size: 30px;
 }
 
-.modal-content .btn .btn-success .btn-block {
+.modal-comment {
+  color: #000000;
+  text-align: left;
+  font-size: 15px;
+}
+
+.btn, .btn-success, .btn-success:hover, .btn-block, .btn-large {
   background-color: #008080;
-  color: #ffffff !important
+  border-color: #008080;
+  color: #ffffff; 
 }
 
 .loading {

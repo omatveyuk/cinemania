@@ -121,7 +121,8 @@
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <div class="modal-title"></div>
+                <div class="modal-title" id="graph-title"></div>
+                <div class="modal-comment" id="current-movie"></div>
               </div>
               <div class="modal-body">
                 <p></p>
@@ -250,14 +251,17 @@
       .style("stroke-width", function(d) { return d.movies.length; })
       .style("cursor", "pointer")
       .on("click", function(d) { 
-        var html = $('#title-movie').html()+'<h3>'+d.source.name+' - '+d.target.name+':</h3><br>'
-        $('.modal-title').html(html);
+        var html = d.source.name+' - '+d.target.name+':';
+        $('#graph-title').html(html);  
+        html = $('#title-movie').html()
+        $('#current-movie').html(html)
+
         html = '';
         for (var i = 0; i < d.movies.length; i++) { 
           html += d.movies[i] + "<br>";
         }
         $('.modal-body p').html(html); 
-        $("#Modal-graph").modal("show"); 
+        $('#Modal-graph').modal("show"); 
 
         });
 

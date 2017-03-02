@@ -38,7 +38,7 @@
 
     {% for step in range(0, 6) %}
       {% set index_in_row = index + step %}   <!-- next in row -->
-      {% if index_in_row in range(movies|count) %}
+      {% if index_in_row < movies|count %}
 
         <div class="col-xs-2">  <!-- 2nd in row -->
 
@@ -119,18 +119,15 @@
   }
 
   function changeMovieRating(evt) {
-    debugger;
     event.preventDefault();
 
     var movie_id = $(this).attr('data-id');
-    //var rating = $('#movie_'+movie_id+' input[name="rating"]:checked').val();
     var rating = $('#rating-value_'+movie_id).val()
     $.post('/change_rating.json', {"movie_id": movie_id, "rating": rating}, showNewMovieRating);
   }
 
 
   $('a.change-rating').click(function(){
-    debugger;
       var movie_id = $(this).attr('data-id');
       $('#movie_'+movie_id).show();
   });

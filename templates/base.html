@@ -15,14 +15,12 @@
         <a class="navbar-brand" href="/">Cinemania</a>
       </div>
       <div id="navbar">
-        <ul class="nav navbar-nav">
-          <li><a href="#">About</a></li>
-        </ul>
         <ul class="nav navbar-nav navbar-right">
           {% if "logged_in_user_id" in session %}
             <li><a href="/logout">Logout</a></li>
             <li><a href="{{ url_for('show_user', user_id= session['logged_in_user_id'])}}">
             Profile</a></li>
+            <li><a id="user-settings">Settings</a></li>
           {% else %}
 <!--             <li><a href="/login">Log In</a></li> -->
             <li><a href="#" id="login-cinemania">Log In</a></li>
@@ -41,33 +39,81 @@
   {% endwith %}
   
   {% block content %} put your content here {% endblock %}
-  <!-- Modal -->
+  <!-- Modal LOGIN-->
   <div class="modal fade" id="Modal-Login" role="dialog">
     <div class="modal-dialog">
     
       <!-- Modal content-->
       <div class="modal-content">
+
         <div class="modal-header" style="padding:35px 50px;">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4><span class="glyphicon glyphicon-lock"></span> Login</h4>
         </div>
+
         <div class="modal-body" style="padding:40px 50px;">
-          <form role="form" action = "/login" method = "post">
+          <form role="form" method = "post">
+
             <div class="form-group">
               <label for="email"><span class="glyphicon glyphicon-user"></span> E-mail</label>
-              <input type="text" class="form-control" id="e-mail" placeholder="Enter email" name="e-mail">
+              <input type="email" class="form-control" id="e-mail" placeholder="Enter email" name="e-mail">
             </div>
+
             <div class="form-group">
               <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
-              <input type="text" class="form-control" id="password" placeholder="Enter password" name="password">
+              <input type="password" class="form-control" id="password" placeholder="Enter password" name="password">
             </div>
-              <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Login</button>
+
+            <button type="submit" class="btn btn-success btn-block" id="login-submit"><span class="glyphicon glyphicon-off"></span> Login</button>
+
+          </form>
+
+          <div>
+            <br>
+            <a href='/authorize'><button class="btn btn-block">Facebook</button></a>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-default" id="sign-up" data-toggle="modal">Sign Up</button>
+        </div>
+
+      </div>
+      
+    </div>
+  </div>
+
+
+  <!-- Modal SIGNUP-->
+  <div class="modal fade" id="Modal-SignUp" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding:35px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4><span class="glyphicon glyphicon-lock"></span> Sign Up</h4>
+        </div>
+
+        <div class="modal-body" style="padding:40px 50px;">
+          <form role="form" method = "post">
+
+            <div class="form-group">
+              <label for="email"><span class="glyphicon glyphicon-user"></span> E-mail</label>
+              <input type="email" class="form-control" id="e-mail-signup" placeholder="Enter email" name="e-mail">
+            </div>
+
+            <div class="form-group">
+              <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+              <input type="password" class="form-control" id="password-signup" placeholder="Enter password" name="password">
+            </div>
+
+            <button type="submit" class="btn btn-success btn-block" id="signup-submit"> Sign Up</button>
+
           </form>
         </div>
-        <div class="modal-footer">
-          <p> <a href="/register">Would you like to register?</a></p>
-<!--           <p>Forgot <a href="#">Password?</a></p> -->
-        </div>
+
       </div>
       
     </div>
@@ -82,11 +128,46 @@
   <script>
   "use strict"
 
-    $("#login-cinemania").click(function(){
-      event.preventDefault();
-      debugger;
-        $("#Modal-Login").modal();
-    });
+  function checkLogin(evt){
+    event.preventDefault();
+    var e_mail = $('#e-mail').val();
+    var password = $('#password').val();
+    $.post('/login.json', {"e-mail": e_mail, "password": password}, submit);
+  }
+
+  function submit(){
+      location.replace("/");
+  }
+
+  function SignUp(evt){
+    event.preventDefault;
+    debugger;
+    var e_mail = $('#e-mail-signup').val();
+    var password = $('#password-signup').val();
+    $.post('/signup.json', {"e-mail": e_mail, "password": password}, submit);
+  }
+
+
+  $("#login-cinemania").click(function(){
+    event.preventDefault();
+    $("#Modal-Login").modal();
+  });
+
+  $("#login-submit").on("click", checkLogin);
+
+  $("#sign-up").click(function(){
+    event.preventDefault();
+    $("#Modal-Login").modal('hide');
+    $("#Modal-SignUp").modal('show');
+  });
+
+  $("#signup-submit").click("submit", SignUp);
+
+  $("#user-settings").click(function(){
+    event.preventDefault();
+    $("#Modal-Settings ").modal();
+  });
+
 
   </script>
 

@@ -24,11 +24,6 @@ class CinemaniaTests(unittest.TestCase):
         result = self.client.get("/random_movie")
         self.assertIn("Country:", result.data)
 
-    def test_login(self):
-        """Test Login page"""
-        result = self.client.get("/login")
-        self.assertIn("Would you like to register?", result.data)
-
 
 class PartyTestsDatabase(unittest.TestCase):
     """Flask tests that use the database."""
@@ -71,6 +66,7 @@ class PartyTestsDatabase(unittest.TestCase):
                                   data={"username": "oxana",
                                         "e-mail": "oxana@oxana.com",
                                         "password": "oxana71",
+                                        "provider": "Cinemania",
                                         "dob": None,
                                         "genres": ["Drama", "Animation"]},
                                   follow_redirects=True)
@@ -82,6 +78,7 @@ class PartyTestsDatabase(unittest.TestCase):
                                   data={"username": "Fred",
                                         "e-mail": "Fred@Fred.com",
                                         "password": "Fred25",
+                                        "provider": "Cinemania",
                                         "dob": None,
                                         "genres": []},
                               follow_redirects=True)
@@ -105,11 +102,13 @@ def example_data():
     fred = User(name="Fred",
                 email="Fred@Fred.com",
                 password="Fred25",
+                provider="Cinemania",
                 dob="30-Aug-2000")
     ann = User(name=None,
                email="Ann@Ann.com",
-                password="Ann25",
-                dob=None)
+               password="Ann25",
+               provider="Cinemania",
+               dob=None)
     db.session.add_all([fred, ann])
     db.session.commit()
 

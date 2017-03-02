@@ -4,6 +4,10 @@ import os                   #to access my OS environment variables
 from flask import Flask, session, request, redirect, render_template, flash, jsonify
 import jinja2
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_login import LoginManager, UserMixin, login_user, logout_user,\
+    current_user
+from oauth import FacebookSignIn
+#from oauth import OAuthSignIn
 import requests
 
 import request_helper as rh
@@ -15,6 +19,7 @@ import model_user as mu
 app = Flask(__name__)
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "shhhhhhhhhhhhhh"
+#lm = LoginManager(app)
 
 config = {}
 
@@ -126,53 +131,119 @@ def get_cast_graph():
     return jsonify(cast_graph)
 
 
-@app.route("/register", methods=["GET"])
-def register_form():
+@app.route("/register/<user_id>", methods=["GET"])
+def register_form(user_id):
+    print "\n REGISTER FORM"
+    print provider
     genres = mu.Genre.query.all()
-    return render_template("register_form.html", genres=genres)
+    return render_template("register_form.html",
+                            genres=genres,
+                            provider=provider)
 
 
-@app.route("/register", methods=["POST"])
-def register_process():
+@app.route("/register/<user_id>", methods=["POST"])
+def register_process(user_id):
     """Add new user to db."""
     name = request.form.get("username")
     if name == '':
         name = None
-    email = request.form.get("e-mail")
-    password = request.form.get("password")
+
+    if provider == 'Cinemania':
+        email = request.form.get("e-mail")
+        password = request.form.get("password")
+        provider = 'Cinemania'
+
     dob = request.form.get("dob")
     if dob == '':
         dob = None
+
     genres = request.form.getlist('genre')
 
-    info_user = [name, email, password, dob, genres]
-    mu.add_user(info_user)
+    if provider == 'Cinemania':
+        info_user = [name, email, password, provider, dob, genres]
+        mu.add_user(info_user)
+    else:
+        # user is already created if he login through Facebook
+        user_id = session["logged_in_user_id"]
+        info_user = [user_id, name, dob, genres]
+        mu.add_info(info_user)
 
     return redirect("/")
 
+@app.route("/signup.json", methods=["POST"])
+def signup_form():
+    """Sign up"""
+    email = request.form.get("e-mail")
+    password = request.form.get("password")
+    provider = 'Cinemania'
+    info_user = [email, password, provider]
 
-@app.route("/login", methods=["GET"])
-def show_login():
-    """Show login form."""
-    return render_template("login_form.html")
+    user_id = mu.add_user(info_user)
+    if user_id:
+        flash("User sucsuccessfully added")
+        session["logged_in_user_id"] = user_id
+        return jsonify({"AddUser": "true"})
+    
+    flash("User with the e-mail already exists")
+    return jsonify({"AddUser": "false"})
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/login.json", methods=["POST"])
 def login_form():
-    #get user-provided email and password from request.form
+    """Log in to Cinemania"""
     email = request.form.get("e-mail")
     password = request.form.get("password")
 
-    if mu.is_user(email, password):
-        return redirect('/')
-    return redirect('/login')
+    user_id = mu.is_user(email, password)
+    if user_id:
+        session["logged_in_user_id"] = user_id
+        flash("Login successful")
+        return jsonify({"isUser": "true"})
+
+    flash("Invalid user. Wrong e-mail, password or  maybe, you registered through Facebook?")
+    return jsonify({"isUser": "false"})
 
 
 @app.route("/logout")
 def logout():
+    """Logout"""
     session.pop('logged_in_user_id', None)
     flash('You were logged out')
     return redirect('/')
+
+
+@app.route("/authorize")
+def oauth_authorize():
+    """Facebook Authorize""" 
+    if "logged_in_user_id" in session:
+        return redirect('/')
+    oauth = FacebookSignIn().authorize()
+    return oauth
+
+
+@app.route('/callback')
+def oauth_callback():
+    """Login with Facebook (if user doesn't exist add new user)"""
+    if "logged_in_user_id" in session:
+        return redirect('/')
+    social_id, email = FacebookSignIn().callback()
+
+    if social_id is None:
+        flash('Authentication failed.')
+        return redirect('/')
+
+    # User is already in the db
+    user_id = mu.is_user(email, social_id)
+    if user_id:
+        session["logged_in_user_id"] = user_id
+        flash("Login successful")
+        return redirect('/')
+
+    # Add user to the dbb    
+    info_user = [email, social_id, 'Facebook']
+    if mu.add_user(info_user):
+        flash("User sucsuccessfully added")
+        return redirect('/')
 
 
 if __name__ == "__main__":
