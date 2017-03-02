@@ -1,4 +1,5 @@
 env
+env-mac
 temp
 secrets.sh
 *.pyc
