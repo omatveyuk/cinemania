@@ -253,6 +253,33 @@ def create_cast_graph_json(config, movie):
     return cast_graph   
 
 
+def create_info_user_json(genres, user, user_genres):
+    """Create dictionary (name, dob, user's genres) for json""" 
+    info_user_json = {"genres": [],
+                      "name": '',
+                      "dob": ''}
+
+    if user.name == None:
+        info_user_json["name"] = ''
+    else:
+        info_user_json["name"] = user.name
+    if user.dob == None:
+        info_user_json["dob"] = ''
+    else:
+        info_user_json["dob"] = user.dob.strftime("%Y-%m-%d")
+
+    user_id_genres = set([genre[0] for genre in user_genres])
+    for genre in genres:
+        if genre.genre_id in user_id_genres:
+            info_user_json["genres"].append({"id": genre.genre_id,
+                                             "name": genre.name,
+                                             "checked": "checked"})
+        else:
+            info_user_json["genres"].append({"id": genre.genre_id,
+                                             "name": genre.name,
+                                             "checked": ""})
+
+    return info_user_json
 
 
 

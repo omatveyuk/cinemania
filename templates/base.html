@@ -22,8 +22,7 @@
             Profile</a></li>
             <li><a id="user-settings">Settings</a></li>
           {% else %}
-<!--             <li><a href="/login">Log In</a></li> -->
-            <li><a href="#" id="login-cinemania">Log In</a></li>
+            <li><a id="login-cinemania">Log In</a></li>
           {% endif %}
         </ul>
       </div>
@@ -40,10 +39,9 @@
   
   {% block content %} put your content here {% endblock %}
   <!-- Modal LOGIN-->
-  <div class="modal fade" id="Modal-Login" role="dialog">
+  <div class="modal fade" id="Modal-Login" role="dialog"> 
     <div class="modal-dialog">
     
-      <!-- Modal content-->
       <div class="modal-content">
 
         <div class="modal-header" style="padding:35px 50px;">
@@ -81,14 +79,13 @@
       </div>
       
     </div>
-  </div>
+  </div>    <!-- Modal LOGIN -->
 
 
   <!-- Modal SIGNUP-->
   <div class="modal fade" id="Modal-SignUp" role="dialog">
     <div class="modal-dialog">
     
-      <!-- Modal content-->
       <div class="modal-content">
 
         <div class="modal-header" style="padding:35px 50px;">
@@ -117,7 +114,52 @@
       </div>
       
     </div>
-  </div>
+  </div>  <!-- Modal Sign Up -->
+
+  <!-- Modal Settings-->
+  <div class="modal fade" id="Modal-Settings" role="dialog">
+    <div class="modal-dialog">
+    
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding:35px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4><span class="glyphicon glyphicon-lock"></span> Registration Form</h4>
+        </div>
+
+        <div class="modal-body" style="padding:40px 50px;">
+          <form role="form" method = "post">
+            <div class="row">
+
+              <div class="col-xs-6">
+
+                <div class="form-group">
+                  <label for="name">Your name</label>
+                  <input type="name" class="form-control" id="name" name="name">
+                </div>
+
+                <div class="form-group">
+                  <label for="dob">Your birthday</label>
+                  <input type="date" class="form-control" id="dob" name="dob">
+                </div>
+
+                <button type="submit" class="btn btn-success btn-block" id="save-settings"> Save</button>
+
+              </div>
+
+              <div class="col-xs-6" id="genres-form">
+                  <p><b>Which genres do you prefer?</b></p>
+              </div>
+
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+      
+    </div>
+  </div>  <!-- Modal Settings -->
 
   <footer>
     <!--<p>Hackbright Academy. Fellowship - 2017.</p>-->
@@ -139,14 +181,50 @@
       location.replace("/");
   }
 
-  function SignUp(evt){
-    event.preventDefault;
-    debugger;
+  function signUp(evt){
+    event.preventDefault();
     var e_mail = $('#e-mail-signup').val();
     var password = $('#password-signup').val();
     $.post('/signup.json', {"e-mail": e_mail, "password": password}, submit);
   }
 
+  function infoSettings(result){
+    $('#name').attr('value', result["name"])
+    $('#dob').attr('value', result["dob"])
+
+    var html = '<form id="genres">';
+    var i;
+    for (i in result["genres"]) {
+      html += '<div class="checkbox"><label><input class="genre" type="checkbox"'; 
+      html += ' id="' + result["genres"][i]["name"];
+      html += '" name="genre" value=' + result["genres"][i]["name"];
+      if (result["genres"][i]["checked"] == "checked"){
+        html += ' checked'
+      }
+      html += '> ' + result["genres"][i]["name"] + ' <br></label></div>';
+    }
+    html += '</form>'
+    $("#genres-form").append(html);
+    $("#Modal-Settings").modal();
+  }
+
+  function saveSettings(evt){
+    event.preventDefault();
+
+    var data = {
+      "test": ['test_val'],
+    };
+
+    var name = $('#name').val();
+    var dob = $('#dob').val();
+    var genres = []
+    $('.genre').each(function() {
+      if($(this).is(':checked'))
+      genres.push($(this).val());
+    });   
+
+    $.post('/register.json', {"name": name, "dob": dob, "genres": genres}, submit);
+  }
 
   $("#login-cinemania").click(function(){
     event.preventDefault();
@@ -161,13 +239,14 @@
     $("#Modal-SignUp").modal('show');
   });
 
-  $("#signup-submit").click("submit", SignUp);
+  $("#signup-submit").click("submit", signUp);
 
   $("#user-settings").click(function(){
     event.preventDefault();
-    $("#Modal-Settings ").modal();
+    $.get('/register.json', infoSettings);
   });
 
+  $("#save-settings").on("click", saveSettings)
 
   </script>
 

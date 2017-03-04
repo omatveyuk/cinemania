@@ -131,44 +131,39 @@ def get_cast_graph():
     return jsonify(cast_graph)
 
 
-@app.route("/register/<user_id>", methods=["GET"])
-def register_form(user_id):
-    print "\n REGISTER FORM"
-    print provider
+@app.route("/register.json", methods=["GET"])
+def register_form():
+    """Send genres and user's preferences to registration form"""
     genres = mu.Genre.query.all()
-    return render_template("register_form.html",
-                            genres=genres,
-                            provider=provider)
+
+    if "logged_in_user_id" in session:
+        user_id = session["logged_in_user_id"]
+        user = mu.get_user(user_id)
+        user_genres = mu.get_user_genres(user_id)
+        return jsonify(rh.create_info_user_json(genres, user, user_genres))
+    return jsonify({"User": "not in session"})
 
 
-@app.route("/register/<user_id>", methods=["POST"])
-def register_process(user_id):
-    """Add new user to db."""
-    name = request.form.get("username")
+@app.route("/register.json", methods=["POST"])
+def register_process():
+    """Add user's preferences and informatio about user to db."""
+    user_id = session["logged_in_user_id"]
+
+    name = request.form.get("name")
     if name == '':
         name = None
-
-    if provider == 'Cinemania':
-        email = request.form.get("e-mail")
-        password = request.form.get("password")
-        provider = 'Cinemania'
 
     dob = request.form.get("dob")
     if dob == '':
         dob = None
 
-    genres = request.form.getlist('genre')
+    genres = request.form.getlist("genres[]")
 
-    if provider == 'Cinemania':
-        info_user = [name, email, password, provider, dob, genres]
-        mu.add_user(info_user)
-    else:
-        # user is already created if he login through Facebook
-        user_id = session["logged_in_user_id"]
-        info_user = [user_id, name, dob, genres]
-        mu.add_info(info_user)
+    info_user = [user_id, name, dob, genres]
+    mu.add_info_user(info_user)
 
-    return redirect("/")
+    return jsonify({"AddSettings": "true"})
+
 
 @app.route("/signup.json", methods=["POST"])
 def signup_form():
@@ -249,10 +244,10 @@ def oauth_callback():
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
-    #app.debug = True
+    # app.debug = True
 
     mu.connect_to_db(app)
 
     # Use the DebugToolbar
-    #DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
     app.run(host="0.0.0.0")

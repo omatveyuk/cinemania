@@ -86,6 +86,7 @@ class UserGenre(db.Model):
                                                                  self.user_id,
                                                                  self.genre_id)
 
+
 class UserMovie(db.Model):
     """Movie which user nas already seen from movie website"""
 
@@ -215,15 +216,25 @@ def add_user(info_user):
         return 0
 
 
-def add_user_info(info_user):
-    """Add info from registration form if user login through Facebook"""
+def add_info_user(info_user):
+    """Add info from registration form"""
     user_id, name, dob, genres = info_user
     user = get_user(user_id)
 
+    # Information about user
+    user.name = name
+    user.dob = dob
+    db.session.commit()
+
+    # Genres' preferences
+    delete_user_genres(user_id)
+    add_user_genres(user_id, genres)
 
 
-
-
+def delete_user_genres(user_id):
+    """Delete user's genre preferences"""
+    genres = UserGenre.query.filter(UserGenre.user_id == user_id).delete()
+    db.session.commit()
 
 
 def add_user_genres(user_id, genres):
