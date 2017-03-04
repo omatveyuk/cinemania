@@ -17,7 +17,7 @@ class CinemaniaTests(unittest.TestCase):
         """Test start page."""
         result = self.client.get("/")
         self.assertIn("Welcome", result.data)
-        self.assertIn("to choose a movie randomly", result.data)
+        self.assertIn("to peek at randomly selected movie", result.data)
 
     def test_movie_page_random(self):
         """Test movie page for movie randomly choosen."""
@@ -46,11 +46,6 @@ class PartyTestsDatabase(unittest.TestCase):
         db.session.close()
         db.drop_all()
 
-    def test_register(self):
-        """Test register page"""
-        result = self.client.get("/register")
-        self.assertIn("User name", result.data)
-
     def test_user_in_session(self):
         """Test that the user's page displays movies that already are seen
            from example_data()"""
@@ -58,32 +53,7 @@ class PartyTestsDatabase(unittest.TestCase):
             with c.session_transaction() as sess:
                 sess['logged_in_user_id'] = 3
         result = self.client.get('/users/3')
-        self.assertIn("Your favorite genre:",  result.data)
-
-    def test_register_successfully(self):
-        """Test user was added successfully"""
-        result = self.client.post("/register",
-                                  data={"username": "oxana",
-                                        "e-mail": "oxana@oxana.com",
-                                        "password": "oxana71",
-                                        "provider": "Cinemania",
-                                        "dob": None,
-                                        "genres": ["Drama", "Animation"]},
-                                  follow_redirects=True)
-        self.assertIn("User sucsuccessfully added", result.data)
-
-    def test_register_user_already_exists(self):
-        """Test: user already exists"""
-        result = self.client.post("/register",
-                                  data={"username": "Fred",
-                                        "e-mail": "Fred@Fred.com",
-                                        "password": "Fred25",
-                                        "provider": "Cinemania",
-                                        "dob": None,
-                                        "genres": []},
-                              follow_redirects=True)
-        self.assertIn("User already exists", result.data)
-
+        self.assertIn("Your favorite genre:", result.data)
 
 def example_data():
     """Create the sample data for testing"""

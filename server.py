@@ -4,10 +4,8 @@ import os                   #to access my OS environment variables
 from flask import Flask, session, request, redirect, render_template, flash, jsonify
 import jinja2
 from flask_debugtoolbar import DebugToolbarExtension
-from flask_login import LoginManager, UserMixin, login_user, logout_user,\
-    current_user
+from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
 from oauth import FacebookSignIn
-#from oauth import OAuthSignIn
 import requests
 
 import request_helper as rh
@@ -19,7 +17,6 @@ import model_user as mu
 app = Flask(__name__)
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "shhhhhhhhhhhhhh"
-#lm = LoginManager(app)
 
 config = {}
 
@@ -99,7 +96,7 @@ def change_movie_rating():
     #Get values from form
     user_id = session["logged_in_user_id"]
     rating = request.form.get("rating")
-    movie_id= request.form.get("movie_id")
+    movie_id = request.form.get("movie_id")
 
     #Update rating in db
     mu.update_rating(user_id, movie_id, rating)
@@ -109,13 +106,13 @@ def change_movie_rating():
 
 @app.route("/cast_graph.json")
 def get_cast_graph():
-    """Collect information for drawing cast graph 
+    """Collect information for drawing cast graph
        Return json:
         {"nodes": [{"name": actor's name,
                     "url": url actor's photo,
                     "wiki": wikipedia link}, ],
          "links": [{"source": actor1's index in "nodes",
-                    "target": actor2's index in "nodes", 
+                    "target": actor2's index in "nodes",
                     "movies": intersection of movies }, ]
         }
     """
@@ -125,7 +122,7 @@ def get_cast_graph():
     movie = Movie(movie_id)
     movie.load_crew(config)
 
-    # Create cast graph (5 actors and director) 
+    # Create cast graph (5 actors and director)
     cast_graph = rh.create_cast_graph_json(config, movie)
 
     return jsonify(cast_graph)
@@ -178,7 +175,7 @@ def signup_form():
         flash("User sucsuccessfully added")
         session["logged_in_user_id"] = user_id
         return jsonify({"AddUser": "true"})
-    
+
     flash("User with the e-mail already exists")
     return jsonify({"AddUser": "false"})
 
@@ -209,7 +206,7 @@ def logout():
 
 @app.route("/authorize")
 def oauth_authorize():
-    """Facebook Authorize""" 
+    """Facebook Authorize"""
     if "logged_in_user_id" in session:
         return redirect('/')
     oauth = FacebookSignIn().authorize()
@@ -234,7 +231,7 @@ def oauth_callback():
         flash("Login successful")
         return redirect('/')
 
-    # Add user to the dbb    
+    # Add user to the db
     info_user = [email, social_id, 'Facebook']
     if mu.add_user(info_user):
         flash("User sucsuccessfully added")
