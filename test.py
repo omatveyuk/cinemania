@@ -71,12 +71,12 @@ def example_data():
 
     fred = User(name="Fred",
                 email="Fred@Fred.com",
-                password="Fred25",
+                password="$2b$12$OQXSZA0n7p5Z8lTVuHhnOuA3TMSCA5/PvTwfqWr4Xh2jc9HKYSBdy",
                 provider="Cinemania",
                 dob="30-Aug-2000")
     ann = User(name=None,
                email="Ann@Ann.com",
-               password="Ann25",
+               password="'$2b$12$rWDF8EBsY9g7PdQzMi8KluFvEkzfTctaYbZ9p5Vqjl5/l5M8G/u5i'",
                provider="Cinemania",
                dob=None)
     db.session.add_all([fred, ann])

@@ -218,10 +218,13 @@ def oauth_callback():
     """Login with Facebook (if user doesn't exist add new user)"""
     if "logged_in_user_id" in session:
         return redirect('/')
-    social_id, email = FacebookSignIn().callback()
 
+    social_id, email = FacebookSignIn().callback()
     if social_id is None:
         flash('Authentication failed.')
+        return redirect('/')
+    if email is None:
+        flash('Sorry, your email is required to continue. Enable Cinemania app in Facebook to share email address.')
         return redirect('/')
 
     # User is already in the db
@@ -233,7 +236,9 @@ def oauth_callback():
 
     # Add user to the db
     info_user = [email, social_id, 'Facebook']
-    if mu.add_user(info_user):
+    user_id = mu.add_user(info_user)
+    if user_id:
+        session["logged_in_user_id"] = user_id
         flash("User sucsuccessfully added")
         return redirect('/')
 

@@ -3,12 +3,14 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, session, flash
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+import bcrypt
 
 # This is the connection to the PostgreSQL database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
 # object, where we do most of our interactions (like committing, etc.)
 
 db = SQLAlchemy()
+
 
 
 ##############################################################################
@@ -203,15 +205,17 @@ def add_user(info_user):
     email, password, provider = info_user
 
     user = User.query.filter_by(email=email).first()
-
     if user is None:
-        user = User(name=None, email=email, password=password, provider=provider, dob=None)
+        # Hash a password with a randomly-generated salt"
+        hashed = bcrypt.hashpw(password.encode('UTF_8'), bcrypt.gensalt())
+        user = User(name=None, email=email, password=hashed, provider=provider, dob=None)
         db.session.add(user)
         db.session.commit()
 
-        user_id = User.query.filter(User.email == email,
-                                    User.password == password).first().user_id
-        return user_id 
+        user_id = User.query.filter(User.email == email).first().user_id
+        # check that commit is successful
+        if user is not None:
+            return user_id
     else:
         return 0
 
@@ -251,12 +255,14 @@ def add_user_genres(user_id, genres):
 
 def is_user(email, password):
     """Return user id if user is valid, overwise 0(false)."""
-    user = User.query.filter(User.email == email,
-                             User.password == password).first()
+    # Check that a unhashed password matches password in db which
+    # has previously been hashed
+    user = User.query.filter(User.email == email).first()
+    if user is not None:
+        if bcrypt.hashpw(password.encode('UTF_8'), user.password.encode('UTF_8')) == user.password.encode('UTF_8'):
+            return user.user_id
 
-    if user is None:
-        return 0
-    return user.user_id
+    return 0
 
 
 def connect_to_db(app, db_url='postgresql:///movie'):
