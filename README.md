@@ -15,18 +15,18 @@ APIs: Themoviedb, Facebook (OAuth)<br/>
 ## <a name="features"></a>Features
 
 Users log in to Cinemania through regular way (e-mail, password) or via Facebook OAuth:
-![cinemania1](![image])
+![homepage](https://cloud.githubusercontent.com/assets/10794461/23594645/5f0393ea-01d0-11e7-94a3-db120978d7ca.png)
 
 Users are able to change their genres preferences:
-![cinemania2](![image])
+![registration](https://cloud.githubusercontent.com/assets/10794461/23594648/5f03db7a-01d0-11e7-948d-e2070bb60a28.png)
 
 Once a movie is chosen the user is shown the movie detail page. The page is made of several sections: the movie header, the poster, links to the actors or directors wikipedia pages, ratings and reviews, the overview and the trailer:
-![cinemania3](![image])
+![movie](https://cloud.githubusercontent.com/assets/10794461/23594646/5f039b42-01d0-11e7-8b3d-b49d955eee61.png)
 
 Users interested in knowing if the main actors and the director have appeared in another movies together, can do so by looking at the relationship graph:
-
+![graph](https://cloud.githubusercontent.com/assets/10794461/23594647/5f039926-01d0-11e7-971f-a50cc0350c30.png)
 Users can always re-visit movie's history in their profile and update ratings:
-![cinemania4](![image])
+![profile](https://cloud.githubusercontent.com/assets/10794461/23594649/5f048bba-01d0-11e7-9dc2-f5f9af877b1e.png)
 
 ## <a name="aboutme"></a>About Me
 I live in the San Francisco Bay Area. I made this site because I wanted to connect my pasion for coding and movies.
