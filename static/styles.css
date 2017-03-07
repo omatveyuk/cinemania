@@ -1,44 +1,54 @@
+
 h1 {
-    color:#008080;
-    font-weight: bold;
-    text-align: center;
+  color:#008080;
+  font-weight: bold;
+  text-align: left;
 }
+
 h3 {
-    color:#008080;
-    font-weight: bold;
-    text-align: center;  
+  color: #FC4A1A;
+  font-weight: bold;
+  text-align: left;  
 }
 
 .navbar-movie {
-    background-color:#008080;
-    color:#ffffff;
-    border-radius:0;
+  background-color:#008080;
+  color:#ffffff;
+  border-radius:0;
+  margin-bottom:0;
 }
 
 .navbar-movie .navbar-nav > li > a {
-    color:#fff;
+  color:#fff;
 }
 
 .navbar-movie .navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
-    color: #ffffff;
-    background-color:transparent;
+  color: #ffffff;
+  background-color:transparent;
 }
 
 .navbar-movie .navbar-brand {
-    color:#eeeeee;
+  color:#eeeeee;
 }
 
 .row {
-    padding: 0px 0px 10px 0px;
+  padding: 0px 0px 10px 0px;
 }
 
+/*#movie-homepage {
+    background-size: 100%;
+    background: url('/static/film-64152_640.jpg') no-repeat;
+    background-position: center top;
+
+}*/
+
 #movie-details {
-    margin: 0px 25px 0px 25px;
+  margin: 0px 25px 0px 25px;
 }
 
 #user-details {
-    margin: 0px 25px 0px 25px;
-    font-size: 17px;
+  margin: 0px 25px 0px 25px;
+  font-size: 17px;
 }
 
 #title-movie {
@@ -49,29 +59,29 @@ h3 {
 }
 
 #choice {
-    position:relative;
-    width: 600px;
-    height: 750px;
-    overflow: hidden;
+  position:relative;
+  width: 600px;
+  height: 750px;
+  overflow: hidden;
 }
 
 #poster {
-    z-index: -1; 
+  z-index: -1; 
 }
 
 .prime-circle {
-    color: #ffffff;
-    background-color: #008080;
-    text-shadow: 2px 2px 3px black;
-    border-radius: 50%;
-    border-color: #ffffff;
-    box-shadow: 3px 3px 10px #666;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
-    font-size: 100%;
-    font-family: sans-serif;
+  color: #ffffff;
+  background-color: #008080;
+  text-shadow: 2px 2px 3px black;
+  border-radius: 50%;
+  border-color: #ffffff;
+  box-shadow: 3px 3px 10px #666;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 100%;
+  font-family: sans-serif;
 }
 
 /*.modal-header, h4, .close {*/
@@ -94,8 +104,7 @@ h3 {
 }
 
 .btn, .btn-success, .btn-success:hover, .btn-block, .btn-large {
-  background-color: #008080;
-  border-color: #008080;
+  background-color: #FC4A1A; 
   color: #ffffff; 
 }
 

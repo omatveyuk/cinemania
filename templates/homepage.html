@@ -3,22 +3,30 @@
 
 <!-- It's container-fluid so it spans the whole page. -->
 <div class="container-fluid" id="movie-homepage"> 
-
+<!-- 
   <div class="row">
-    <div class="col-xs-12">
-      <h1> Welcome </h1>
+
+  </div> -->
+
+
+  <div class="col-xs-6">
+    <div class="container-fluid" style="margin-top: 80px;">
+      <img src="/static/film-64152_640.jpg" class="img-responsive" alt="CINEMANIA">
     </div>
   </div>
 
-  <div class="row" id="message" style="font-size: 25px; text-align: center;">    <!-- start -->
-    Click &nbsp; 
-    <a id="start" style="color: #008080; text-weight: bold;">here</a>
-     &nbsp; to peek at randomly selected movie...
-  </div>  <!-- start -->
-
-  <div class="container" id="choice">   <!-- choice -->
-      <img id="poster" src="/static/movie.jpg" class="img-responsive center-block" alt="CINEMANIA">
-  </div>  <!-- choice -->
+  <div class="col-xs-6">
+    <div class="col-xs-12">
+      <h1> Welcome </h1>
+    </div>
+    <div class="col-xs-12" id="message" style="font-size: 25px; cursor: pointer">    <!-- start -->
+      Need help finding a movie?<br>
+      Click &nbsp; 
+      <a id="start" style="color: #FC4A1A; text-weight: bold;">here</a>
+      &nbsp; to peek at random selected movie...
+    </div>  <!-- start -->
+    <div class="container" id="choice"></div>  <!-- choice -->
+  </div>
 
 </div>    <!-- movie-homepage -->
  
@@ -30,7 +38,9 @@
  
   function playPosters(result) {
     var html = 'Please wait. Processing. . .';
+    $("#message").attr("style", "text-align: center; font-size: 25px; cursor: pointer;");
     $("#message").html(html);
+    $("h1").html(' ');
 
  
     html = '<div id="slideshow" class="carousel slide" data-ride="carousel" '+
@@ -49,7 +59,7 @@
       temp++;
       html += '<img src="'+
               key+
-              '" class="img-responsive center-block" alt="CINEMANIA" style="width: 65%; height: 65%">'+
+              '" class="img-responsive img-thumbnail center-block" alt="CINEMANIA" style="width: 60%; height: 60%">'+
               '</div>';
       $('#carousel-poster').append(html);
     } 

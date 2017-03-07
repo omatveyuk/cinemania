@@ -2,8 +2,11 @@
 
 import unittest
 
-from server import app
+from server import app, config
+from flask import session 
 from flask_sqlalchemy import SQLAlchemy
+import model_movie as mm
+import model_user as mu
 from model_user import Movie, Genre, User, UserMovie, UserGenre, db, connect_to_db
 
 class CinemaniaTests(unittest.TestCase):
@@ -25,14 +28,15 @@ class CinemaniaTests(unittest.TestCase):
         self.assertIn("Country:", result.data)
 
 
-class PartyTestsDatabase(unittest.TestCase):
+class TestsDatabase(unittest.TestCase):
     """Flask tests that use the database."""
 
     def setUp(self):
         """Stuff to do before every test."""
 
-        self.client = app.test_client()
+        app.config['SECRET_KEY'] = 'key'
         app.config['TESTING'] = True
+        self.client = app.test_client()
 
         # Connect to test database 
         connect_to_db(app, 'postgresql:///testdb')
@@ -54,6 +58,40 @@ class PartyTestsDatabase(unittest.TestCase):
                 sess['logged_in_user_id'] = 3
         result = self.client.get('/users/3')
         self.assertIn("Your favorite genre:", result.data)
+
+    def test_check_movie(self):
+        """Test checking if movie exists in list of movie(Movie)."""
+        # Create movie objects which contain information about movie
+        movie_not_in_db = mm.Movie(271110)
+        movie_not_in_db.load(config)
+        movie_in_db = mm.Movie(135397)
+        movie_in_db.load(config)    
+
+        self.assertFalse(mu.check_movie(movie_not_in_db))
+        self.assertTrue(mu.check_movie(movie_in_db))
+
+    def test_add_movie(self):
+        """Test Adding movie to user's movie list(UserMovie) and list of movies(Movie)"""
+        # Create movie objects which contain information about movie
+        movie_not_in_db = mm.Movie(155)
+        movie_not_in_db.load(config)
+
+        mu.add_movie(movie_not_in_db, 1)
+        self.assertTrue(mu.check_movie(movie_not_in_db))
+        self.assertTrue(mu.is_movie_in_user_movies_list(1, 155))
+
+    def test_get_user_movie_rating(self):
+        """Test returning user's rating for movie."""
+
+        self.assertEqual(mu.get_user_movie_rating(135397, 1), 5)
+        self.assertIsNone(mu.get_user_movie_rating(238, 1))
+
+    # def test_update_rating(self):
+    #     test_update_rating(user_id, movie_id, rating)
+
+        
+
+
 
 def example_data():
     """Create the sample data for testing"""

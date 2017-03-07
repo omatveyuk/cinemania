@@ -4,7 +4,6 @@ import os                   #to access my OS environment variables
 from flask import Flask, session, request, redirect, render_template, flash, jsonify
 import jinja2
 from flask_debugtoolbar import DebugToolbarExtension
-from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
 from oauth import FacebookSignIn
 import requests
 
@@ -51,11 +50,12 @@ def get_random_movie():
     """Return random movie from themoviedb API."""
     # Get random movie id from themoviedb API
     movie_id = rh.get_random_movie_id(config)
+    print "movie_id: ", movie_id
 
-    # Create movie object which contain information about movie
+    # Create movie object which contain information about movie"
     movie = Movie(movie_id)
     movie.load(config)
-
+    #import pdb; pdb.set_trace()
     # if user login add movie to user's movie list
     if "logged_in_user_id" in session:
         mu.add_movie(movie, session["logged_in_user_id"])
@@ -71,7 +71,10 @@ def get_movie(movie_id):
     movie.load(config)
 
     # Get user's rating for movie
-    user_movierating = mu.get_user_movie_rating(movie_id)
+    user_movierating = None
+    if "logged_in_user_id" in session:
+        user_id = session["logged_in_user_id"]
+        user_movierating = mu.get_user_movie_rating(movie_id, user_id)
 
     return render_template("movie_details.html", movie=movie,
                             user_movierating=user_movierating)

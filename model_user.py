@@ -1,7 +1,7 @@
 """Models and database functions for users. Movie project."""
 
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, session, flash
+from flask import Flask, flash
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 import bcrypt
 
@@ -137,21 +137,24 @@ def add_movie(movie, user_id):
     # UserMovie
     # Before add movie to UserMovie check that commit above is successful
     if check_movie(movie):
-        movie_id=Movie.query.filter_by(themoviedb_id=movie.id).first().movie_id
-        user_movie = UserMovie(user_id=user_id,
-                               movie_id=movie_id,
-                               rating=None,
-                               seen=False)
-        db.session.add(user_movie)
-        db.session.commit()
+        if not is_movie_in_user_movies_list(user_id, movie.id):
+            movie_id = Movie.query.filter_by(themoviedb_id=movie.id).first().movie_id
+            user_movie = UserMovie(user_id=user_id,
+                                      movie_id=movie_id,
+                                      rating=None,
+                                      seen=False)
+            db.session.add(user_movie)
+            db.session.commit()
 
 
-def get_user_movie_rating(movie_id):
+def get_user_movie_rating(movie_id, user_id):
     """Return user's rating for movie."""
     user_movierating = None
-    if "logged_in_user_id" in session:
-        id_movie_db = Movie.query.filter(Movie.themoviedb_id == movie_id).first().movie_id
-        user_movierating = UserMovie.query.filter(UserMovie.user_id == session["logged_in_user_id"],
+
+    movie_db = Movie.query.filter(Movie.themoviedb_id == movie_id).first()
+    if movie_db is not None:
+        id_movie_db = movie_db.movie_id
+        user_movierating = UserMovie.query.filter(UserMovie.user_id == user_id,
                                                   UserMovie.movie_id == id_movie_db).first().rating
 
     return user_movierating
@@ -203,6 +206,7 @@ def get_user_genres(user_id):
 def add_user(info_user):
     """Add new user."""
     email, password, provider = info_user
+    print email, password
 
     user = User.query.filter_by(email=email).first()
     if user is None:

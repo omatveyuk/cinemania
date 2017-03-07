@@ -51,12 +51,14 @@ def get_random_movie_id(config):
     """ Return random movie id from themoviedb
         url for requests is read from global config
     """
-    if "logged_in_user_id" in session:
-        movie_id = get_random_movie_id_session(config)
-        return movie_id
+    #if "logged_in_user_id" in session:
+        #movie_id = get_random_movie_id_session(config)
+        #return movie_id
 
     url = config['url']['popular']
-    return get_random_movie_id_based_url(url)
+    #return get_random_movie_id_based_url(url)
+    get_random_movie_id_based_url(url)
+    return 271110   #238 #god father #155 #nolan   33 550 271110
 
 
 def get_random_movie_id_session(config):
@@ -82,6 +84,7 @@ def get_random_movie_id_session(config):
             random_index = random.randint(0, len(movies_id)-1)
             if not mu.is_movie_in_user_movies_list(user_id, movies_id[random_index]):
                 return movies_id[random_index]
+            del movie_id[random_index] 
         
 
 def get_random_movie_id_genres(url_genres):
@@ -123,8 +126,6 @@ def get_random_movie_id_based_url(url):
         movies = r_movies.json()
 
     movie_id = movies['results'][id_on_page]["id"]
-    #movie_id = 155 #238 #gold father #155 #nolan   33 550
-
     return movie_id
 
 
@@ -138,7 +139,9 @@ def get_twenty_posters(config, page, posters):
 
     r_movies = requests.get(url)
     movies = r_movies.json()
+
     for item in movies['results']:
+        print item['poster_path']
         if item['poster_path']:
             posters['{0}{1}'.format(config['url']['poster'],
                                     item['poster_path'])] = item['original_title']
