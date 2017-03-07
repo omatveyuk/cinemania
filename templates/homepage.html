@@ -3,29 +3,31 @@
 
 <!-- It's container-fluid so it spans the whole page. -->
 <div class="container-fluid" id="movie-homepage"> 
-<!-- 
-  <div class="row">
-
-  </div> -->
-
 
   <div class="col-xs-6">
-    <div class="container-fluid" style="margin-top: 80px;">
+    <div class="container-fluid" style="margin-top: 120px;">
       <img src="/static/film-64152_640.jpg" class="img-responsive" alt="CINEMANIA">
     </div>
   </div>
 
   <div class="col-xs-6">
-    <div class="col-xs-12">
-      <h1> Welcome </h1>
+    <div class="row">  
+      <div class="col-xs-12">
+        <h1 style="font-size: 60px;">CINEMANIA</h1>
+      </div>
     </div>
-    <div class="col-xs-12" id="message" style="font-size: 25px; cursor: pointer">    <!-- start -->
-      Need help finding a movie?<br>
-      Click &nbsp; 
-      <a id="start" style="color: #FC4A1A; text-weight: bold;">here</a>
-      &nbsp; to peek at random selected movie...
-    </div>  <!-- start -->
-    <div class="container" id="choice"></div>  <!-- choice -->
+    <div class="row">
+      <div class="col-xs-12" id="message" style="font-size: 25px; cursor: pointer">    <!-- start -->
+        <b>Welcome</b><br>
+        Need help finding a movie?<br>
+        Click &nbsp; 
+        <a id="start" style="color: #FC4A1A; text-weight: bold;">here</a>
+        &nbsp; to peek at random selected movie...
+      </div>  <!-- start -->
+    </div>
+    <div class="row">
+      <div class="container" id="choice"></div>  <!-- choice -->
+    </div>
   </div>
 
 </div>    <!-- movie-homepage -->
@@ -40,7 +42,7 @@
     var html = 'Please wait. Processing. . .';
     $("#message").attr("style", "text-align: center; font-size: 25px; cursor: pointer;");
     $("#message").html(html);
-    $("h1").html(' ');
+    // $("h1").html(' ');
 
  
     html = '<div id="slideshow" class="carousel slide" data-ride="carousel" '+
@@ -59,7 +61,7 @@
       temp++;
       html += '<img src="'+
               key+
-              '" class="img-responsive img-thumbnail center-block" alt="CINEMANIA" style="width: 60%; height: 60%">'+
+              '" class="img-responsive img-thumbnail center-block" alt="CINEMANIA" style="width: 55%; height: 55%">'+
               '</div>';
       $('#carousel-poster').append(html);
     } 

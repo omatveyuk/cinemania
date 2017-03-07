@@ -24,7 +24,7 @@
 
   <div class="row">   <!-- country-production-release -->
     <div class="col-xs-2">
-      <b>Country: </b> 
+      <div class="small_title"><b>Country: </b></div> 
     </div>
     <div class="col-xs-10" id="country">
       {% if movie.production_countries|length != 0 %}
@@ -37,7 +37,7 @@
       {% endif %}
     </div><br>
     <div class="col-xs-2">
-      <b>Production Co: </b> 
+      <div class="small_title"><b>Production Co: </b></div>
     </div>
     <div class="col-xs-10" id="company">
       {% if movie.production_companies|length != 0 %}
@@ -50,7 +50,7 @@
       {% endif %}
     </div><br>
     <div class="col-xs-2">
-      <b>Release Date: </b> 
+      <div class="small_title"><b>Release Date: </b></div>
     </div>
     <div class="col-xs-10" id="release-date">
       {{ movie.release_date }} 
@@ -68,7 +68,7 @@
         </div>
 
         <div class="col-xs-8 text-justify" id="details">
-          <b>Genre: </b>
+          <spin class="small_title"><b>Genre: </b></spin>
           {% if movie.genres|length != 0 %}
             {% if movie.genres|length > 1 %}
               {% for genre in movie.genres[:-1] %} 
@@ -77,7 +77,7 @@
             {% endif %} 
             {{movie.genres[-1]}}
           {% endif %}<br>
-          <b>Director{% if movie.directors|length > 1 %}s{% endif %}: </b>
+          <spin class="small_title"><b>Director{% if movie.directors|length > 1 %}s{% endif %}: </b></spin>
           {% if movie.directors|length != 0 %}
             {% if movie.directors|length > 1 %}
               {% for director in movie.directors[:-1] %} 
@@ -86,7 +86,7 @@
             {% endif %} 
             <a href="{{ movie.directors[-1].wikipedia_url }}">{{ movie.directors[-1].name }}</a>
           {% endif %}<br>
-          <b>Writer{% if movie.writers|length > 1 %}s{% endif %}: </b>
+          <spin class="small_title"><b>Writer{% if movie.writers|length > 1 %}s{% endif %}: </b></spin>
           {% if movie.writers|length != 0 %}
             {% if movie.writers|length > 1 %}
               {% for writer in movie.writers[:-1] %} 
@@ -95,7 +95,7 @@
             {% endif %} 
             <a href="{{ movie.writers[-1].wikipedia_url }}">{{ movie.writers[-1].name }}</a>
           {% endif %}<br>
-          <b>Actor{% if movie.actors|length > 1 %}s{% endif %}: </b>
+          <spin class="small_title"><b>Actor{% if movie.actors|length > 1 %}s{% endif %}: </b></spin>
           {% if movie.actors|length != 0 %}
             {% if movie.actors|length > 1 %}
               {% for actor in movie.actors[:-1] %} 
@@ -104,7 +104,7 @@
             {% endif %} 
             <a href="{{ movie.actors[-1].wikipedia_url }}">{{ movie.actors[-1].name }}</a>
           {% endif %}<br>
-          <b>Overview: </b>{{ movie.overview }}
+          <spin class="small_title"><b>Overview: </b></spin>{{ movie.overview }}
         </div>
 
       </div>        <!-- poster-details -->
@@ -156,8 +156,8 @@
     </div>      <!-- info -->
 
     <div class="col-xs-4 text-justify" id="review">     <!-- review -->
-      <b>Rating: </b>{{ movie.vote_average }} ({{ movie.vote_count }})<br>
-      <b>Reviews</b> ({{ movie.total_reviews }})<b>:</b><br>
+      <spin class="small_title"><b>Rating: </b></spin>{{ movie.vote_average }} ({{ movie.vote_count }})<br>
+      <spin class="small_title"><b>Reviews</b></spin> ({{ movie.total_reviews }})<b>:</b><br>
       {% for review in movie.reviews %}
         <div class="review"> 
           <u>{{ review.name }}:</u> {{ review.text}}
@@ -209,7 +209,7 @@
 
 
   function showCastGraph(result){
-    var html = "<h3>Connections between lead actors and the director in other movies</h3>";
+    var html = '<div style="font-size: 20px; color: #fc4a1a; font-weight: bold;">Connections between lead actors and the director in other movies</div>';
     $('#title-graph').html(html);
     $("#draw-graph").html('');
 

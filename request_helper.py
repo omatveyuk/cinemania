@@ -5,7 +5,7 @@ import random
 from flask import session
 import model_user as mu
 from model_movie import PersonNode
-
+import datetime
 
 def get_movie_by_id(config, movie_id):
     """ Get information about movie from request to themoviedb by movie id """
@@ -51,12 +51,12 @@ def get_random_movie_id(config):
     """ Return random movie id from themoviedb
         url for requests is read from global config
     """
-    #if "logged_in_user_id" in session:
-        #movie_id = get_random_movie_id_session(config)
-        #return movie_id
+    # if "logged_in_user_id" in session:
+    #     movie_id = get_random_movie_id_session(config)
+    #     return movie_id
 
     url = config['url']['popular']
-    #return get_random_movie_id_based_url(url)
+    # return get_random_movie_id_based_url(url)
     get_random_movie_id_based_url(url)
     return 271110   #238 #god father #155 #nolan   33 550 271110
 
@@ -133,6 +133,8 @@ def get_twenty_posters(config, page, posters):
     """Return 20 movie posters from responde page of popular movie
        and total number of pages
     """
+    time1 = datetime.datetime.now().time()
+    # print time1
     url = config['url']['popular']
     if page > 1:
         url = "{0}&page={1}".format(url, page)
@@ -141,10 +143,12 @@ def get_twenty_posters(config, page, posters):
     movies = r_movies.json()
 
     for item in movies['results']:
-        print item['poster_path']
+        # print item['poster_path']
         if item['poster_path']:
             posters['{0}{1}'.format(config['url']['poster'],
                                     item['poster_path'])] = item['original_title']
+    time2 = datetime.datetime.now().time()
+    print "time for request: ", time1, time2
     return [posters, movies['total_pages']]
 
 

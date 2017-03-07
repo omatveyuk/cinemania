@@ -1,3 +1,10 @@
+header, body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+h1, h3, #title-movie, .navbar-brand {
+  font-family: 'Acme', sans-serif;
+}
 
 h1 {
   color:#008080;
@@ -10,6 +17,19 @@ h3 {
   font-weight: bold;
   text-align: left;  
 }
+
+.navbar-brand {
+  font-size: 24px;
+}
+
+.close {
+  color: #ffffff;
+  opacity: 1; 
+}
+
+.small_title {
+    color:#008080;
+  }
 
 .navbar-movie {
   background-color:#008080;
@@ -35,40 +55,6 @@ h3 {
   padding: 0px 0px 10px 0px;
 }
 
-/*#movie-homepage {
-    background-size: 100%;
-    background: url('/static/film-64152_640.jpg') no-repeat;
-    background-position: center top;
-
-}*/
-
-#movie-details {
-  margin: 0px 25px 0px 25px;
-}
-
-#user-details {
-  margin: 0px 25px 0px 25px;
-  font-size: 17px;
-}
-
-#title-movie {
-  font-family: 'Raleway', sans-serif;
-  text-align: left;
-  font-size: 25px;
-  font-weight: bold;
-}
-
-#choice {
-  position:relative;
-  width: 600px;
-  height: 750px;
-  overflow: hidden;
-}
-
-#poster {
-  z-index: -1; 
-}
-
 .prime-circle {
   color: #ffffff;
   background-color: #008080;
@@ -81,7 +67,7 @@ h3 {
   line-height: 40px;
   text-align: center;
   font-size: 100%;
-  font-family: sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 /*.modal-header, h4, .close {*/
@@ -106,6 +92,40 @@ h3 {
 .btn, .btn-success, .btn-success:hover, .btn-block, .btn-large {
   background-color: #FC4A1A; 
   color: #ffffff; 
+}
+
+/*#movie-homepage {
+    background-size: 100%;
+    background: url('/static/film-64152_640.jpg') no-repeat;
+    background-position: center top;
+
+}*/
+
+#movie-details {
+  margin: 0px 25px 0px 25px;
+}
+
+#user-details {
+  margin: 0px 25px 0px 25px;
+  font-size: 17px;
+}
+
+#title-movie {
+/*  font-family: 'Raleway', sans-serif;*/
+  text-align: left;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+#choice {
+  position:relative;
+  width: 600px;
+  height: 750px;
+  overflow: hidden;
+}
+
+#poster {
+  z-index: -1; 
 }
 
 .loading {
