@@ -3,7 +3,7 @@
 import unittest
 
 from server import app, config
-from flask import session 
+from flask import session
 from flask_sqlalchemy import SQLAlchemy
 import model_movie as mm
 import model_user as mu
@@ -38,10 +38,10 @@ class TestsDatabase(unittest.TestCase):
         app.config['TESTING'] = True
         self.client = app.test_client()
 
-        # Connect to test database 
+        # Connect to test database
         connect_to_db(app, 'postgresql:///testdb')
 
-        # Create tables and add sample data 
+        # Create tables and add sample data
         db.create_all()
         example_data()
 
@@ -65,13 +65,13 @@ class TestsDatabase(unittest.TestCase):
         movie_not_in_db = mm.Movie(271110)
         movie_not_in_db.load(config)
         movie_in_db = mm.Movie(135397)
-        movie_in_db.load(config)    
+        movie_in_db.load(config)
 
         self.assertFalse(mu.check_movie(movie_not_in_db))
         self.assertTrue(mu.check_movie(movie_in_db))
 
     def test_add_movie(self):
-        """Test Adding movie to user's movie list(UserMovie) and list of movies(Movie)"""
+        """Test adding movie to user's movie list(UserMovie) and list of movies(Movie)"""
         # Create movie objects which contain information about movie
         movie_not_in_db = mm.Movie(155)
         movie_not_in_db.load(config)
@@ -81,17 +81,64 @@ class TestsDatabase(unittest.TestCase):
         self.assertTrue(mu.is_movie_in_user_movies_list(1, 155))
 
     def test_get_user_movie_rating(self):
-        """Test returning user's rating for movie."""
+        """Test fetching user's rating for movie."""
 
         self.assertEqual(mu.get_user_movie_rating(135397, 1), 5)
         self.assertIsNone(mu.get_user_movie_rating(238, 1))
 
-    # def test_update_rating(self):
-    #     test_update_rating(user_id, movie_id, rating)
+    def test_update_rating(self):
+        """Test updating user's rating for movie"""
+        user_id = 1
+        movie_id = 5
+        rating = 6
+        mu.update_rating(user_id, movie_id, rating)
+        usermovie_rating = mu.UserMovie.query.filter(mu.UserMovie.user_id == user_id,
+                                                     mu.UserMovie.movie_id == movie_id).first().rating
+        self.assertEqual(usermovie_rating, 6)
+        movie_id = 7
+        mu.update_rating(user_id, movie_id, rating)
+        usermovie_rating = mu.UserMovie.query.filter(mu.UserMovie.user_id == user_id,
+                                                     mu.UserMovie.movie_id == movie_id).first()
+        self.assertIsNone(usermovie_rating)
 
-        
+    def test_get_user(self):
+        """Test fetching user"""
+        user_id = 1
+        self.assertEqual(mu.get_user(user_id).email, "Fred@Fred.com")
+        user_id = 4
+        self.assertIsNone(mu.get_user(user_id))
 
+    def test_get_user_movies(self):
+        """Test fetching all user's movies for user's page"""
+        user_id = 2
+        self.assertEqual(len(mu.get_user_movies(user_id)), 0)
+        user_id = 3
+        self.assertEqual(len(mu.get_user_movies(user_id)), 0)
+        user_id = 1
+        self.assertEqual(len(mu.get_user_movies(user_id)), 6)
 
+    def test_is_movie_in_user_movies_list(self):
+        """Test checking if movie exists in user's list of movie"""
+        user_id = 1
+        themoviedb_id = 381288
+        self.assertTrue(mu.is_movie_in_user_movies_list(user_id, themoviedb_id))
+        themoviedb_id = 155
+        self.assertFalse(mu.is_movie_in_user_movies_list(user_id, themoviedb_id))
+        user_id = 2
+        self.assertFalse(mu.is_movie_in_user_movies_list(user_id, themoviedb_id))
+
+    def test_get_user_genres(self):
+        """Test fetching user's genre preference"""
+        user_id = 1
+        self.assertEqual(len(mu.get_user_genres(user_id)), 4)
+        user_id = 2
+        self.assertEqual(len(mu.get_user_genres(user_id)), 0)
+
+    def test_add_user(self):
+        """Test adding user to db"""
+        info_user = ['oxana@oxana.com', 'oxana25', 'Cinemania']
+        user_id = mu.add_user(info_user)
+        self.assertTrue(mu.User.query.get(user_id))
 
 def example_data():
     """Create the sample data for testing"""
@@ -177,7 +224,7 @@ def example_data():
                             seen="t")
     db.session.add_all([fred_music, fred_war, fred_comedy, fred_family,
                         fred_movie1, fred_movie2, fred_movie3, fred_movie4, fred_movie5, fred_movie6])
-    db.session.commit() 
+    db.session.commit()
 
 
 if __name__ == "__main__":

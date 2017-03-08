@@ -18,23 +18,23 @@ APIs: Themoviedb, Facebook (OAuth)<br/>
 
 For personalized experience, users can log in to Cinemania through e-mail, password or via Facebook OAuth:
 
-![homepage](https://cloud.githubusercontent.com/assets/10794461/23594645/5f0393ea-01d0-11e7-94a3-db120978d7ca.png)
+![homepage](https://cloud.githubusercontent.com/assets/10794461/23692569/66504c64-0384-11e7-8870-dc9abe1d191b.png)
 
-Users are able to change their genres' preferences:
+Users are able to login with Facebook authentication:
 
-![registration](https://cloud.githubusercontent.com/assets/10794461/23594648/5f03db7a-01d0-11e7-948d-e2070bb60a28.png)
+![login](https://cloud.githubusercontent.com/assets/10794461/23692570/6651844e-0384-11e7-84ad-c265a99e912f.png)
 
 Once a movie is chosen, the user is shown the movie detail page. The page is made of several sections: the movie header, the poster, links to the actors or directors Wikipedia pages, ratings and reviews, the overview and the trailer:
 
-![movie](https://cloud.githubusercontent.com/assets/10794461/23594646/5f039b42-01d0-11e7-8b3d-b49d955eee61.png)
+![movie](https://cloud.githubusercontent.com/assets/10794461/23692566/664c2abc-0384-11e7-8050-ca61b7599f5c.png)
 
 Users interested in knowing if the main actors and the director have appeared in other movies together, they can do so by looking at the relationship graph:
 
-![graph](https://cloud.githubusercontent.com/assets/10794461/23594647/5f039926-01d0-11e7-971f-a50cc0350c30.png)
+![graph](https://cloud.githubusercontent.com/assets/10794461/23692567/664e5b20-0384-11e7-96f4-1b171b85d11e.png)
 
 Finally, users can always re-visit movie's history in their profile and update ratings:
 
-![profile](https://cloud.githubusercontent.com/assets/10794461/23594649/5f048bba-01d0-11e7-9dc2-f5f9af877b1e.png)
+![profile](https://cloud.githubusercontent.com/assets/10794461/23692568/664f40f8-0384-11e7-8e26-b7aa1f812e5c.png)
 
 ## <a name="aboutme"></a>About Me
 I live in the San Francisco Bay Area. I made this site because I wanted to connect my passion for coding and movies.
