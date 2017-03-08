@@ -140,6 +140,35 @@ class TestsDatabase(unittest.TestCase):
         user_id = mu.add_user(info_user)
         self.assertTrue(mu.User.query.get(user_id))
 
+    def test_delete_user_genres(self):
+        """Test deleting genre's preferences of user"""
+        user_id = 3
+        mu.delete_user_genres(user_id)
+        self.assertEqual(len(mu.UserGenre.query.filter(mu.UserGenre.user_id == user_id).all()), 0)
+
+    def test_add_user_genres(self):
+        """Test adding genre's preferences of user"""
+        user_id = 1
+        mu.delete_user_genres(user_id)
+        # Music and Comedy are in db, Therileer is not
+        genres= ['Music', 'Comedy', 'Thriller']
+        mu.add_user_genres(user_id, genres)
+        self.assertEqual(len(mu.UserGenre.query.filter(mu.UserGenre.user_id == user_id).all()), 2)
+
+    def test_add_info_user(self):
+        """Test adding onfo user"""
+        info_user = [1, 'oxana', None, ['War', 'Comedy', 'Music']]
+        mu.add_info_user(info_user)
+        user_id = 1
+        self.assertEqual(len(mu.UserGenre.query.filter(mu.UserGenre.user_id == user_id).all()), 3)
+        self.assertEqual(mu.User.query.get(user_id).name, 'oxana')
+
+    def test_is_user(self):
+        """Test if user exists in db"""
+        self.assertEqual(mu.is_user('Fred@Fred.com', 'Fred25'), 1)
+        self.assertEqual(mu.is_user('Fred@Fred.com', 'Fred23'), 0)
+
+
 def example_data():
     """Create the sample data for testing"""
 

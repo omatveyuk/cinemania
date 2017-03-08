@@ -206,7 +206,6 @@ def get_user_genres(user_id):
 def add_user(info_user):
     """Add new user."""
     email, password, provider = info_user
-    print email, password
 
     user = User.query.filter_by(email=email).first()
     if user is None:
@@ -248,12 +247,14 @@ def delete_user_genres(user_id):
 def add_user_genres(user_id, genres):
     """Add user's genre preference."""
     for genre in genres:
-        genre_id = Genre.query.filter_by(name=genre).first().genre_id
-        usergenre_id = UserGenre.query.filter(UserGenre.user_id == user_id,
+        genre_db = Genre.query.filter_by(name=genre).first()
+        if genre_db is not None:
+            genre_id = genre_db.genre_id
+            usergenre_id = UserGenre.query.filter(UserGenre.user_id == user_id,
                                               UserGenre.genre_id == genre_id).first()
-        if usergenre_id is None:
-            usergenre = UserGenre(user_id=user_id, genre_id=genre_id)
-            db.session.add(usergenre)
+            if usergenre_id is None:
+                usergenre = UserGenre(user_id=user_id, genre_id=genre_id)
+                db.session.add(usergenre)
     db.session.commit()
 
 

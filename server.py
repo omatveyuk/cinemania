@@ -50,7 +50,6 @@ def get_random_movie():
     """Return random movie from themoviedb API."""
     # Get random movie id from themoviedb API
     movie_id = rh.get_random_movie_id(config)
-    print "movie_id: ", movie_id
 
     # Create movie object which contain information about movie"
     movie = Movie(movie_id)

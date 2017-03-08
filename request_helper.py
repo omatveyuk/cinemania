@@ -133,8 +133,6 @@ def get_twenty_posters(config, page, posters):
     """Return 20 movie posters from responde page of popular movie
        and total number of pages
     """
-    time1 = datetime.datetime.now().time()
-    # print time1
     url = config['url']['popular']
     if page > 1:
         url = "{0}&page={1}".format(url, page)
@@ -143,12 +141,9 @@ def get_twenty_posters(config, page, posters):
     movies = r_movies.json()
 
     for item in movies['results']:
-        # print item['poster_path']
         if item['poster_path']:
             posters['{0}{1}'.format(config['url']['poster'],
                                     item['poster_path'])] = item['original_title']
-    time2 = datetime.datetime.now().time()
-    print "time for request: ", time1, time2
     return [posters, movies['total_pages']]
 
 
