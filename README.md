@@ -20,8 +20,6 @@ For personalized experience, users can log in to Cinemania through e-mail, passw
 
 ![homepage](https://cloud.githubusercontent.com/assets/10794461/23692569/66504c64-0384-11e7-8870-dc9abe1d191b.png)
 
-Users are able to login with Facebook authentication:
-
 ![login](https://cloud.githubusercontent.com/assets/10794461/23692570/6651844e-0384-11e7-84ad-c265a99e912f.png)
 
 Once a movie is chosen, the user is shown the movie detail page. The page is made of several sections: the movie header, the poster, links to the actors or directors Wikipedia pages, ratings and reviews, the overview and the trailer:
