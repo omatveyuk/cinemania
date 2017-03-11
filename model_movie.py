@@ -3,6 +3,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 import request_helper
+from datetime import datetime
 
 ##############################################################################
 # Model definitions
@@ -68,12 +69,15 @@ class Movie(object):
         self.original_language = json_movie['original_language']
         self.production_countries = [ country['name'] for country in json_movie['production_countries']]
         self.production_companies = [ company['name'] for company in json_movie['production_companies']]
-        self.release_date = json_movie['release_date']
+        self.release_date = datetime.strptime(str(json_movie['release_date']), '%Y-%m-%d').strftime('%d-%b-%Y')
         self.imdb_id = json_movie['imdb_id']
         self.genres = [ genre['name'] for genre in json_movie['genres']]
         self.runtime = json_movie['runtime']
         self.overview = json_movie['overview']
-        self.poster_url = '{0}{1}'.format(config['url']['poster'], json_movie['poster_path'])
+        if json_movie['poster_path'] is not None:
+            self.poster_url = '{0}{1}'.format(config['url']['poster'], json_movie['poster_path'])
+        else:
+            self.poster_url = None
         self.vote_average = json_movie['vote_average']
         self.vote_count = json_movie['vote_count']
 

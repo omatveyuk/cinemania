@@ -51,14 +51,15 @@ def get_random_movie_id(config):
     """ Return random movie id from themoviedb
         url for requests is read from global config
     """
-    # if "logged_in_user_id" in session:
-    #     movie_id = get_random_movie_id_session(config)
-    #     return movie_id
+    if "logged_in_user_id" in session:
+        movie_id = get_random_movie_id_session(config)
+        return movie_id
 
     url = config['url']['popular']
-    # return get_random_movie_id_based_url(url)
-    get_random_movie_id_based_url(url)
-    return 271110   #238 #god father #155 #nolan   33 550 271110
+    return get_random_movie_id_based_url(url)
+    # for testing:
+    # get_random_movie_id_based_url(url)
+    # return 271110   #238 #god father #155 #nolan   33 550 271110
 
 
 def get_random_movie_id_session(config):

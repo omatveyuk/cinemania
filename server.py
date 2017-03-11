@@ -36,6 +36,7 @@ config['url']['person_credits'] = "/movie_credits?api_key={0}".format(config['ap
 
 @app.route('/')
 def index():
+    session.pop("random_movie_id", None)
     return render_template("homepage.html")
 
 
@@ -48,17 +49,22 @@ def get_posters():
 @app.route('/random_movie')
 def get_random_movie():
     """Return random movie from themoviedb API."""
-    # Get random movie id from themoviedb API
-    movie_id = rh.get_random_movie_id(config)
+
+    if "random_movie_id" not in session:
+        # Get random movie id from themoviedb API
+        movie_id = rh.get_random_movie_id(config)
+    else:
+        movie_id = session["random_movie_id"]
 
     # Create movie object which contain information about movie"
     movie = Movie(movie_id)
     movie.load(config)
-    #import pdb; pdb.set_trace()
+
     # if user login add movie to user's movie list
     if "logged_in_user_id" in session:
         mu.add_movie(movie, session["logged_in_user_id"])
 
+    session["random_movie_id"] = movie_id
     return render_template("movie_details.html", movie=movie)
 
 
@@ -248,10 +254,10 @@ def oauth_callback():
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
-    # app.debug = True
+    app.debug = True
 
     mu.connect_to_db(app)
 
     # Use the DebugToolbar
-    # DebugToolbarExtension(app)
+    DebugToolbarExtension(app)
     app.run(host="0.0.0.0")
