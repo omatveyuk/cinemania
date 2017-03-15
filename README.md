@@ -4,6 +4,8 @@ Cinemania is a web-application that helps movie lovers to discover movies. The a
 
 When user lands on the movie page, besides the movie description, he sees the movie's ratings and reviews, the movie's trailer, links to the actors and directors Wikipedia pages, visual graph showing relationship between the main actors and the director and links to the Netflix and Hulu. Also, the user can rate individual movies, store and review the history of the movies discovered. To provide personalization, the app users are given an option to sign-in with e-mail and password or via OAuth.
 
+Presentation [video](https://www.youtube.com/watch?v=JnnOQStrhmE) on youtube.
+
 ##Contents
 * [Tech Stack](#technologies)
 * [Features](#features)
