@@ -9,6 +9,7 @@ Presentation [video](https://www.youtube.com/watch?v=JnnOQStrhmE) on youtube.
 ##Contents
 * [Tech Stack](#technologies)
 * [Features](#features)
+* [Installing](#installing)
 * [About Me](#aboutme)
 
 ## <a name="technologies"></a>Technologies
@@ -35,6 +36,51 @@ Users interested in knowing if the main actors and the director have appeared in
 Finally, users can always re-visit movie's history in their profile and update ratings:
 
 ![profile](https://cloud.githubusercontent.com/assets/10794461/23692568/664f40f8-0384-11e7-8e26-b7aa1f812e5c.png)
+
+## <a name="installing"></a>Installing
+
+Clone this repo:
+```
+https://github.com/omatveyuk/cinemania.git
+```
+
+Create virtual environment on your laptop, inside a directory:
+```
+virtualenv env
+source env/bin/activate
+```
+
+Install the requirements:
+```
+pip install -r requirements.txt
+```
+
+Get secret keys themoviedb API and Facebook API, and save it to secrets.sh:
+```
+export THEMOVIEDB_API_KEY="Your Key is Here"
+export FACEBOOK_API_SECRET="Your Key is Here"
+export FACEBOOK_ID="Your Key is Here"
+```
+
+Set up your database and seed initial data:
+```
+python model_user.py
+python seed.py
+```
+
+Start running your server:
+```
+python server.py
+```
+
+Open up your browser and navigate to:
+```
+ 'localhost:5000/'
+```
+
+Have a fun with Cinemania!️
+
+
 
 ## <a name="aboutme"></a>About Me
 I live in the San Francisco Bay Area. I made this site because I wanted to connect my passion for coding and movies.
