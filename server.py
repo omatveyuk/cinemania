@@ -18,7 +18,8 @@ app = Flask(__name__)
 app.secret_key = "shhhhhhhhhhhhhh"
 
 config = {}
-
+mu.connect_to_db(app)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 config['api_key'] = {}
 config['api_key']['themoviedb'] = os.environ['THEMOVIEDB_API_KEY']
@@ -88,14 +89,18 @@ def get_movie(movie_id):
 @app.route("/users/<int:user_id>")
 def show_user(user_id):
     """Return page showing the user's movie list."""
-    user = mu.get_user(user_id)
-    movies = mu.get_user_movies(user_id)
-    genres = mu.get_user_genres(user_id)
+    if user_id == session.get("logged_in_user_id", 0):
+        user = mu.get_user(user_id)
+        movies = mu.get_user_movies(user_id)
+        genres = mu.get_user_genres(user_id)
 
-    return render_template("user_details.html",
-                           user=user,
-                           movies=movies,
-                           genres=genres)
+        return render_template("user_details.html",
+                               user=user,
+                               movies=movies,
+                               genres=genres)
+    flash("Invalid credentials.")
+    return redirect('/')
+
 
 
 @app.route("/change_rating.json", methods=['POST'])
@@ -180,7 +185,7 @@ def signup_form():
 
     user_id = mu.add_user(info_user)
     if user_id:
-        flash("User sucsuccessfully added")
+        flash("User successfully added")
         session["logged_in_user_id"] = user_id
         return jsonify({"AddUser": "true"})
 
@@ -228,6 +233,8 @@ def oauth_callback():
         return redirect('/')
 
     social_id, email = FacebookSignIn().callback()
+    print "SERVER**************"
+    print social_id, email
     if social_id is None:
         flash('Authentication failed.')
         return redirect('/')
@@ -241,13 +248,13 @@ def oauth_callback():
         session["logged_in_user_id"] = user_id
         flash("Login successful")
         return redirect('/')
-
+    print "I'm here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     # Add user to the db
     info_user = [email, social_id, 'Facebook']
     user_id = mu.add_user(info_user)
     if user_id:
         session["logged_in_user_id"] = user_id
-        flash("User sucsuccessfully added")
+        flash("User successfully added")
         return redirect('/')
 
 
@@ -256,7 +263,7 @@ if __name__ == "__main__":
     # point that we invoke the DebugToolbarExtension
     app.debug = True
 
-    mu.connect_to_db(app)
+    # mu.connect_to_db(app)
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
