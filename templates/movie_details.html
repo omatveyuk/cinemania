@@ -260,7 +260,7 @@
       .data(result.links)
       .enter().append("line")
       .attr("class", "link")
-      .attr("stroke","#808080")
+      .style("stroke","#808080")
       .style("stroke-width", function(d) { return d.movies.length; })
       .style("cursor", "pointer")
       .on("click", function(d) { 
@@ -282,20 +282,29 @@
       .attr("class", "node")
       .call(force.drag);
 
+    node.append("pattern")
+      .attr("id", function(d) { return "person-"+d.index })
+      .attr("width", 140)
+      .attr("height", 140)
+      .attr("x", -70)
+      .attr("y", -60)
+      .attr("patternUnits", "userSpaceOnUse")
+      .append("image")
+      .attr("xlink:href", function(d) { console.log(d); return d.url })
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", 140)
+      .attr("height", 140);
+
     node.append("circle")
       .attr("r",radius)
-      .attr("stroke","#808080")
-      .attr("fill", "#008080");
-
-    node.append("image")
-      .attr("xlink:href", function(d) { return d.url })
-      .attr("x", -25)
-      .attr("y", -37)
-      .attr("width", 50)
-      .attr("height", 75);
+      .style("stroke","#008080")
+      .style("stroke-width", 8)    // set the stroke width
+      .style("fill", "#ffffff")
+      .style("fill", function(d) { return ('url(#person-'+d.index+')');});
 
     node.append("text")
-      .attr("dx", 30)
+      .attr("dx", 35)
       .attr("dy", 30)
       .style("font-weight","bold")
       .text(function(d) { return d.name });
