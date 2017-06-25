@@ -97,7 +97,7 @@ def get_job_status(job_key):
         data = mu.Result.query.filter_by(id=job.result).first()
         return jsonify({"result":"1"})  #jsonify(data.result), 200
     elif job.is_failed:
-        return redirect('/')        # TODO: errorhandling
+        return jsonify({"result":"-1"})        # TODO: errorhandling
     else:
         return jsonify({"result":"0"}) # "Nay!", 202
 
@@ -281,7 +281,6 @@ def oauth_callback():
         session["logged_in_user_id"] = user_id
         flash("Login successful")
         return redirect('/')
-    print "I'm here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     # Add user to the db
     info_user = [email, social_id, 'Facebook']
     user_id = mu.add_user(info_user)
@@ -306,7 +305,6 @@ def get_random_movie(logged_in_user_id, current_movie_id):
     # Create movie object which contain information about movie"
     movie = Movie(current_movie_id)
     movie.load(config)
-
     # worker to store movie using Redis
     # put inf about random movie in db
     movie_json = json.dumps(movie, cls=ComplexEncoder)
@@ -328,4 +326,5 @@ if __name__ == "__main__":
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
+    # app.run(host="10.0.2.15")
     app.run(host="0.0.0.0")

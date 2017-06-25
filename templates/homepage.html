@@ -67,7 +67,6 @@
 
     // Start async task to find random movie
     $.get('/job', function(data) {
-      debugger;
       var job_id = data.job_id;
       // call fn pollResults in 1 sec
       setTimeout(pollResults, 1000, job_id);
@@ -87,6 +86,8 @@
             console.log("not yet");
             // call fn pollResults in 1 sec again
             setTimeout(pollResults, 1000, job_id);
+          } else {
+              location.replace("/");
           }
         }
       });
