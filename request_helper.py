@@ -47,58 +47,59 @@ def get_videos_by_id(config, movie_id):
     return videos
 
 
-def get_random_movie_id(config):
+def get_random_movie_id(config, logged_in_user_id):
     """ Return random movie id from themoviedb
         url for requests is read from global config
     """
-    if "logged_in_user_id" in session:
-        movie_id = get_random_movie_id_session(config)
+    if logged_in_user_id is not None:
+        movie_id = get_random_movie_id_for_logged_in_user(config, logged_in_user_id)
         return movie_id
 
     url = config['url']['popular']
     return get_random_movie_id_based_url(url)
+
     # for testing:
     # get_random_movie_id_based_url(url)
-    # return 271110   #238 #god father #155 #nolan   33 550 271110
+    # return 194662 #271110   #238 #god father #155 #nolan   33 550 271110
 
 
-def get_random_movie_id_session(config):
+def get_random_movie_id_for_logged_in_user(config, user_id, max_tries=10):
     """Return movie id which randomly choosen from themoviedb
        (popular movies and movies based on genre's preference of user
         url for requests is read from global config
         If all movies from requests are already in the user's movie list
         make another round of new requests
     """
-    user_id = session["logged_in_user_id"]
 
-    while True:
+
+    for i in xrange(max_tries):
         # get random movie id from popular movie request
         url = config['url']['popular']
-        movies_id = [get_random_movie_id_based_url(url)]
+        movie_ids = [get_random_movie_id_based_url(url)]
 
         # get random movie ids from all genres requests based on user's preference
         url = config['url']['genres']
-        movies_id.extend(get_random_movie_id_genres(url))
+        movie_ids.extend(get_random_movie_id_genres(url, user_id))
 
         # get random movie id
-        while len(movies_id) > 0:
-            random_index = random.randint(0, len(movies_id)-1)
-            if not mu.is_movie_in_user_movies_list(user_id, movies_id[random_index]):
-                return movies_id[random_index]
-            del movie_id[random_index] 
+        while len(movie_ids) > 0:
+            random_index = random.randint(0, len(movie_ids)-1)
+            if not mu.is_movie_in_user_movies_list(user_id, movie_ids[random_index]):
+                return movie_ids[random_index]
+            del movie_ids[random_index]
+
         
 
-def get_random_movie_id_genres(url_genres):
+def get_random_movie_id_genres(url_genres, user_id):
     """ Return list of random movie ids based on genres which user prefers."""
-    user_id = session["logged_in_user_id"]
     genres = mu.get_user_genres(user_id)
-    movies_id = []
+    movie_ids = []
 
     for genre in genres:
         url = "{0}{1}".format(url_genres, genre[2])
-        movies_id.append(get_random_movie_id_based_url(url))
+        movie_ids.append(get_random_movie_id_based_url(url))
 
-    return movies_id    
+    return movie_ids
 
 
 def get_random_movie_id_based_url(url):

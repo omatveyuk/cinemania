@@ -7,3 +7,6 @@ secrets.sh
 deactiv
 deactivate
 misha
+.idea/
+dump.rdb
+static/posters

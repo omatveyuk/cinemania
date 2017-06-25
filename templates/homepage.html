@@ -64,7 +64,32 @@
       $('#carousel-poster').append(html);
     } 
     $("#slideshow").carousel();
-    location.replace("/random_movie");
+
+    // Start async task to find random movie
+    $.get('/job', function(data) {
+      debugger;
+      var job_id = data.job_id;
+      // call fn pollResults in 1 sec
+      setTimeout(pollResults, 1000, job_id);
+    });
+  }
+
+  // Check results every sec
+  function pollResults(job_id) {
+      $.ajax({
+        async:true,
+        url: "/results/"+job_id,
+        success: function(data) {
+          if (data.result === "1") {
+            console.log("completed");
+            location.replace("/random_movie/"+job_id);
+          } else if (data.result === "0") {
+            console.log("not yet");
+            // call fn pollResults in 1 sec again
+            setTimeout(pollResults, 1000, job_id);
+          }
+        }
+      });
   }
 
 

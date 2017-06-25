@@ -4,6 +4,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import request_helper
 from datetime import datetime
+import json
 
 ##############################################################################
 # Model definitions
@@ -37,6 +38,55 @@ class Movie(object):
         """Provide helpful represetration when printed"""
         return "<Movie id={0} Title={1}>".format(self.id, self.title)
 
+    def repr_json(self):
+        return dict(id=self.id,
+                    title=self.title,
+                    original_language=self.original_language,
+                    production_countries=self.production_countries,
+                    production_companies=self.production_companies,
+                    release_date=self.release_date,
+                    imdb_id=self.imdb_id,
+                    imdb_rating=self.imdb_rating,
+                    genres=self.genres,
+                    runtime=self.runtime,
+                    directors=self.directors,
+                    writers=self.writers,
+                    actors=self.actors,
+                    overview=self.overview,
+                    trailer_url=self.trailer_url,
+                    poster_url=self.poster_url,
+                    reviews=self.reviews,
+                    total_pages_reviews=self.total_pages_reviews,
+                    total_reviews=self.total_reviews,
+                    vote_average=self.vote_average,
+                    vote_count=self.vote_count)
+
+    @classmethod
+    def load_from_JSON(cls, json_movie):
+        """Load movie from JSON"""
+        movie = cls(json_movie["id"])       # create instance using constructor
+        movie.title = json_movie["title"]
+        movie.original_language = json_movie["original_language"]
+        movie.production_countries = json_movie["production_countries"]
+        movie.production_companies = json_movie["production_companies"]
+        movie.release_date = json_movie["release_date"]
+        movie.imdb_id = json_movie["imdb_id"]
+        movie.imdb_rating = json_movie["imdb_rating"]
+        movie.genres = json_movie["genres"]
+        movie.runtime = json_movie["runtime"]
+        movie.directors = [ Person(person["id"], person["name"], person["profile_url"], person["wikipedia_url"]) for person in json_movie["directors"]]
+        movie.writers = [ Person(person["id"], person["name"], person["profile_url"], person["wikipedia_url"]) for person in json_movie["writers"]]
+        movie.actors = [ Person(person["id"], person["name"], person["profile_url"], person["wikipedia_url"]) for person in json_movie["actors"]]
+        movie.overview = json_movie["overview"]
+        movie.trailer_url = json_movie["trailer_url"]
+        movie.poster_url = json_movie["poster_url"]
+        movie.reviews = [ Review(review["name"], review["text"]) for review in json_movie["reviews"]]
+        movie.total_pages_reviews = json_movie["total_pages_reviews"]
+        movie.total_reviews = json_movie["total_reviews"]
+        movie.vote_average = json_movie["vote_average"]
+        movie.vote_count = json_movie["vote_count"]
+        return movie
+
     def print_actors(self):
         """Print list of actors for movie"""
         print 'Title', self.title, '. Actors:'
@@ -64,12 +114,13 @@ class Movie(object):
     def load_info(self, config):
         """Get information about movie from themoviedb API"""
         json_movie = request_helper.get_movie_by_id(config, self.id)
+        release_date = datetime.strptime(str(json_movie['release_date']), '%Y-%m-%d').strftime('%d-%b-%Y') if json_movie['release_date'] != "" else ""
 
         self.title = json_movie['title']
         self.original_language = json_movie['original_language']
         self.production_countries = [ country['name'] for country in json_movie['production_countries']]
         self.production_companies = [ company['name'] for company in json_movie['production_companies']]
-        self.release_date = datetime.strptime(str(json_movie['release_date']), '%Y-%m-%d').strftime('%d-%b-%Y')
+        self.release_date = release_date
         self.imdb_id = json_movie['imdb_id']
         self.genres = [ genre['name'] for genre in json_movie['genres']]
         self.runtime = json_movie['runtime']
@@ -97,7 +148,7 @@ class Movie(object):
             profile_url = None
             if actor['profile_path'] is not None:
                 profile_url = '{0}{1}'.format(config['url']['profile'], actor['profile_path'])
-            self.actors.append(Person(actor['id'], actor['name'], profile_url, config))
+            self.actors.append(Person(actor['id'], actor['name'], profile_url, config['url']['wikipedia']))
 
         # Directors and writers
         for person in json_crew['crew']:
@@ -105,7 +156,7 @@ class Movie(object):
                 profile_url = None
                 if person['profile_path'] is not None:
                     profile_url = '{0}{1}'.format(config['url']['profile'], person['profile_path'])
-                crew_member = Person(person['id'], person['name'], profile_url, config)
+                crew_member = Person(person['id'], person['name'], profile_url, config['url']['wikipedia'])
                 if person['job'] == 'Director':
                     self.directors.append(crew_member)
                 if person['job'] == 'Screenplay':
@@ -140,15 +191,21 @@ class Movie(object):
 
 class Person(object):
     """Person class"""
-    def __init__(self, person_id, name, profile_url, config):
+    def __init__(self, person_id, name, profile_url, wikipedia_url):
         self.id = person_id
         self.name = name
         self.profile_url = profile_url
-        self.wikipedia_url = '{0}/{1}'.format(config['url']['wikipedia'], name.replace(' ', '_'))
+        self.wikipedia_url = '{0}/{1}'.format(wikipedia_url, name.replace(' ', '_'))
 
     def __repr__(self):
         """Provide helpful represetration when printed"""
         return "<Person id={0} name={1} profile={2}>".format(self.id, self.name, self.profile_url)
+
+    def repr_json(self):
+        return dict(id=self.id,
+                    name=self.name,
+                    profile_url=self.profile_url,
+                    wikipedia_url=self.wikipedia_url)
 
 
 class Review(object):
@@ -160,6 +217,10 @@ class Review(object):
     def __repr__(self):
         """Provide helpful represetration when printed"""
         return "<Review name={0} text={1}>".format(self.name, self.text)
+
+    def repr_json(self):
+        return dict(name=self.name,
+                    text=self.text)
 
 
 class PersonNode(object):
@@ -195,3 +256,11 @@ class PersonNode(object):
         for key, value in self.movies.items():
             print key, value
         print self.adjacent
+
+
+class ComplexEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if hasattr(obj,'repr_json'):
+            return obj.repr_json()
+        else:
+            return json.JSONEncoder.default(self, obj)

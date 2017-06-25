@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, flash
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 import bcrypt
+from sqlalchemy.dialects.postgresql import JSON
 
 # This is the connection to the PostgreSQL database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
@@ -112,6 +113,20 @@ class UserMovie(db.Model):
         return "<User's movies id=%s user_id=%s movie_id=%s>" % (self.usermovie_id,
                                                                  self.user_id,
                                                                  self.movie_id)
+
+class Result(db.Model):
+    """Redis. Results from worker.py to server"""
+    __tablename__ = 'results'
+
+    id = db.Column(db.Integer, primary_key=True)
+    result = db.Column(JSON)
+
+    def __init__(self, result):
+        self.result = result
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
 
 ##############################################################################
 # Helper functions
