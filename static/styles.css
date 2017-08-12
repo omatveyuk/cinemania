@@ -18,19 +18,12 @@ h3 {
   text-align: left;  
 }
 
-.navbar-brand {
-  font-size: 24px;
-}
+/*.row {
+  padding: 0px 0px 10px 0px;
+}*/
 
-.close {
-  color: #ffffff;
-  opacity: 1; 
-}
 
-.small_title {
-    color:#008080;
-  }
-
+/* navigation bar */
 .navbar-movie {
   background-color:#008080;
   color:#ffffff;
@@ -49,11 +42,64 @@ h3 {
 
 .navbar-movie .navbar-brand {
   color:#eeeeee;
+  font-size: 24px;
 }
 
-.row {
-  padding: 0px 0px 10px 0px;
+.navbar-movie .navbar-toggle {
+  border-color: #FFFFFF;
+} 
+
+.navbar-movie .navbar-toggle .icon-bar {
+  background-color: #FFFFFF;
 }
+
+
+/* homepage */
+#movie-homepage {
+  display: table;
+}
+
+.movie-cell {
+  display: table-cell;
+  width: 50%;
+  vertical-align: top;
+}
+
+.movie-cell h1 {
+  font-size: 60px;
+}
+
+#main-poster {
+  padding: 120px 0px 0px 0px;
+}
+
+#message {
+  font-size: 25px;
+  cursor: pointer;
+}
+
+#choice {
+  position:relative;
+  /*width: 600px;*/
+  /*height: 750px;*/
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+
+
+
+
+
+.close {
+  color: #ffffff;
+  opacity: 1; 
+}
+
+.small_title {
+    color:#008080;
+  }
 
 .prime-circle {
   color: #ffffff;
@@ -94,12 +140,6 @@ h3 {
   color: #ffffff; 
 }
 
-/*#movie-homepage {
-    background-size: 100%;
-    background: url('/static/film-64152_640.jpg') no-repeat;
-    background-position: center top;
-
-}*/
 
 #movie-details {
   margin: 0px 25px 0px 25px;
@@ -115,13 +155,6 @@ h3 {
   text-align: left;
   font-size: 40px;
   font-weight: bold;
-}
-
-#choice {
-  position:relative;
-  width: 600px;
-  height: 750px;
-  overflow: hidden;
 }
 
 #poster {
@@ -153,3 +186,37 @@ h3 {
     width: 1.25em;    
   }
 }
+
+/* landscape phones and portrait tablets */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 140%;
+  }
+
+  h3 {
+    font-size: 100%;
+  }
+
+  #message {
+    font-size: 140%;
+  }
+
+}
+
+/* landscape phones and small devices */
+@media (max-width: 480px) {
+  .navbar-default .navbar-brand,
+  .navbar-default .navbar-brand:hover,
+  .navbar-default .navbar-brand:focus
+  {
+    font-size: 140%;
+  }
+
+  .movie-cell {
+    display: table-row;
+  }
+
+  .movie-cell h1 {
+    font-size: 40px;
+    text-align: center;
+  }

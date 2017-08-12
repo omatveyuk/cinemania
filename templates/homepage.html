@@ -4,30 +4,20 @@
 <!-- It's container-fluid so it spans the whole page. -->
 <div class="container-fluid" id="movie-homepage"> 
 
-  <div class="col-xs-6">
-    <div class="container-fluid" style="margin-top: 120px;">
-      <img src="/static/film-64152_640.jpg" class="img-responsive" alt="CINEMANIA">
-    </div>
+  <div class="movie-cell" id="main-poster">
+      <img id="img-main-poster" src="/static/film-64152_640.jpg" class="img-responsive" alt="CINEMANIA">
   </div>
 
-  <div class="col-xs-6">
-    <div class="row">  
-      <div class="col-xs-12">
-        <h1 style="font-size: 60px;">CINEMANIA</h1>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-12" id="message" style="font-size: 25px; cursor: pointer">    <!-- start -->
-        <b>Welcome</b><br>
-        Need help finding a movie?<br>
-        Click &nbsp; 
-        <a id="start" style="color: #FC4A1A; text-weight: bold;">here</a>
-        &nbsp; to peek at randomly selected movie...
-      </div>  <!-- start -->
-    </div>
-    <div class="row">
-      <div class="container" id="choice"></div>  <!-- choice -->
-    </div>
+  <div class="movie-cell">
+    <h1>CINEMANIA</h1>
+    <div id="message">    <!-- start -->
+      <b>Welcome</b><br>
+      Need help finding a movie?<br>
+      Click &nbsp; 
+      <a id="start" style="color: #FC4A1A; text-weight: bold;">here</a>
+      &nbsp; to peek at randomly selected movie...
+    </div>  <!-- start -->
+    <div class="container" id="choice"></div>  <!-- choice -->
   </div>
 
 </div>    <!-- movie-homepage -->
@@ -40,8 +30,8 @@
  
   function playPosters(result) {
     var html = 'Please wait. Processing. . .';
-    $("#message").attr("style", "text-align: center; font-size: 25px; cursor: pointer;");
-    $("#message").html(html);
+    $('#message').html(html);
+    $('#message').attr("style", "text-align: center;");
  
     html = '<div id="slideshow" class="carousel slide" data-ride="carousel" '+
            'data-interval="500">'+
@@ -52,7 +42,7 @@
     var temp=1;
     for(var key in result) {
       if (temp == 1) {
-        html='<div class="item active">'
+        html='<div class="item active">';
       } else {
         html='<div class="item">';
       }
@@ -95,10 +85,19 @@
 
 
   function showPosters(evt) {
-    $.get('/posters.json', playPosters);
+    // evt.preventDefault();
+    // var screen_width = $('#movie-homepage').outerWidth();
+    // if (screen_width <= 480) {
+    //   $('#img-main-poster').slideUp(function(){
+    //     $.get('/static/posters/posters.json', playPosters);
+    //   });
+    // } else {
+      $.get('/static/posters/posters.json', playPosters);
+    // }
   }
 
   $('a#start').on('click', showPosters);
+
 
   </script>
 {% endblock %}
