@@ -80,12 +80,31 @@ h3 {
 
 #choice {
   position:relative;
-  /*width: 600px;*/
-  /*height: 750px;*/
   width: 100%;
   height: auto;
   overflow: hidden;
 }
+
+
+/* modal window */
+.modal-header {
+  background-color: #008080;
+  color: #ffffff;
+  text-align: center;
+  font-size: 30px;
+}
+.modal-title {
+  color: #ffffff;
+  text-align: center;
+  font-size: 30px;
+}
+
+.modal-comment {
+  color: #000000;
+  text-align: left;
+  font-size: 15px;
+}
+
 
 
 
@@ -116,24 +135,7 @@ h3 {
   font-family: 'Montserrat', sans-serif;
 }
 
-/*.modal-header, h4, .close {*/
-.modal-header {
-  background-color: #008080;
-  color: #ffffff;
-  text-align: center;
-  font-size: 30px;
-}
-.modal-title {
-  color: #ffffff;
-  text-align: center;
-  font-size: 30px;
-}
 
-.modal-comment {
-  color: #000000;
-  text-align: left;
-  font-size: 15px;
-}
 
 .btn, .btn-success, .btn-success:hover, .btn-block, .btn-large {
   background-color: #FC4A1A; 
@@ -216,7 +218,12 @@ h3 {
     display: table-row;
   }
 
+  #main-poster {
+    padding: 0px 0px 0px 0px;
+  }
+
   .movie-cell h1 {
     font-size: 40px;
     text-align: center;
   }
+
