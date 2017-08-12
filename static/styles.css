@@ -18,11 +18,6 @@ h3 {
   text-align: left;  
 }
 
-/*.row {
-  padding: 0px 0px 10px 0px;
-}*/
-
-
 /* navigation bar */
 .navbar-movie {
   background-color:#008080;
@@ -105,20 +100,16 @@ h3 {
   font-size: 15px;
 }
 
-
-
-
-
-
-
-.close {
-  color: #ffffff;
-  opacity: 1; 
+/* user profile movie page */
+.user-movie-container {
+  width: 15%;
+  position: relative;
+  margin: 15px 7px 0px 7px;
+  /*background-color: red;*/
+  display: inline-block;
+  vertical-align: top;
+  text-align: left;
 }
-
-.small_title {
-    color:#008080;
-  }
 
 .prime-circle {
   color: #ffffff;
@@ -135,6 +126,28 @@ h3 {
   font-family: 'Montserrat', sans-serif;
 }
 
+.change-rating {
+  font-size: 12px;
+  cursor: pointer
+}
+
+
+
+
+
+
+
+.close {
+  color: #ffffff;
+  opacity: 1; 
+}
+
+.small_title {
+    color:#008080;
+  }
+
+
+
 
 
 .btn, .btn-success, .btn-success:hover, .btn-block, .btn-large {
@@ -148,12 +161,12 @@ h3 {
 }
 
 #user-details {
-  margin: 0px 25px 0px 25px;
+  margin: 0px 40px 0px 40px;
+  padding: 0px;
   font-size: 17px;
 }
 
 #title-movie {
-/*  font-family: 'Raleway', sans-serif;*/
   text-align: left;
   font-size: 40px;
   font-weight: bold;
@@ -191,16 +204,12 @@ h3 {
 
 /* landscape phones and portrait tablets */
 @media (max-width: 768px) {
-  h1 {
+  h1, h3, #message {
     font-size: 140%;
   }
 
-  h3 {
-    font-size: 100%;
-  }
-
-  #message {
-    font-size: 140%;
+  #user-details {
+    margin: 0px 25px 0px 25px;
   }
 
 }
@@ -227,3 +236,26 @@ h3 {
     text-align: center;
   }
 
+  #user-details {
+    margin: 0px 15px 0px 15px;
+  }
+
+  /* user profile movie page */
+  .user-movie-container {
+    width: 25%;
+    font-size: 10px;
+  }
+
+  .prime-circle {
+    text-shadow: 2px 2px 3px black;
+    box-shadow: 2px 2px 8px #666;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    /*font-size: 100%;*/
+  }
+
+  .change-rating {
+    font-size: 10px;
+    cursor: pointer
+  }

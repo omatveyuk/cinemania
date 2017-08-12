@@ -7,97 +7,83 @@
   
 <div class="container-fluid" id="user-details"> 
 
-  <div class="row">
-    <div class="col-xs-12">
-      <h3><b>{% if user.name %}Hi {{ user.name }},{% endif %}</b></h3>
-    </div>
-  </div>
+  <h3><b>{% if user.name %}Hi {{ user.name }},{% endif %}</b></h3>
 
-  <div class="row">   <!-- genres --> 
-    <div class="col-xs-12">
-      <spin class="small_title"><b>Your favorite genre{% if genres|length > 1 %}s{% endif %}: </b></spin>
-      {% if genres|length != 0 %}
-        {% if genres|length > 1 %}
-          {% for genre in genres[:-1] %} 
-            {{ genre.name }},&nbsp;
-          {% endfor %} 
-        {% endif %}
-        {{ genres[-1].name }}
+  <div>   <!-- genres --> 
+    <span class="small_title"><b>Your favorite genre{% if genres|length > 1 %}s{% endif %}: </b></span>
+    {% if genres|length != 0 %}
+      {% if genres|length > 1 %}
+        {% for genre in genres[:-1] %} 
+          {{ genre.name }},&nbsp;
+        {% endfor %} 
       {% endif %}
-    </div>
+      {{ genres[-1].name }}
+    {% endif %}
   </div>    <!-- genres  -->
 
-  <div class="row">
-    <div class="col-xs-3">
-      <div class="small_title"><b>Movie you've seen:</b></div>
+  <div class="small_title"><b>Movie you've seen:</b></div>
+
+  <div class="container-fluid" style="padding: 0px; text-align: center;">
+
+  {% for index in range(0, movies|count) %}
+    
+    <div class="user-movie-container">
+
+      <div  style="position: absolute;  right: 0px; top: 0px; z-index: 2" id="center-rating_{{ movies[index].movie_id }}">
+        {% if movies[index].rating %}
+        <div class= "prime-circle" id="rating_{{ movies[index].movie_id }}">      <!-- movie rating -->
+          {{ movies[index].rating }}
+        </div>
+        {% endif %}
+      </div>
+      
+
+      <div>  <!-- change rating form -->
+
+        <div style="display: inline-block;">
+          <a class="change-rating" data-id="{{ movies[index].movie_id }}">
+          {% if movies[index].rating %}
+            Change...
+          {%else%}
+            Add rating...
+          {% endif %}
+          </a>
+        </div>
+
+        <div style="display: inline-block;">
+          <form class="change-rating" method="post" id="movie_{{ movies[index].movie_id }}" data-id="{{ movies[index].movie_id }}" hidden style="font-size: 15px">
+            <select class="custom-select" id="rating-value_{{ movies[index].movie_id }}">
+              <option selected>{{ movies[index].rating }}</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </form>
+        </div>
+
+      </div>  <!-- change rating form -->
+
+      <a href="{{ url_for('get_movie', movie_id=movies[index].themoviedb_id) }}" style="cursor: pointer;">
+        {% if movies [index].poster_url is not none %}
+          <img src="{{ movies[index].poster_url }}" class="img-thumbnail img-responsive" >
+        {% else %}
+          <img src="/static/film-64152_640.jpg" class="img-thumbnail img-responsive" >
+          <div>{{ movies[index].title }}</div>
+        {% endif %}
+      </a>
+
     </div>
-  </div>
-
-  {% for index in range(0, movies|count, 6) %}
-    <div class="row">   <!-- row of seen movies -->
-
-    {% for step in range(0, 6) %}
-      {% set index_in_row = index + step %}   <!-- next in row -->
-      {% if index_in_row < movies|count %}
-
-        <div class="col-xs-2">  <!-- 2nd in row -->
-
-          <div class="row" style="height: 280px;">   <!-- poster with circle rating -->
-            <div class="col-xs-11" style="position: absolute;" >
-              <a href="{{ url_for('get_movie', movie_id=movies[index_in_row].themoviedb_id) }}" style="cursor: pointer">
-                {% if movies [index_in_row].poster_url is not none %}
-                  <img src="{{ movies[index_in_row].poster_url }}" class="img-thumbnail img-responsive" >
-                {% else %}
-                  <img src="/static/film-64152_640.jpg" class="img-thumbnail img-responsive" >
-                  <br>{{ movies[index_in_row].title }}
-
-                {% endif %}
-              </a>
-            </div>
-
-            <div class="col-xs-offset-8 col-xs-4" style="position:absolute; z-index=2;" id="center-rating_{{ movies[index_in_row].movie_id }}">
-              {% if movies[index_in_row].rating %}
-                <div class= "prime-circle" id="rating_{{ movies[index_in_row].movie_id }}">      <!-- movie rating -->
-                  {{ movies[index_in_row].rating }}
-                </div>
-              {% endif %}
-            </div>
-          </div>  <!-- poster with circle rating -->  
-
-          <div class="row">  <!-- change rating form -->
-
-            <div class="col-xs-7">
-              <a class="change-rating" data-id="{{ movies[index_in_row].movie_id }}" style="font-size: 12px; cursor: pointer">Change rating...</a>
-            </div>
-
-            <div class="col-xs-4" style="aligne: left">
-              <form class="change-rating" method="post" id="movie_{{ movies[index_in_row].movie_id }}" data-id="{{ movies[index_in_row].movie_id }}" hidden style="font-size: 15px">
-                <select class="custom-select" id="rating-value_{{ movies[index_in_row].movie_id }}">
-                  <option selected>{{ movies[index_in_row].rating }}</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                </select>
-              </form>
-            </div>
-
-          </div>  <!-- change rating form -->
-
-        </div>  <!-- 2snd in row -->
-
-      {% endif %}
-    {% endfor %}
-
-    </div>  <!-- row of seen movies -->
-    <br>
+    
   {% endfor %}
+
+  </div>  
   
 </div>  
 
@@ -119,6 +105,7 @@
     }
 
     $('#rating_'+result['movie_id']).html(result['rating']);
+    $('a[data-id="'+result['movie_id']+'"]').html('Change...');
 
     $('#warning:hidden').show();
     $('#warning').html("Rating updated.")
