@@ -250,7 +250,7 @@
       .attr("height", height)
       .style("stroke", "#808080")
       .style("fill", "none")
-      .style("stroke-width", 2);
+      .style("stroke-width", 3);
 
     var borderPath2 = svg.append("rect")
       .attr("x", 3)
@@ -263,9 +263,15 @@
 
     var force = d3.layout.force()
         .gravity(.01)
-        .distance(280)
+        .distance(function() {
+        if (width > 480) {
+          return 300;  
+        } else {
+          return 180;
+        }})
         .charge(-120)
         .size([width, height]);
+
 
     // Define the data for the nodes(circles) and links
     force

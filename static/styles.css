@@ -224,6 +224,9 @@ h3 {
 
 .loading {
   font-size: 20px;
+  font-color: #000000;
+  font-style: none; 
+  text-align: left;
 }
 
 .loading:after {
@@ -373,3 +376,4 @@ h3 {
     font-size: 100%;
     text-align: left;
   }
+
