@@ -363,3 +363,13 @@ h3 {
     display: inline-block;
     width: auto;
   }
+
+  #graph {
+    text-align: center;
+    margin-right: 0px;
+  }
+
+  #title-graph {
+    font-size: 100%;
+    text-align: left;
+  }
