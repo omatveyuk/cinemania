@@ -5,28 +5,25 @@
 <!-- It's container-fluid so it spans the whole page. -->
 <div class="container-fluid" id="movie-details"> 
 
-  <div class="row" style="margin-top: 15px;">   <!-- title-rating -->
-    <div class="col-xs-10" id="title-movie" data-id="{{ movie.id }}">
+  <div class="movie-row" style="margin-top: 15px">   <!-- title-rating -->
+    <div id="title-movie" data-id="{{ movie.id }}">
       {{ movie.title }} 
     </div>
-    <div class="col-xs-2">
-      <!--<div class="row">
+    <div id="rating-movie">
+      <!--       <div class="row">
         <b>IMDB</b> ({{ movie.imdb_id }}): {{ movie.imdb_rating }}
-      </div>-->
-      <div class="row")>
-        {% if user_movierating %}
-          <div class="col-xs-6" style="padding: 15px 15px 0px 0px;"><b>Your rating: </b></div>
-          <div class="col-xs-6 prime-circle">{{user_movierating}}</div>
-        {% endif %}
-      </div>
+      </div> -->
+      {% if user_movierating %}
+        <div style="margin-right: 15px; display: inline-block"><b>Your rating: </b></div>
+        <div class="prime-circle" style="display: inline-block">{{user_movierating}}</div>
+      {% endif %}
     </div>
   </div>              <!-- title-rating -->
 
-  <div class="row">   <!-- country-production-release -->
-    <div class="col-xs-2">
-      <div class="small_title"><b>Country: </b></div> 
-    </div>
-    <div class="col-xs-10" id="country">
+  <div class="movie-row">   <!-- country -->
+    
+    <div class="small-title small-title-size">Country:&nbsp;&nbsp;</div> 
+    <div class="content" id="country">
       {% if movie.production_countries|length != 0 %}
         {% if movie.production_countries|length > 1 %}
           {% for country in movie.production_countries[:-1] %} 
@@ -35,11 +32,14 @@
         {% endif %} 
         {{movie.production_countries[-1]}}
       {% endif %}
-    </div><br>
-    <div class="col-xs-2">
-      <div class="small_title"><b>Production Co: </b></div>
-    </div>
-    <div class="col-xs-10" id="company">
+    </div>   
+    
+  </div>    <!-- country -->
+
+  <div class="movie-row">   <!-- production -->
+    
+    <div class="small-title small-title-size">Production Co:&nbsp;&nbsp;</div>
+    <div class="content" id="company">
       {% if movie.production_companies|length != 0 %}
         {% if movie.production_companies|length > 1 %}
           {% for company in movie.production_companies[:-1] %} 
@@ -48,76 +48,86 @@
         {% endif %} 
         {{movie.production_companies[-1]}}
       {% endif %}
-    </div><br>
-    <div class="col-xs-2">
-      <div class="small_title"><b>Release Date: </b></div>
     </div>
-    <div class="col-xs-10" id="release-date">
+    
+  </div>    <!-- production -->
+
+  <div class="movie-row">   <!-- release -->
+    
+    <div class="small-title small-title-size">Release Date:&nbsp;&nbsp;</div>
+    <div class="content" id="release-date">
       {{ movie.release_date }} 
     </div>
-  </div>        <!-- country-production-release -->
 
-  <div class="row" id="info-movie">  
+  </div>    <!-- release -->
 
-    <div class="col-xs-8" id="info">
+  <div class="movie-row" id="info-movie" style="margin-top: 15px">  
 
-      <div class="row">     <!-- poster-details -->
+    <div id="info">   <!-- info -->
 
-        <div class="col-xs-4" id="poster">  
-          {% if movie.poster_url is not none %}
-            <img src="{{ movie.poster_url }}" class="img-thumbnail" alt="No image" width="100%" height="100%">
-          {% else %}
-            <img src="/static/film-64152_640.jpg" class="img-thumbnail" alt="No image" width="100%" height="100%">
-          {% endif %}
+      <div style="overflow: hidden">
+
+      <div id="poster">  <!-- poster -->
+        {% if movie.poster_url is not none %}
+          <img src="{{ movie.poster_url }}" class="img-thumbnail" alt="No image">
+        {% else %}
+          <img src="/static/film-64152_640.jpg" class="img-thumbnail" alt="No image">
+        {% endif %}
+      </div>  <!-- poster -->
+
+      <div class="text-justify" id="details">   <!-- details -->
+        <span class="small-title">Genre:&nbsp;&nbsp;</span>
+        {% if movie.genres|length != 0 %}
+          {% if movie.genres|length > 1 %}
+            {% for genre in movie.genres[:-1] %} 
+              {{ genre }}, 
+            {% endfor %} 
+          {% endif %} 
+          {{movie.genres[-1]}}
+        {% endif %}
+        <br>
+        <span class="small-title">Director{% if movie.directors|length > 1 %}s{% endif %}:&nbsp;&nbsp;</span>
+        {% if movie.directors|length != 0 %}
+          {% if movie.directors|length > 1 %}
+            {% for director in movie.directors[:-1] %} 
+              <a href="{{ director.wikipedia_url }}">{{ director.name }}</a>,
+            {% endfor %} 
+          {% endif %} 
+          <a href="{{ movie.directors[-1].wikipedia_url }}">{{ movie.directors[-1].name }}</a>
+        {% endif %}
+        <br>
+        <span class="small-title">Writer{% if movie.writers|length > 1 %}s{% endif %}:&nbsp;&nbsp;</span>
+        {% if movie.writers|length != 0 %}
+          {% if movie.writers|length > 1 %}
+            {% for writer in movie.writers[:-1] %} 
+              <a href="{{ writer.wikipedia_url }}">{{ writer.name }}</a>, 
+            {% endfor %} 
+          {% endif %} 
+          <a href="{{ movie.writers[-1].wikipedia_url }}">{{ movie.writers[-1].name }}</a>
+        {% endif %}
+        <br>
+        <span class="small-title">Actor{% if movie.actors|length > 1 %}s{% endif %}:&nbsp;&nbsp;</span>
+        {% if movie.actors|length != 0 %}
+          {% if movie.actors|length > 1 %}
+            {% for actor in movie.actors[:-1] %} 
+              <a href="{{ actor.wikipedia_url }}">{{ actor.name }}</a>, 
+            {% endfor %} 
+          {% endif %} 
+          <a href="{{ movie.actors[-1].wikipedia_url }}">{{ movie.actors[-1].name }}</a>
+        {% endif %}
+        </br>
+        <span class="small-title">Overview:&nbsp;&nbsp;</span>{{ movie.overview }}
+
+      </div>    <!-- details -->
+
+      </div>
+
+      <div id="graph">   <!-- graph -->
+        <div id="title-graph">
+          <a id="cast-graph">Would you like to see connections between lead actors and the director in other movies?</a>
         </div>
 
-        <div class="col-xs-8 text-justify" id="details">
-          <spin class="small_title"><b>Genre: </b></spin>
-          {% if movie.genres|length != 0 %}
-            {% if movie.genres|length > 1 %}
-              {% for genre in movie.genres[:-1] %} 
-                {{ genre }}, 
-              {% endfor %} 
-            {% endif %} 
-            {{movie.genres[-1]}}
-          {% endif %}<br>
-          <spin class="small_title"><b>Director{% if movie.directors|length > 1 %}s{% endif %}: </b></spin>
-          {% if movie.directors|length != 0 %}
-            {% if movie.directors|length > 1 %}
-              {% for director in movie.directors[:-1] %} 
-                <a href="{{ director.wikipedia_url }}">{{ director.name }}</a>,
-              {% endfor %} 
-            {% endif %} 
-            <a href="{{ movie.directors[-1].wikipedia_url }}">{{ movie.directors[-1].name }}</a>
-          {% endif %}<br>
-          <spin class="small_title"><b>Writer{% if movie.writers|length > 1 %}s{% endif %}: </b></spin>
-          {% if movie.writers|length != 0 %}
-            {% if movie.writers|length > 1 %}
-              {% for writer in movie.writers[:-1] %} 
-                <a href="{{ writer.wikipedia_url }}">{{ writer.name }}</a>, 
-              {% endfor %} 
-            {% endif %} 
-            <a href="{{ movie.writers[-1].wikipedia_url }}">{{ movie.writers[-1].name }}</a>
-          {% endif %}<br>
-          <spin class="small_title"><b>Actor{% if movie.actors|length > 1 %}s{% endif %}: </b></spin>
-          {% if movie.actors|length != 0 %}
-            {% if movie.actors|length > 1 %}
-              {% for actor in movie.actors[:-1] %} 
-                <a href="{{ actor.wikipedia_url }}">{{ actor.name }}</a>, 
-              {% endfor %} 
-            {% endif %} 
-            <a href="{{ movie.actors[-1].wikipedia_url }}">{{ movie.actors[-1].name }}</a>
-          {% endif %}<br>
-          <spin class="small_title"><b>Overview: </b></spin>{{ movie.overview }}
-        </div>
-
-      </div>        <!-- poster-details -->
-
-      <div class="row" id="graph">   <!-- graph -->
-        <div class="col-xs-12" id="title-graph">
-          <a id="cast-graph" style="font-size: 20px; color: #fc4a1a"><b>Would you like to see connections between lead actors and the director in other movies?</b></a>
-        </div>
-        <div class="col-xs-12" id="draw-graph"></div>
+        <div id="draw-graph"></div>
 
         <div class="modal fade" id="Modal-graph" role="dialog">    <!-- Modal -->
           <div class="modal-dialog">
@@ -134,34 +144,31 @@
             </div>
             
           </div>
-        </div>    <!-- modal -->
+        </div>    <!-- Modal -->
 
       </div>      <!-- graph -->
-
-      <div class="row">     <!-- trailer -->
-        <div class="col-xs-12" id="trailer">
-          {% if movie.trailer_url|length != 0 %} 
-            <div class="embed-responsive embed-responsive-16by9">
-              <iframe class="embed-responsive-item" src="{{ movie.trailer_url[0] }}"></iframe>
-            </div>
-          {% endif %}
-        </div>
+    
+      <div id="trailer">    <!-- trailer -->
+        {% if movie.trailer_url|length != 0 %} 
+          <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" src="{{ movie.trailer_url[0] }}"></iframe>
+          </div>
+        {% else %}
+          <img src="/static/film-64152_640.jpg" alt="No trailer" width="50%">&nbsp; &nbsp;
+          <span style="font-size: 20px; font-weight: bold; vertical-align: bottom">No trailer</span>
+        {% endif %}
       </div>    <!-- trailer -->
 
-      <div>
-        <div class="col-xs-offset-2 col-xs-3">
-          <a href="https://www.netflix.com/login"><button class="btn btn-block">Watch on Netflix</button></a>
-        </div>
-        <div class="col-xs-offset-2 col-xs-3">
-          <a href="https://www.hulu.com/welcome"><button class="btn btn-block">Watch on Hulu</button></a>
-        </div>
+      <div align="center">
+        <a href="https://www.netflix.com/login"><button class="btn watch-button">Watch on Netflix</button></a>
+        <a href="https://www.hulu.com/welcome"><button class="btn watch-button">Watch on Hulu</button></a>
       </div>
 
     </div>      <!-- info -->
 
-    <div class="col-xs-4 text-justify" id="review">     <!-- review -->
-      <spin class="small_title"><b>Rating: </b></spin>{{ movie.vote_average }} ({{ movie.vote_count }})<br>
-      <spin class="small_title"><b>Reviews</b></spin> ({{ movie.total_reviews }})<b>:</b><br>
+    <div class="text-justify" id="review">     <!-- review -->
+      <div class="small-title">Rating:&nbsp;&nbsp;{{ movie.vote_average }} ({{ movie.vote_count }})</div>
+      <div class="small-title">Reviews&nbsp;&nbsp;({{ movie.total_reviews }}):</div>
       {% for review in movie.reviews %}
         <div class="review"> 
           <u>{{ review.name }}:</u> {{ review.text}}
@@ -170,7 +177,7 @@
       {% endfor %}
     </div>    <!-- review -->
 
-  </div>  <!-- info-movie -->
+  </div>  <!-- info-movie -->  
 
 </div>  <!-- all-about-movie -->
 
@@ -218,7 +225,20 @@
     $("#draw-graph").html('');
 
     // create d3 object
-    var width = 900, height = 750, radius = 50;
+    // var width = 900, height = 750, radius = 50;
+    var width = $('#info').outerWidth();
+    var height = 0.8 * width;
+    var radius = 50;
+    var sizeImage = 140;
+    var strokeWidth = 8
+    if (width < 480) {
+      width = 340;
+      radius = 30;
+      strokeWidth = 3;
+      sizeImage = 90;
+    }
+    
+
     var svg = d3.select("#draw-graph").append("svg")
       .attr("width", width)
       .attr("height", height);
@@ -284,28 +304,35 @@
 
     node.append("pattern")
       .attr("id", function(d) { return "person-"+d.index })
-      .attr("width", 140)
-      .attr("height", 140)
-      .attr("x", -70)
-      .attr("y", -60)
+      .attr("width", sizeImage)
+      .attr("height", sizeImage)
+      .attr("x", -sizeImage/2)
+      .attr("y", -sizeImage/2)
       .attr("patternUnits", "userSpaceOnUse")
       .append("image")
       .attr("xlink:href", function(d) { console.log(d); return d.url })
       .attr("x", 0)
       .attr("y", 0)
-      .attr("width", 140)
-      .attr("height", 140);
+      .attr("width", sizeImage)
+      .attr("height", sizeImage);
 
     node.append("circle")
       .attr("r",radius)
       .style("stroke","#008080")
-      .style("stroke-width", 8)    // set the stroke width
-      .style("fill", "#ffffff")
-      .style("fill", function(d) { return ('url(#person-'+d.index+')');});
+      .style("stroke-width", strokeWidth)    // set the stroke width
+      .style("fill", function(d) {
+        if (d.url !== null) {
+          return ('url(#person-'+d.index+')');  
+        } else {
+          return '#FFFFFF';
+        }  
+      });
 
     node.append("text")
-      .attr("dx", 35)
-      .attr("dy", 30)
+      // .attr("dx", 35)
+      // .attr("dy", 30)
+      .attr("dx", sizeImage/4)
+      .attr("dy", sizeImage/4)
       .style("font-weight","bold")
       .text(function(d) { return d.name });
 
