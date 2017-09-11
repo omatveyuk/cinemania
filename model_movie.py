@@ -62,7 +62,7 @@ class Movie(object):
                     vote_count=self.vote_count)
 
     @classmethod
-    def load_from_JSON(cls, json_movie):
+    def load_from_JSON(cls, json_movie, config):
         """Load movie from JSON"""
         movie = cls(json_movie["id"])       # create instance using constructor
         movie.title = json_movie["title"]
@@ -74,9 +74,9 @@ class Movie(object):
         movie.imdb_rating = json_movie["imdb_rating"]
         movie.genres = json_movie["genres"]
         movie.runtime = json_movie["runtime"]
-        movie.directors = [ Person(person["id"], person["name"], person["profile_url"], person["wikipedia_url"]) for person in json_movie["directors"]]
-        movie.writers = [ Person(person["id"], person["name"], person["profile_url"], person["wikipedia_url"]) for person in json_movie["writers"]]
-        movie.actors = [ Person(person["id"], person["name"], person["profile_url"], person["wikipedia_url"]) for person in json_movie["actors"]]
+        movie.directors = [ Person(person["id"], person["name"], person["profile_url"], config['url']['wikipedia']) for person in json_movie["directors"]]
+        movie.writers = [ Person(person["id"], person["name"], person["profile_url"], config['url']['wikipedia']) for person in json_movie["writers"]]
+        movie.actors = [ Person(person["id"], person["name"], person["profile_url"], config['url']['wikipedia']) for person in json_movie["actors"]]
         movie.overview = json_movie["overview"]
         movie.trailer_url = json_movie["trailer_url"]
         movie.poster_url = json_movie["poster_url"]
@@ -143,6 +143,8 @@ class Movie(object):
         """ Get information about actors, director, writer from themoviedb API"""
         json_crew = request_helper.get_crew_by_id(config, self.id)
 
+        print "*****************INSIDE LOAD_CREW*****************"
+
         # Actors
         for actor in json_crew['cast']:
             profile_url = None
@@ -196,6 +198,12 @@ class Person(object):
         self.name = name
         self.profile_url = profile_url
         self.wikipedia_url = '{0}/{1}'.format(wikipedia_url, name.replace(' ', '_'))
+        print "**********************************************"
+        print 'Class Person'
+        print "wikipedia_url(config)", wikipedia_url
+        print "Name: ", self.name
+        print "wkikipedia url: ", self.wikipedia_url
+
 
     def __repr__(self):
         """Provide helpful represetration when printed"""

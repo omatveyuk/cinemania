@@ -6,13 +6,12 @@ import jinja2
 from flask_debugtoolbar import DebugToolbarExtension
 from oauth import FacebookSignIn
 import requests
-import json
 
 import request_helper as rh
-from model_movie import Movie, Person, Review, ComplexEncoder
+from model_movie import Movie, Person, Review
+import model_movie
 import model_user as mu
 
-# redis - dispatcher of tasks
 from rq import Queue
 from rq.job import Job
 from worker import conn
@@ -24,11 +23,12 @@ app.secret_key = "shhhhhhhhhhhhhh"
 
 config = {}
 mu.connect_to_db(app)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-q = Queue(connection=conn)      # redis connection
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+q=Queue(connection=conn)
 
 config['api_key'] = {}
-config['api_key']['themoviedb'] = os.environ['THEMOVIEDB_API_KEY']
+config['api_key']['themoviedb'] = '581f16d1449a5be365c74560b2f4c7f5'
 config['url'] = {}
 config['url']['popular'] = "https://api.themoviedb.org/3/movie/popular?api_key={0}".format(config['api_key']['themoviedb'])
 config['url']['movie'] = "https://api.themoviedb.org/3/movie"
@@ -40,66 +40,28 @@ config['url']['genres'] = "https://api.themoviedb.org/3/discover/movie?api_key={
 config['url']['person_base'] = "https://api.themoviedb.org/3/person/"
 config['url']['person_credits'] = "/movie_credits?api_key={0}".format(config['api_key']['themoviedb'])
 
-
-@app.before_request
-def before_request():
+def foo():
     pass
+@app.route('/random_movie')
+def get_random_movie():
+    """Return random movie from themoviedb API."""
 
-
-@app.route('/')
-def index():
-    session.pop("random_movie_id", None)
-    return render_template("homepage.html")
-
-
-@app.route('/posters.json')
-def get_posters():
-    """Get 40 posters for animation."""
-    return jsonify(rh.get_posters_for_animation(config))
-
-
-@app.route('/job', methods=['GET', 'POST'])
-def task():
-    # schedule worker task (get_random_movie will be executed by worker.py)
-    logged_in_user_id = get_user_id_from_session()
-    current_movie_id = session.get("random_movie_id", None)
-    job = q.enqueue_call(
-        # func="server.long_task", args=(1,), result_ttl=5000
-        func="server.get_random_movie", args=(logged_in_user_id, current_movie_id,), result_ttl=5000
-    )
-    print(job.get_id())
-    return jsonify({"job_id":job.get_id()})
-
-
-@app.route('/random_movie/<job_id>')
-def show_random_movie(job_id):
-    """Display random movie which stored by Redis"""
-    job = Job.fetch(job_id, connection=conn)
-    if job.is_finished:
-        result = mu.Result.query.filter_by(id=job.result).first()
-        movie_json = json.loads(result.result)
-        movie = Movie.load_from_JSON(movie_json, config)
-        if movie is not None:
-            # if user login add movie to user's movie list
-            session["random_movie_id"] = movie.id       # movie id  from themoviedb API
-            if "logged_in_user_id" in session:
-                mu.add_movie(movie, session["logged_in_user_id"])
-            return render_template("movie_details.html", movie=movie)
-    return redirect('/')
-
-
-@app.route("/results/<job_key>", methods=['GET'])
-def get_job_status(job_key):
-    """Get job status from Redis"""
-    job = Job.fetch(job_key, connection=conn)
-
-    if job.is_finished:
-        data = mu.Result.query.filter_by(id=job.result).first()
-        return jsonify({"result":"1"})  #jsonify(data.result), 200
-    elif job.is_failed:
-        return jsonify({"result":"-1"})        # TODO: errorhandling
+    if "random_movie_id" not in session:
+        # Get random movie id from themoviedb API
+        movie_id = rh.get_random_movie_id(config)
     else:
-        return jsonify({"result":"0"}) # "Nay!", 202
+        movie_id = session["random_movie_id"]
+
+    # Create movie object which contain information about movie"
+    movie = Movie(movie_id)
+    movie.load(config)
+
+    # if user login add movie to user's movie list
+    if "logged_in_user_id" in session:
+        mu.add_movie(movie, session["logged_in_user_id"])
+
+    session["random_movie_id"] = movie_id
+    return render_template("movie_details.html", movie=movie)
 
 
 @app.route('/movies/<int:movie_id>')
@@ -281,6 +243,7 @@ def oauth_callback():
         session["logged_in_user_id"] = user_id
         flash("Login successful")
         return redirect('/')
+    print "I'm here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     # Add user to the db
     info_user = [email, social_id, 'Facebook']
     user_id = mu.add_user(info_user)
@@ -289,42 +252,14 @@ def oauth_callback():
         flash("User successfully added")
         return redirect('/')
 
-#************************************************************************
-# Helper functions
-
-def get_user_id_from_session():
-    return session.get("logged_in_user_id", None)
-
-def get_random_movie(logged_in_user_id, current_movie_id):
-    """Return random movie from themoviedb API."""
-
-    if current_movie_id is None:
-        # Get random movie id from themoviedb API
-        current_movie_id = rh.get_random_movie_id(config, logged_in_user_id)
-
-    # Create movie object which contain information about movie"
-    movie = Movie(current_movie_id)
-    movie.load(config)
-    # worker to store movie using Redis
-    # put inf about random movie in db
-    movie_json = json.dumps(movie, cls=ComplexEncoder)
-    result = mu.Result(
-        result=movie_json
-    )
-    mu.db.session.add(result)
-    mu.db.session.commit()
-    return result.id
-
-
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
     app.debug = True
 
-    # mu.connect_to_db(app)
+    mu.connect_to_db(app)
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
-    # app.run(host="192.168.2.26")
     app.run(host="0.0.0.0")
