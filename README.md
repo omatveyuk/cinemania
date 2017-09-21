@@ -23,21 +23,21 @@ APIs: Themoviedb, Facebook (OAuth)<br/>
 
 For personalized experience, users can log in to Cinemania through e-mail, password or via Facebook OAuth:
 
-![homepage](https://cloud.githubusercontent.com/assets/10794461/23692569/66504c64-0384-11e7-8870-dc9abe1d191b.png)
+![homepage](http://res.cloudinary.com/oxanamatveyuk/image/upload/v1505973962/Screen_Shot_2017-09-20_at_10.54.18_PM_m8nvuk.png)
 
-![login](https://cloud.githubusercontent.com/assets/10794461/23692570/6651844e-0384-11e7-84ad-c265a99e912f.png)
+![login](http://res.cloudinary.com/oxanamatveyuk/image/upload/v1505973961/Screen_Shot_2017-09-20_at_10.54.52_PM_lpzlfi.png)
 
-Using Redis for long-running task such as fetching a movie. Once a movie is chosen, the user is shown the movie detail page. The page is made of several sections: the movie header, the poster, links to the actors or directors Wikipedia pages, ratings and reviews, the overview and the trailer:
+Using Redis for long-running task such as fetching a movie. Once a movie is chosen, the user is shown the movie detail page. The page is made of several sections: the movie header, the poster, links to the actors or directors Wikipedia pages, ratings and reviews, the overview and the trailer. Sentiment extraction algorithm determines positive or negative review:
 
-![movie](https://cloud.githubusercontent.com/assets/10794461/23692566/664c2abc-0384-11e7-8050-ca61b7599f5c.png)
+![movie](http://res.cloudinary.com/oxanamatveyuk/image/upload/v1505973963/Screen_Shot_2017-09-20_at_11.02.29_PM_cbyrwo.png)
 
 Users interested in knowing if the main actors and the director have appeared in other movies together, they can do so by looking at the relationship graph:
 
-![graph](https://cloud.githubusercontent.com/assets/10794461/23692567/664e5b20-0384-11e7-96f4-1b171b85d11e.png)
+![graph](http://res.cloudinary.com/oxanamatveyuk/image/upload/v1505973962/Screen_Shot_2017-09-20_at_11.01.43_PM_rinyoj.png)
 
 Finally, users can always re-visit movie's history in their profile and update ratings:
 
-![profile](https://cloud.githubusercontent.com/assets/10794461/23692568/664f40f8-0384-11e7-8e26-b7aa1f812e5c.png)
+![profile](http://res.cloudinary.com/oxanamatveyuk/image/upload/v1505973965/Screen_Shot_2017-09-20_at_10.56.23_PM_kbgd5s.png)
 
 ## <a name="installing"></a>Installing
 
@@ -57,6 +57,11 @@ Install the requirements:
 pip install -r requirements.txt
 ```
 
+Setup Redis and make sure it starts
+```
+redis-server start
+```
+
 Get secret keys themoviedb API and Facebook API, and save it to secrets.sh:
 ```
 export THEMOVIEDB_API_KEY="Your Key is Here"
@@ -70,8 +75,14 @@ python model_user.py
 python seed.py
 ```
 
+For sentiment extraction from 
+[https://archive.ics.uci.edu/ml/datasets/Sentiment+Labelled+Sentences#](https://archive.ics.uci.edu/ml/datasets/Sentiment+Labelled+Sentences#)
+download training data set to training_data directory 
+
 Start running your server:
 ```
+source secrets.sh
+python worker.py &
 python server.py
 ```
 

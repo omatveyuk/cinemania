@@ -55,8 +55,6 @@ def create_classifier_positive_negative_reviews():
     # Score is either 1 (for positive) or 0 (for negative)
 
     files = [os.path.join(config['training_data'], f) for f in os.listdir(config['training_data']) if os.path.isfile(os.path.join(config['training_data'], f))]
-    # print "********************* CREATE CLASSIFIER *****************************"
-    # print files
 
     reviews_scores = []
     for each_file in files: 
@@ -64,16 +62,10 @@ def create_classifier_positive_negative_reviews():
             reviews_scores += text_file.read().split('\n')
     # split by tab and remove corrupted data
     reviews_scores = [review_score.split('\t') for review_score in reviews_scores if len(review_score.split('\t')) == 2 and review_score.split('\t')[1] != '']
-    # print reviews_scores
-    # print len(reviews_scores)
 
     # extract reviews and labels
     train_reviews = [review_score[0] for review_score in reviews_scores]
     train_scores = [review_score[1] for review_score in reviews_scores]
-    # print train_reviews
-    # print train_scores
-    # print len(train_reviews)
-    # print len(train_scores)
 
     # Frequency Representation (convert documents to numbers)
     # Learn the vocabulary dictionary and return term-document matrix.
@@ -390,11 +382,11 @@ def get_random_movie(logged_in_user_id, current_movie_id):
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
-    app.debug = True
+    # app.debug = True
 
     # mu.connect_to_db(app)
 
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
     # app.run(host="192.168.2.26")
     app.run(host="0.0.0.0")
