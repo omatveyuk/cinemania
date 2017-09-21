@@ -17,16 +17,20 @@ from rq import Queue
 from rq.job import Job
 from worker import conn
 
+# ML for recognizing positive or negative review
+from sklearn.feature_extraction.text import CountVectorizer    # for creating vector of frequency representation
+from sklearn.naive_bayes import BernoulliNB                    # algorithm for categorization
 
 app = Flask(__name__)
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "shhhhhhhhhhhhhh"
 
-config = {}
 mu.connect_to_db(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
 q = Queue(connection=conn)      # redis connection
 
+config = {}
 config['api_key'] = {}
 config['api_key']['themoviedb'] = os.environ['THEMOVIEDB_API_KEY']
 config['url'] = {}
@@ -39,6 +43,62 @@ config['url']['wikipedia'] = "https://en.wikipedia.org/wiki"
 config['url']['genres'] = "https://api.themoviedb.org/3/discover/movie?api_key={0}&with_genres=".format(config['api_key']['themoviedb'])
 config['url']['person_base'] = "https://api.themoviedb.org/3/person/"
 config['url']['person_credits'] = "/movie_credits?api_key={0}".format(config['api_key']['themoviedb'])
+config['training_data'] = "training_data/"
+
+#************************************************************************
+# Helper functions to define positive or negative movie review 
+def create_classifier_positive_negative_reviews():
+    """Return classifier of positive/negative review based on naive bayes algorithm"""
+
+    # read labeled interview from txt files
+    # Format: review \t score \n
+    # Score is either 1 (for positive) or 0 (for negative)
+
+    files = [os.path.join(config['training_data'], f) for f in os.listdir(config['training_data']) if os.path.isfile(os.path.join(config['training_data'], f))]
+    # print "********************* CREATE CLASSIFIER *****************************"
+    # print files
+
+    reviews_scores = []
+    for each_file in files: 
+        with open(each_file, 'r') as text_file:
+            reviews_scores += text_file.read().split('\n')
+    # split by tab and remove corrupted data
+    reviews_scores = [review_score.split('\t') for review_score in reviews_scores if len(review_score.split('\t')) == 2 and review_score.split('\t')[1] != '']
+    # print reviews_scores
+    # print len(reviews_scores)
+
+    # extract reviews and labels
+    train_reviews = [review_score[0] for review_score in reviews_scores]
+    train_scores = [review_score[1] for review_score in reviews_scores]
+    # print train_reviews
+    # print train_scores
+    # print len(train_reviews)
+    # print len(train_scores)
+
+    # Frequency Representation (convert documents to numbers)
+    # Learn the vocabulary dictionary and return term-document matrix.
+    count_vectorizer = CountVectorizer(binary="true")
+    train_reviews = count_vectorizer.fit_transform(train_reviews)
+
+    # Training phase. return classifer
+    classifier = BernoulliNB().fit(train_reviews, train_scores)
+
+    return (classifier, count_vectorizer)
+
+def define_positive_negative_review(text_review):
+    """Return 1 if review is classified as positive, 0 - negative"""
+    return classifier.predict(count_vectorizer.transform([text_review]))[0]
+
+def classify_reviews(movie):
+    """Classify movie reviews. Input: movie instance"""
+    for review in movie.reviews:
+        review.is_positive = define_positive_negative_review(review.text)
+
+#************************************************************************
+
+# Create classifier for recognizing positive and negative review
+classifier, count_vectorizer = create_classifier_positive_negative_reviews()
+
 
 
 @app.before_request
@@ -80,6 +140,9 @@ def show_random_movie(job_id):
         movie_json = json.loads(result.result)
         movie = Movie.load_from_JSON(movie_json, config)
         if movie is not None:
+            # Classify each movie review as positive or negative
+            classify_reviews(movie)
+
             # if user login add movie to user's movie list
             session["random_movie_id"] = movie.id       # movie id  from themoviedb API
             if "logged_in_user_id" in session:
@@ -108,6 +171,12 @@ def get_movie(movie_id):
     # Create movie object which contain information about movie
     movie = Movie(movie_id)
     movie.load(config)
+
+    # Classify each movie review as positive or negative
+    classify_reviews(movie)
+    print "*****************************SERVER GET_MOVIE Print reviews:"
+    for review in movie.reviews:
+        print review
 
     # Get user's rating for movie
     user_movierating = None
@@ -305,6 +374,7 @@ def get_random_movie(logged_in_user_id, current_movie_id):
     # Create movie object which contain information about movie"
     movie = Movie(current_movie_id)
     movie.load(config)
+
     # worker to store movie using Redis
     # put inf about random movie in db
     movie_json = json.dumps(movie, cls=ComplexEncoder)

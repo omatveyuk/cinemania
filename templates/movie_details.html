@@ -171,7 +171,12 @@
       <div class="small-title">Reviews&nbsp;&nbsp;({{ movie.total_reviews }}):</div>
       {% for review in movie.reviews %}
         <div class="review"> 
-          <u>{{ review.name }}:</u> {{ review.text}}
+          {% if review.is_positive == '1' %}
+            <span class="glyphicon glyphicon-thumbs-up"></span> 
+          {% else %}
+            <span class="glyphicon glyphicon-thumbs-down"></span>
+          {% endif %}
+          &nbsp;&nbsp;<u>{{ review.name }}:</u> {{ review.text}}
         </div>
         <hr>
       {% endfor %}

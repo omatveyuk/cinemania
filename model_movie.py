@@ -6,6 +6,7 @@ import request_helper
 from datetime import datetime
 import json
 
+
 ##############################################################################
 # Model definitions
 
@@ -198,12 +199,6 @@ class Person(object):
         self.name = name
         self.profile_url = profile_url
         self.wikipedia_url = '{0}/{1}'.format(wikipedia_url, name.replace(' ', '_'))
-        print "**********************************************"
-        print 'Class Person'
-        print "wikipedia_url(config)", wikipedia_url
-        print "Name: ", self.name
-        print "wkikipedia url: ", self.wikipedia_url
-
 
     def __repr__(self):
         """Provide helpful represetration when printed"""
@@ -221,14 +216,17 @@ class Review(object):
     def __init__(self, name, text=""):
         self.name = name
         self.text = text
+        # classifier at server defines positive or negative review (1 - positive, 0 - negative)
+        self.is_positive = None
 
     def __repr__(self):
         """Provide helpful represetration when printed"""
-        return "<Review name={0} text={1}>".format(self.name, self.text)
+        return "<Review name={0}\ntext={1}\nis_positive={2}>".format(self.name, self.text, self.is_positive)
 
     def repr_json(self):
         return dict(name=self.name,
-                    text=self.text)
+                    text=self.text,
+                    is_positive=self.is_positive)
 
 
 class PersonNode(object):
